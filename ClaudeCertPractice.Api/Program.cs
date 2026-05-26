@@ -26,8 +26,12 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ExamGuideService>();
 builder.Services.AddSingleton<QuestionBankService>();
 builder.Services.AddSingleton<QuizSessionService>();
+builder.Services.AddSingleton<AiGenerationJobService>();
 builder.Services.AddHttpClient<LearningContentService>();
-builder.Services.AddHttpClient<AiQuestionGeneratorService>();
+builder.Services.AddHttpClient<AiQuestionGeneratorService>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(10);
+});
 
 var corsOrigins = builder.Configuration["CORS_ALLOWED_ORIGINS"];
 var allowedOrigins = string.IsNullOrWhiteSpace(corsOrigins)

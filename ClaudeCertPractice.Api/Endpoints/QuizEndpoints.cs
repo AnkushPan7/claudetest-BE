@@ -22,6 +22,16 @@ public static class QuizEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status502BadGateway);
 
+        group.MapPost("/sessions/generate", StartAiGeneration)
+            .WithName("StartAiGeneration")
+            .Produces<AiGenerationStatusDto>(StatusCodes.Status202Accepted)
+            .Produces(StatusCodes.Status400BadRequest);
+
+        group.MapGet("/sessions/generate/{jobId}", GetAiGenerationStatus)
+            .WithName("GetAiGenerationStatus")
+            .Produces<AiGenerationStatusDto>()
+            .Produces(StatusCodes.Status404NotFound);
+
         group.MapGet("/sessions/{sessionId}/questions/{index:int}", GetQuestion)
             .WithName("GetQuizQuestion")
             .Produces<QuestionPublicDto>()
@@ -44,6 +54,88 @@ public static class QuizEndpoints
 
         return app;
     }
+
+    private static IResult StartAiGeneration(
+        CreateSessionRequest request,
+        AiQuestionGeneratorService ai,
+        AiGenerationJobService jobs,
+        IOptions<QuizSettings> settings,
+        IServiceScopeFactory scopeFactory)
+    {
+        if (!ai.IsConfigured)
+            return Results.BadRequest(
+                "AI mode requires ANTHROPIC_API_KEY or AnthropicApiKey in environment (or .env), or Quiz:AnthropicApiKey.");
+
+        var quizSettings = settings.Value;
+        var learningUrls = string.IsNullOrWhiteSpace(request.LearningUrl)
+            ? quizSettings.GetLearningUrls()
+            : (IReadOnlyList<string>)[request.LearningUrl.Trim()];
+        var count = Math.Clamp(request.Count ?? 10, 1, quizSettings.MaxQuestionsPerSession);
+        var totalBatches = (int)Math.Ceiling(count / (double)quizSettings.AiBatchSize);
+        var job = jobs.Create(count, totalBatches);
+        var sectionIds = request.SectionIds;
+
+        _ = Task.Run(async () =>
+        {
+            using var scope = scopeFactory.CreateScope();
+            var scopedAi = scope.ServiceProvider.GetRequiredService<AiQuestionGeneratorService>();
+            var scopedSessions = scope.ServiceProvider.GetRequiredService<QuizSessionService>();
+            var scopedJobs = scope.ServiceProvider.GetRequiredService<AiGenerationJobService>();
+
+            try
+            {
+                var progress = new Progress<(int CompletedBatches, int TotalBatches, int QuestionsGenerated)>(p =>
+                    scopedJobs.ReportBatch(job.JobId, p.CompletedBatches, p.QuestionsGenerated));
+
+                var questions = await scopedAi.GenerateAsync(
+                    count,
+                    learningUrls,
+                    sectionIds,
+                    progress,
+                    CancellationToken.None);
+
+                if (questions.Count == 0)
+                {
+                    scopedJobs.Fail(job.JobId, "AI returned no questions; try again or use the question bank.");
+                    return;
+                }
+
+                var session = scopedSessions.Create(questions, "Ai");
+                scopedJobs.Complete(
+                    job.JobId,
+                    new SessionDto(
+                        session.SessionId,
+                        session.Questions.Count,
+                        session.Questions.Select(q => q.Id).ToList(),
+                        session.SourceMode));
+            }
+            catch (Exception ex)
+            {
+                scopedJobs.Fail(job.JobId, ex.Message);
+            }
+        });
+
+        return Results.Accepted(
+            $"/api/quiz/sessions/generate/{job.JobId}",
+            ToStatusDto(job));
+    }
+
+    private static IResult GetAiGenerationStatus(string jobId, AiGenerationJobService jobs)
+    {
+        var job = jobs.Get(jobId);
+        return job is null ? Results.NotFound() : Results.Ok(ToStatusDto(job));
+    }
+
+    private static AiGenerationStatusDto ToStatusDto(AiGenerationJobState job) =>
+        new(
+            job.JobId,
+            job.Status,
+            job.TargetCount,
+            job.TotalBatches,
+            job.CompletedBatches,
+            job.QuestionsGenerated,
+            job.Session,
+            job.Error);
 
     private static IResult GetMetadata(
         QuestionBankService bank,
@@ -89,7 +181,7 @@ public static class QuizEndpoints
 
             try
             {
-                questions = await ai.GenerateAsync(count, learningUrls, request.SectionIds, ct);
+                questions = await ai.GenerateAsync(count, learningUrls, request.SectionIds, ct: ct);
             }
             catch (Exception ex)
             {
