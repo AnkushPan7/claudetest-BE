@@ -38,7 +38,6 @@ public class AiQuestionGeneratorService
         int count,
         IReadOnlyList<string> learningUrls,
         int[]? sectionIds,
-        IProgress<(int CompletedBatches, int TotalBatches, int QuestionsGenerated)>? progress = null,
         CancellationToken ct = default)
     {
         var apiKey = GetApiKey();
@@ -61,31 +60,16 @@ public class AiQuestionGeneratorService
         var all = new List<Question>();
         var remaining = count;
         var batchNum = 0;
-        var totalBatches = (int)Math.Ceiling(count / (double)_settings.AiBatchSize);
-        // Later batches use a shorter excerpt so each Anthropic call stays fast.
-        var followUpSource = sourceText.Length > 16_000
-            ? sourceText[..16_000] + "\n\n[Excerpt truncated for follow-up batches — use the same learning themes.]"
-            : sourceText;
 
         while (remaining > 0)
         {
             var batchSize = Math.Min(remaining, _settings.AiBatchSize);
             batchNum++;
             var existingTitles = all.Select(q => q.Title).ToList();
-            var materialForBatch = batchNum == 1 ? sourceText : followUpSource;
             var batch = await GenerateBatchAsync(
-                apiKey,
-                materialForBatch,
-                urlsLine,
-                batchSize,
-                sectionHint,
-                batchNum,
-                all.Count,
-                existingTitles,
-                ct);
+                apiKey, sourceText, urlsLine, batchSize, sectionHint, batchNum, all.Count, existingTitles, ct);
             all.AddRange(batch);
             remaining -= batch.Count;
-            progress?.Report((batchNum, totalBatches, all.Count));
             if (batch.Count == 0)
                 throw new InvalidOperationException("AI returned no questions; try again or use Json mode.");
         }
