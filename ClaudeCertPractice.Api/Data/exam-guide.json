@@ -1,0 +1,61 @@
+{
+  "examTitle": "Claude Certified Architect – Foundations (CCA-F)",
+  "questionCount": 60,
+  "passingScore": 720,
+  "scoreMin": 100,
+  "scoreMax": 1000,
+  "practicePassingScore": 900,
+  "responseFormat": "Multiple choice — one correct answer and three distractors per question",
+  "examScenariosNote": "The certification exam presents 4 scenarios at random from the 6 below; questions are scenario-based.",
+  "domains": [
+    { "id": 1, "name": "Agentic Architecture & Orchestration", "weightPercent": 27 },
+    { "id": 2, "name": "Tool Design & MCP Integration", "weightPercent": 18 },
+    { "id": 3, "name": "Claude Code Configuration & Workflows", "weightPercent": 20 },
+    { "id": 4, "name": "Prompt Engineering & Structured Output", "weightPercent": 20 },
+    { "id": 5, "name": "Context Management & Reliability", "weightPercent": 15 }
+  ],
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "Customer Support Resolution Agent",
+      "primaryDomains": ["Agentic Architecture & Orchestration", "Tool Design & MCP Integration", "Context Management & Reliability"]
+    },
+    {
+      "id": 2,
+      "name": "Code Generation with Claude Code",
+      "primaryDomains": ["Claude Code Configuration & Workflows", "Context Management & Reliability"]
+    },
+    {
+      "id": 3,
+      "name": "Multi-Agent Research System",
+      "primaryDomains": ["Agentic Architecture & Orchestration", "Tool Design & MCP Integration", "Context Management & Reliability"]
+    },
+    {
+      "id": 4,
+      "name": "Developer Productivity with Claude",
+      "primaryDomains": ["Tool Design & MCP Integration", "Claude Code Configuration & Workflows", "Agentic Architecture & Orchestration"]
+    },
+    {
+      "id": 5,
+      "name": "Claude Code for Continuous Integration",
+      "primaryDomains": ["Claude Code Configuration & Workflows", "Prompt Engineering & Structured Output"]
+    },
+    {
+      "id": 6,
+      "name": "Structured Data Extraction",
+      "primaryDomains": ["Prompt Engineering & Structured Output", "Context Management & Reliability"]
+    }
+  ],
+  "legacySectionToDomain": {
+    "1": 5,
+    "2": 4,
+    "3": 1,
+    "6": 2,
+    "7": 3,
+    "8": 1,
+    "9": 2,
+    "10": 3,
+    "11": 4,
+    "12": 5
+  }
+}
