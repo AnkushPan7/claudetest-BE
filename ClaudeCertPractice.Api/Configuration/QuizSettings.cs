@@ -17,7 +17,7 @@ public class QuizSettings
         "https://docs.anthropic.com/en/docs/build-with-claude/overview",
     ];
 
-    public string AnthropicModel { get; set; } = "claude-sonnet-4-20250514";
+    public string AnthropicModel { get; set; } = "claude-haiku-4-5";
 
     public IReadOnlyList<string> GetLearningUrls()
     {
