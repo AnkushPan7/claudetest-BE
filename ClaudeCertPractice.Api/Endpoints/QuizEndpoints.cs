@@ -99,7 +99,7 @@ public static class QuizEndpoints
         else
         {
             var meta = bank.GetMetadata();
-            var count = Math.Clamp(request.Count ?? meta.TotalQuestions, 1, meta.TotalQuestions);
+            var count = Math.Clamp(request.Count ?? meta.TotalQuestions, 1, meta.BankQuestionCount);
             var ids = bank.PickRandomIds(count, request.SectionIds);
             questions = ids
                 .Select(id => bank.GetById(id))
