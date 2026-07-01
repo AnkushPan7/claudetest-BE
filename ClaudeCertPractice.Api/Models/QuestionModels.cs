@@ -73,7 +73,10 @@ public record AnswerRequest(string SelectedAnswer);
 public record AnswerSubmitDto(
     int Index,
     int Total,
-    string SelectedAnswer);
+    string SelectedAnswer,
+    string CorrectAnswer,
+    bool IsCorrect,
+    string Explanation);
 
 public record SessionSummaryDto(
     string SessionId,

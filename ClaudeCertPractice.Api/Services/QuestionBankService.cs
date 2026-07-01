@@ -7,6 +7,7 @@ public class QuestionBankService
 {
     private readonly ExamGuideService _examGuide;
     private readonly IReadOnlyList<Question> _questions;
+    private readonly IReadOnlyList<Question> _realExamQuestions;
 
     public QuestionBankService(IWebHostEnvironment env, ExamGuideService examGuide)
     {
@@ -32,7 +33,14 @@ public class QuestionBankService
 
         if (_questions.Count == 0)
             throw new InvalidDataException("No questions loaded from " + path);
+
+        _realExamQuestions = _questions
+            .Where(q => q.Id is >= 73 and <= 132)
+            .ToList();
     }
+
+    private IReadOnlyList<Question> PracticePool =>
+        _realExamQuestions.Count > 0 ? _realExamQuestions : _questions;
 
     public ExamMetadata GetMetadata()
     {
@@ -40,7 +48,7 @@ public class QuestionBankService
         return new ExamMetadata(
             guide.ExamTitle,
             guide.QuestionCount,
-            _questions.Count,
+            PracticePool.Count,
             _examGuide.GetDomainSections(),
             QuestionSource: "Json",
             AiGenerationAvailable: false,
@@ -66,8 +74,8 @@ public class QuestionBankService
     public List<int> PickRandomIds(int count, int[]? domainIds)
     {
         var pool = domainIds is { Length: > 0 }
-            ? _questions.Where(q => domainIds.Contains(_examGuide.LegacySectionToDomain(q.SectionId))).ToList()
-            : _questions.ToList();
+            ? PracticePool.Where(q => domainIds.Contains(_examGuide.LegacySectionToDomain(q.SectionId))).ToList()
+            : PracticePool.ToList();
 
         var rng = Random.Shared;
         return pool.OrderBy(_ => rng.Next()).Take(Math.Min(count, pool.Count)).Select(q => q.Id).ToList();

@@ -51,7 +51,7 @@
       "id": 3,
       "sectionId": 1,
       "title": "Conversation Memory Not Working",
-      "text": "Claude asks what genres a user enjoys even though they said \"I love jazz\" two messages earlier. Most likely cause?",
+      "text": "Your music recommendation assistant is in a multi-turn conversation. Claude asks what genres a user enjoys even though they said \"I love jazz\" two messages earlier. What is the most likely cause?",
       "options": {
         "A": "Claude requires a vector database connection to maintain conversation memory",
         "B": "Your application isn't including prior messages in the messages array",
@@ -163,7 +163,7 @@
       "id": 11,
       "sectionId": 1,
       "title": "Event Planning: 4.2 Average Clarifying Questions, 35% Abandonment",
-      "text": "Reducing questions causes poor recommendations; keeping them causes abandonment. Best trade-off?",
+      "text": "Your event planning assistant asks an average of 4.2 clarifying questions per session. Analytics show 35% of users abandon before completing their request. Reducing questions causes poor recommendations, but keeping them causes abandonment. What is the best trade-off?",
       "options": {
         "A": "Configure the assistant to consolidate all clarifying questions into a single compound question",
         "B": "Instruct the assistant to state explicit assumptions based on conversation history, proceed with recommendations while inviting corrections, and reserve clarifying questions only for irreversible actions like confirming bookings",
@@ -177,7 +177,7 @@
       "id": 12,
       "sectionId": 1,
       "title": "Ambiguous First Message: \"Set up my focus music\"",
-      "text": "Could mean configure preferences, create playlist, or play immediately. Best approach?",
+      "text": "A user's first message to your focus music assistant is: \"Set up my focus music.\" This could mean configure preferences, create a playlist, or play music immediately. What is the best approach?",
       "options": {
         "A": "Create a new \"Focus\" playlist with curated tracks and notify the user it's ready",
         "B": "Start preference configuration by asking about genres, tempo, and artists",
@@ -205,7 +205,7 @@
       "id": 14,
       "sectionId": 1,
       "title": "Latency and Costs Rise After 50+ Conversation Turns",
-      "text": "PRIMARY cause of increasing API latency and costs?",
+      "text": "Your conversational assistant shows increasing API latency and costs after 50+ conversation turns. What is the PRIMARY cause?",
       "options": {
         "A": "The model generates progressively longer responses as it accumulates more context",
         "B": "The entire conversation history is included with each API request, so input tokens grow with every turn",
@@ -219,7 +219,7 @@
       "id": 15,
       "sectionId": 1,
       "title": "Repetitive Response Openers (\"Certainly!\", \"I'd be happy to help!\")",
-      "text": "Users report responses feel repetitive across turns. Most effective approach?",
+      "text": "Users report your assistant's responses feel repetitive across turns, with the same openers like \"Certainly!\" and \"I'd be happy to help!\" appearing frequently. What is the most effective approach?",
       "options": {
         "A": "Append a partial assistant message with a direct response opening that the model will continue from",
         "B": "Implement post-processing to detect and strip common greeting phrases from response beginnings",
@@ -233,7 +233,7 @@
       "id": 16,
       "sectionId": 2,
       "title": "Tool Ordering: extract_metadata Before Enrichment",
-      "text": "Claude sometimes calls lookup_citations before extract_metadata. Most effective fix?",
+      "text": "Your document extraction pipeline requires `extract_metadata` to run before enrichment tools like `lookup_citations`. However, Claude sometimes calls `lookup_citations` before `extract_metadata`. What is the most effective fix?",
       "options": {
         "A": "Set tool_choice to \"any\" combined with system prompt instructions",
         "B": "Set tool_choice to {\"type\": \"tool\", \"name\": \"extract_metadata\"} and process the enrichment requests in subsequent turns after receiving the extracted metadata",
@@ -247,7 +247,7 @@
       "id": 17,
       "sectionId": 2,
       "title": "property_type Enum Failing for Unusual Types",
-      "text": "8% of extractions fail schema validation. New property types keep appearing. Best long-term solution?",
+      "text": "Your real estate extraction schema uses a `property_type` enum. 8% of extractions fail schema validation because new property types keep appearing that are not in the enum. What is the best long-term solution?",
       "options": {
         "A": "Continuously expand the enum to include newly observed property types",
         "B": "Add few-shot examples demonstrating how to map unexpected types to the closest existing enum value",
@@ -261,7 +261,7 @@
       "id": 18,
       "sectionId": 2,
       "title": "Standard Reports vs. Urgent Exception Reports",
-      "text": "Minimize costs while meeting latency requirements. Architecture?",
+      "text": "Your document processing system handles standard monthly reports (archived after processing) and urgent exception reports (require action within 30 minutes). Both use the same JSON schema. How should you architect the pipeline to minimize costs while meeting latency requirements?",
       "options": {
         "A": "Submit all documents to the Batch API with custom_ids for tracking",
         "B": "Route standard reports to the Batch API for 50% cost savings, and route urgent exception reports to the real-time Messages API",
@@ -275,7 +275,7 @@
       "id": 19,
       "sectionId": 2,
       "title": "Batch Processing Strategy: 30-Hour SLA",
-      "text": "Documents arrive continuously. Which batching frequency satisfies 99.9% reliability within 30 hours?",
+      "text": "Documents arrive continuously at your processing center. You need a batch processing strategy that satisfies 99.9% reliability within a 30-hour SLA. Which batching frequency should you use?",
       "options": {
         "A": "Submit a single batch at end of day",
         "B": "Submit batches every 6 hours (6 + 24 = 30 hrs — no buffer)",
@@ -331,7 +331,7 @@
       "id": 23,
       "sectionId": 2,
       "title": "Invoice Extraction: Line Items Sum Mismatch",
-      "text": "Downstream systems reject mismatched records. Most effective approach?",
+      "text": "Your invoice extraction pipeline extracts line items and totals, but downstream systems reject records when line items do not sum to the stated total. What is the most effective approach?",
       "options": {
         "A": "Add a \"calculated_total\" field where the model sums extracted line items alongside a \"stated_total\" field. Flag records for human review when values differ",
         "B": "Add few-shot examples demonstrating invoices where extracted line items sum correctly",
@@ -345,7 +345,7 @@
       "id": 24,
       "sectionId": 2,
       "title": "context_length_exceeded for 300 Documents",
-      "text": "Most cost-effective approach to process only the failures?",
+      "text": "You submitted 10,000 documents via the Batch API. 300 failed with `context_length_exceeded`. What is the most cost-effective approach to process only the failures?",
       "options": {
         "A": "Reprocess the entire batch with prompt caching enabled",
         "B": "Resubmit only the 300 failed documents after chunking them into smaller pieces, then combine the partial extractions",
@@ -359,7 +359,7 @@
       "id": 25,
       "sectionId": 2,
       "title": "Retry-with-Error-Feedback: LEAST Helped by Retries",
-      "text": "For which failure would additional retries be LEAST effective?",
+      "text": "Your extraction system implements automatic retries when validation fails, appending specific validation errors to the prompt. For which failure pattern would additional retries be LEAST effective?",
       "options": {
         "A": "The model extracts \"et al.\" for co-authors when the full list exists only in an external document not in the input",
         "B": "The model extracts citation counts as locale-formatted strings (\"1,234\") when the schema requires integers",
@@ -373,7 +373,7 @@
       "id": 26,
       "sectionId": 2,
       "title": "12% Semantic Validation Failure",
-      "text": "JSON syntax never fails. Most effective approach to reduce manual review?",
+      "text": "Your invoice extraction uses tool use with strict JSON schemas. JSON syntax errors never occur, but 12% of extractions fail semantic validation (e.g., line items do not sum to total). These currently route to manual review. What is the most effective approach to reduce manual review?",
       "options": {
         "A": "Implement post-processing logic that automatically corrects common errors",
         "B": "Retry the extraction up to 3 times when validation fails, accepting first result that passes",
@@ -387,7 +387,7 @@
       "id": 27,
       "sectionId": 2,
       "title": "Contract Amendments: Original vs. Amendment",
-      "text": "\"30-day payment terms\" vs \"45 days\" in Amendment 1. Most effective improvement?",
+      "text": "Your contract extraction system processes documents with amendments. The original contract states \"30-day payment terms\" but Amendment 1 specifies \"45 days.\" What is the most effective improvement?",
       "options": {
         "A": "Post-extraction validation using pattern matching to flag amendments for manual review",
         "B": "Add prompt instructions to always extract the most recent amendment value and ignore superseded original terms",
@@ -401,7 +401,7 @@
       "id": 28,
       "sectionId": 2,
       "title": "Inconsistent \"Materials\" Field Output",
-      "text": "\"cotton blend\" vs \"Cotton/Polyester mix\" vs field omitted when present. Most effective fix?",
+      "text": "Your product catalog extraction has inconsistent \"materials\" field output: sometimes \"cotton blend\", sometimes \"Cotton/Polyester mix\", and sometimes the field is omitted when materials are clearly present. What is the most effective fix?",
       "options": {
         "A": "Add few-shot examples showing 2-3 complete input-output pairs with standardized material description formats",
         "B": "Make the \"materials\" field required instead of optional to force the model to always extract a value",
@@ -429,7 +429,7 @@
       "id": 30,
       "sectionId": 2,
       "title": "Automating High-Confidence Extractions (97% Accuracy)",
-      "text": "System has 100% human review for 3 months. Before deploying automation, what validation is most critical?",
+      "text": "Your extraction system has operated with 100% human review for 3 months, achieving 97% accuracy on high-confidence extractions. Before deploying automation that routes high-confidence extractions directly to downstream systems, what validation is most critical?",
       "options": {
         "A": "Analyze accuracy by document type and field to verify high-confidence extractions perform consistently across all segments, not just in aggregate",
         "B": "Verify that 97% accuracy meets requirements for all downstream systems that consume the extracted data",
@@ -443,7 +443,7 @@
       "id": 31,
       "sectionId": 3,
       "title": "Customer Demands Human Agent NOW",
-      "text": "Customer says: \"I want to talk to a real person NOW.\" Agent has not called any tools. What should the agent do?",
+      "text": "A customer sends: \"I want to talk to a real person NOW.\" Your support agent has not called any tools yet. What should the agent do?",
       "options": {
         "A": "Immediately call escalate_to_human with the conversation history",
         "B": "Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating",
@@ -457,7 +457,7 @@
       "id": 32,
       "sectionId": 3,
       "title": "Designing Escalation Trigger Logic",
-      "text": "Which approach most reliably identifies cases that genuinely require human intervention?",
+      "text": "You are implementing escalation logic for your customer support agent to determine when to call `escalate_to_human`. Which approach most reliably identifies cases that genuinely require human intervention?",
       "options": {
         "A": "Instruct the agent to escalate when the customer requests a human, when the issue requires policy exceptions, or when the agent cannot make meaningful progress",
         "B": "Implement sentiment analysis that monitors for frustration indicators and triggers when frustration score exceeds a threshold",
@@ -471,7 +471,7 @@
       "id": 33,
       "sectionId": 3,
       "title": "process_refund Technical vs. Business Errors",
-      "text": "Agent wastes 3-4 turns retrying permanent business errors. Both return plain text. Most effective fix?",
+      "text": "Your billing dispute agent uses `process_refund`, which returns both technical errors (transient) and business errors (permanent). The agent wastes 3-4 turns retrying permanent business errors because both return plain text messages. What is the most effective fix?",
       "options": {
         "A": "Implement automatic retry logic at the tool level for technical errors only",
         "B": "Add a check_refund_eligibility tool that must be called before process_refund",
@@ -527,7 +527,7 @@
       "id": 37,
       "sectionId": 3,
       "title": "Compliance: Refunds >$500 Must Always Escalate",
-      "text": "Despite clear system prompt instructions, 3% failure rate persists. How to achieve guaranteed compliance?",
+      "text": "Compliance policy requires that refunds exceeding $500 must always escalate to a human agent. Despite clear system prompt instructions, logs show a 3% failure rate where high-value refunds are processed directly. How do you achieve guaranteed compliance?",
       "options": {
         "A": "Add few-shot examples to the prompt showing correct escalation behavior at various refund amounts",
         "B": "Strengthen the system prompt with emphatic language: \"CRITICAL POLICY: Refunds over $500 MUST trigger human escalation. NEVER process these directly.\"",
@@ -541,7 +541,7 @@
       "id": 38,
       "sectionId": 3,
       "title": "Agent Asks for Customer's Name Again",
-      "text": "Multi-step identity verification; agent re-asks for name after the third verification question. Most likely cause?",
+      "text": "Your agent performs multi-step identity verification before resetting passwords. After the customer answers the third verification question, the agent asks for their name again as if the earlier exchange never happened. What is the most likely cause?",
       "options": {
         "A": "Claude's memory retention is limited to two conversational turns by default",
         "B": "The conversation history isn't being passed in subsequent API requests",
@@ -555,7 +555,7 @@
       "id": 39,
       "sectionId": 3,
       "title": "MCP Tool lookup_order: Error Communication Pattern",
-      "text": "Backend sometimes returns \"Order not found\" or temporary database failures. What is the correct pattern?",
+      "text": "You are implementing an MCP `lookup_order` tool. The backend sometimes returns \"Order not found\" or temporary database failures. What is the correct error communication pattern?",
       "options": {
         "A": "Log the error server-side and return an empty result to avoid confusing the model",
         "B": "Return a success response with a \"status\" field indicating the error type",
@@ -597,7 +597,7 @@
       "id": 42,
       "sectionId": 3,
       "title": "Customer Raises 3 Issues in One Session",
-      "text": "At turn 48, customer asks about their refund from turns 1–15. Strategy to maintain all issues?",
+      "text": "A customer raises three separate issues in a single support session. At turn 48, they ask about their refund discussed in turns 1–15. What strategy best maintains context for all issues throughout the session?",
       "options": {
         "A": "Rely on MCP tools to re-fetch relevant information on demand when the customer references earlier issues",
         "B": "Implement sliding window context that retains the most recent 30 turns",
@@ -653,7 +653,7 @@
       "id": 46,
       "sectionId": 3,
       "title": "MCP readOnlyHint vs. destructiveHint Annotations",
-      "text": "Team proposes bypassing confirmation for tools annotated readOnlyHint: true. What should guide this decision?",
+      "text": "Your team proposes bypassing user confirmation for MCP tools annotated with `readOnlyHint: true`. What should guide this decision?",
       "options": {
         "A": "Implement a verification layer testing each tool's actual behavior before adding it to an allowlist",
         "B": "MCP servers run as local processes, so tools from properly initialized connections can be trusted regardless of vendor",
@@ -667,7 +667,7 @@
       "id": 47,
       "sectionId": 3,
       "title": "MCP Server vs. Custom Tool for Weather API",
-      "text": "Primary advantage of the MCP approach when multiple AI applications need weather data?",
+      "text": "Your organization needs to integrate weather API data into multiple AI applications. What is the primary advantage of using an MCP server approach instead of custom tools?",
       "options": {
         "A": "Any MCP-compatible client can connect to your weather server without writing custom integration code",
         "B": "MCP servers process tool calls faster than custom implementations because they use an optimized binary protocol",
@@ -695,7 +695,7 @@
       "id": 49,
       "sectionId": 3,
       "title": "search_documents Database Selection Parameter",
-      "text": "Three databases; users express naturally (\"search the research database\"). How to design the parameter?",
+      "text": "You are building a `search_documents` tool with three document databases. Users naturally express their intent (e.g., \"search the research database\"). How should you design the database selection parameter?",
       "options": {
         "A": "A freeform string parameter where the backend uses semantic matching to determine which database(s) to search",
         "B": "No explicit parameter—search all three databases by default, then have the model filter results by source",
@@ -723,7 +723,7 @@
       "id": 51,
       "sectionId": 3,
       "title": "get_portfolio_value: Structured JSON vs. Text",
-      "text": "Primary advantage of using structured output with defined fields?",
+      "text": "Your financial agent uses a `get_portfolio_value` tool. What is the primary advantage of using structured JSON output with defined fields instead of free-form text?",
       "options": {
         "A": "Structured JSON is processed deterministically by the model, significantly improving accuracy when extracting values",
         "B": "Structured JSON consumes significantly fewer tokens than natural language",
@@ -737,7 +737,7 @@
       "id": 52,
       "sectionId": 3,
       "title": "remove_team_member dry_run Bypassed",
-      "text": "Agent calls with dry_run=false directly, skipping the required preview+confirm workflow. Most reliable enforcement?",
+      "text": "Your team management agent has a `remove_team_member` tool with a required preview+confirm workflow using `dry_run=true` before `dry_run=false`. The agent sometimes calls with `dry_run=false` directly, skipping preview. What is the most reliable enforcement approach?",
       "options": {
         "A": "Add server-side validation that permits dry_run=false only when a dry_run=true call with identical parameters occurred within the past 60 seconds",
         "B": "Add detailed instructions and few-shot examples to the tool description",
@@ -751,7 +751,7 @@
       "id": 53,
       "sectionId": 3,
       "title": "delete_contact: Misidentified Records",
-      "text": "Current multi-step confirmation adds friction. Reduce error rate while maintaining efficiency?",
+      "text": "Your CRM agent's `delete_contact` tool sometimes deletes misidentified records when multiple contacts share similar names. The current multi-step confirmation adds friction. How do you reduce error rate while maintaining efficiency?",
       "options": {
         "A": "Present matched records with differentiating fields and require single-click confirmation of the intended target before executing deletion",
         "B": "Deploy automated duplicate detection that identifies and merges probable duplicates",
@@ -765,7 +765,7 @@
       "id": 54,
       "sectionId": 3,
       "title": "send_notification Timeouts",
-      "text": "Currently returns generic is_error: true, agents retry, causing duplicate notifications. How to modify error response?",
+      "text": "Your agent uses a `send_notification` tool. When the underlying service times out, the tool returns a generic `is_error: true`, causing agents to retry and send duplicate notifications. How should you modify the error response?",
       "options": {
         "A": "Return is_error: true with a structured field retry_safe: true for timeouts",
         "B": "Return is_error: false with the original message content echoed back",
@@ -793,7 +793,7 @@
       "id": 56,
       "sectionId": 3,
       "title": "search_flights: 503 Service Unavailable",
-      "text": "Most effective way to handle this error in your tool implementation?",
+      "text": "Your travel agent's `search_flights` tool calls an external API that sometimes returns 503 Service Unavailable. What is the most effective way to handle this error in your tool implementation?",
       "options": {
         "A": "Return an error message in the tool result explaining the service is temporarily unavailable",
         "B": "Log the error internally and return an empty response, letting the model continue without the flight data",
@@ -807,7 +807,7 @@
       "id": 57,
       "sectionId": 3,
       "title": "process_reimbursement: $500 Approval Threshold",
-      "text": "Which design ensures the threshold cannot be bypassed regardless of how the agent is prompted?",
+      "text": "Your expense agent has a `process_reimbursement` tool with a $500 approval threshold. Which design ensures the threshold cannot be bypassed regardless of how the agent is prompted?",
       "options": {
         "A": "Provide two tools (auto_reimburse hard-coded to $500 and request_manager_approval) with system prompt instructions and audit logging",
         "B": "process_reimbursement accepts an approved_by_manager boolean; prompt instructs agent to only set this to true after confirming approval",
@@ -821,7 +821,7 @@
       "id": 58,
       "sectionId": 3,
       "title": "log_workout: Invalid Measurement Combinations",
-      "text": "Cardio exercises get \"reps\", strength exercises get \"miles\". Most effective fix?",
+      "text": "You are building a fitness assistant with a single `log_workout` tool that accepts exercise type and a measurement field (minutes, miles, reps, or sets). During testing, cardio exercises are logged with \"reps\" and strength exercises with \"miles\" — clearly invalid combinations. What is the most effective fix?",
       "options": {
         "A": "Add enum constraints on measurement limiting values to \"minutes\", \"miles\", \"reps\", or \"sets\"",
         "B": "Split into log_cardio_workout (with duration_minutes or distance_miles parameters) and log_strength_workout (with reps and sets parameters)",
@@ -835,7 +835,7 @@
       "id": 59,
       "sectionId": 3,
       "title": "Scheduling Agent: Slot No Longer Available",
-      "text": "get_available_slots then book_appointment. Another user books in between. How to redesign?",
+      "text": "Your scheduling agent uses `get_available_slots` followed by `book_appointment`. Another user books the selected slot in between the two calls. How should you redesign the workflow?",
       "options": {
         "A": "Modify book_appointment to return failure information including currently available alternative slots",
         "B": "Combine both tools into a single find_and_book_appointment that atomically checks and books",
@@ -961,7 +961,7 @@
       "id": 68,
       "sectionId": 1,
       "title": "[Exam Guide] Subagent timeout error propagation",
-      "text": "A web search subagent times out. Which error propagation approach best enables intelligent coordinator recovery?",
+      "text": "In your multi-agent research system, a web search subagent times out during a coordinated query. Which error propagation approach best enables intelligent coordinator recovery?",
       "options": {
         "A": "Return structured error context including failure type, attempted query, partial results, and potential alternatives",
         "B": "Implement automatic retry with exponential backoff in the subagent, returning generic \"search unavailable\" after exhaustion",
@@ -1030,7 +1030,7 @@
     {
       "id": 73,
       "sectionId": 7,
-      "title": "[Real Exam] Code Review – Severity Consistency",
+      "title": "Code Review – Severity Consistency",
       "text": "Your automated code review system shows inconsistent severity ratings — similar issues like null pointer risks receive critical severity in some PRs but only medium in others. Developer trust is declining because teams cannot predict which findings require immediate attention. What is the most effective way to improve severity consistency?",
       "options": {
         "A": "Request that Claude include its reasoning for each severity assignment, then use that reasoning to manually calibrate ratings during review",
@@ -1044,7 +1044,7 @@
     {
       "id": 74,
       "sectionId": 7,
-      "title": "[Real Exam] Claude Code – Automated Pipeline",
+      "title": "Claude Code – Automated Pipeline",
       "text": "Your pipeline script runs `claude \"analyze this and report for security issues\"` but the job hangs indefinitely. Claude Code is waiting for user input. What is the best approach to run Claude Code in an automated pipeline?",
       "options": {
         "A": "Redirect stdin from /dev/null",
@@ -1058,7 +1058,7 @@
     {
       "id": 75,
       "sectionId": 7,
-      "title": "[Real Exam] Code Review – False Positive Rate",
+      "title": "Code Review – False Positive Rate",
       "text": "Analysis shows Security & correctness findings have 4% FP rate, style & naming have 45% FP rate, and documentation findings have 48% FP rate. Developers have started dismissing findings without review. What approach best restores developer trust while improving the system?",
       "options": {
         "A": "Keep all categories enabled while adding few-shot examples to improve each category accuracy over the coming weeks",
@@ -1072,7 +1072,7 @@
     {
       "id": 76,
       "sectionId": 2,
-      "title": "[Real Exam] Batch API – Document Routing",
+      "title": "Batch API – Document Routing",
       "text": "Your extraction system processes standard monthly reports (archived after processing) and urgent exception reports (need trigger actions within 1 hour). Both use the same JSON schema. You want to minimize API costs while meeting latency requirements. How should you architect the processing pipeline?",
       "options": {
         "A": "Submit all documents to the real-time Messages API to ensure consistent processing latency across document types",
@@ -1086,7 +1086,7 @@
     {
       "id": 77,
       "sectionId": 2,
-      "title": "[Real Exam] Structured Output – JSON Reliability",
+      "title": "Structured Output – JSON Reliability",
       "text": "Your extraction pipeline occasionally receives responses that do not parse as valid JSON, causing downstream processing failures. What is the most reliable approach to ensure Claude returns valid, schema-compliant structured data?",
       "options": {
         "A": "Add explicit formatting instructions to the prompt with JSON examples, emphasizing that Claude must return only valid JSON with no surrounding text",
@@ -1100,7 +1100,7 @@
     {
       "id": 78,
       "sectionId": 2,
-      "title": "[Real Exam] Human Review – Semantic Errors",
+      "title": "Human Review – Semantic Errors",
       "text": "After deployment, 12% of extractions contain semantic errors that pass JSON schema validation (e.g., a duration like \"30 minutes\" stored in a numeric field expecting seconds). Human reviewers can only check 20% of extractions. Which approach most effectively allocates reviewer attention?",
       "options": {
         "A": "Prioritize review of all extractions where required fields are empty or explicitly marked as not found",
@@ -1114,7 +1114,7 @@
     {
       "id": 79,
       "sectionId": 2,
-      "title": "[Real Exam] Tool Use – Forcing Specific Tools",
+      "title": "Tool Use – Forcing Specific Tools",
       "text": "Your pipeline uses `extract_metadata` with a JSON schema. You also defined `citation_formatter` and `reference_list` tools. Claude sometimes calls `citation_formatter` first, which fails because structured metadata extraction must happen first. What is the most effective way to ensure `extract_metadata` is called first?",
       "options": {
         "A": "Set `tool_choice` to \"any\" so Claude must use a tool, combined with system prompt instructions prioritizing `extract_metadata`",
@@ -1128,7 +1128,7 @@
     {
       "id": 80,
       "sectionId": 2,
-      "title": "[Real Exam] Semantic Validation – Retry Logic",
+      "title": "Semantic Validation – Retry Logic",
       "text": "Your invoice extraction uses tool use with strict JSON schemas. JSON syntax errors never occur, but 12% of extractions fail semantic validation (line items do not sum to total, vendor IDs wrong format). These currently route to manual review. What is the most effective approach to reduce manual review while maintaining accuracy?",
       "options": {
         "A": "Implement post-processing logic that automatically corrects common errors, such as recalculating total from line items when sums do not match",
@@ -1142,7 +1142,7 @@
     {
       "id": 81,
       "sectionId": 2,
-      "title": "[Real Exam] Retry Logic – When It Fails",
+      "title": "Retry Logic – When It Fails",
       "text": "Your extraction system implements automatic retries when validation fails. Each retry appends the specific validation error to the prompt and resolves most failures within 2-3 attempts. For which failure pattern would additional retries be LEAST effective?",
       "options": {
         "A": "The model extracts citation counts as locale-formatted strings (\"1,234\") when the schema requires integers",
@@ -1156,7 +1156,7 @@
     {
       "id": 82,
       "sectionId": 2,
-      "title": "[Real Exam] Conflicting Data Sources",
+      "title": "Conflicting Data Sources",
       "text": "Specifications sometimes appear inconsistently within source documents. A summary section might state \"Battery: 4000mAh\" while the detailed specs table shows \"Battery: 4200mAh.\" Your schema uses a single `battery_capacity_mah` field. The detailed specs table is more accurate 90% of the time. What is the most effective approach?",
       "options": {
         "A": "Implement schema validation that rejects results containing conflicting values, requiring manual review for affected documents",
@@ -1170,7 +1170,7 @@
     {
       "id": 83,
       "sectionId": 2,
-      "title": "[Real Exam] Context Window – Tool Definition Tokens",
+      "title": "Context Window – Tool Definition Tokens",
       "text": "Your extraction system uses tool use with a JSON schema containing 12 fields totaling approximately 2,100 tokens. For documents under 150K tokens, accuracy is 98%. For documents between 135–190K tokens, accuracy drops to 71%, with information from the first half rarely extracted accurately. What is the most likely cause?",
       "options": {
         "A": "Very long documents exceed the model effective attention span regardless of context limits",
@@ -1184,7 +1184,7 @@
     {
       "id": 84,
       "sectionId": 2,
-      "title": "[Real Exam] Long Document Strategy",
+      "title": "Long Document Strategy",
       "text": "Evaluation shows 94% extraction accuracy on short meeting transcripts (<30 minutes) but only 64% on longer transcripts (>60 minutes) where key decisions are scattered throughout. Both lengths fit within the model context window. What pattern most effectively improves accuracy on longer documents?",
       "options": {
         "A": "Add few-shot examples demonstrating correct extraction from lengthy meetings with scattered information",
@@ -1198,7 +1198,7 @@
     {
       "id": 85,
       "sectionId": 2,
-      "title": "[Real Exam] Output Normalization",
+      "title": "Output Normalization",
       "text": "Your extraction pipeline processes restaurant menus and must output structured JSON with fields for item names, descriptions, prices, and dietary info. Source menus are inconsistent: prices appear as \"$12\" vs \"12.00\", dietary info as icons vs text. What is the most reliable approach for consistent output?",
       "options": {
         "A": "Use separate extraction calls for each field to ensure consistent handling of each type",
@@ -1212,7 +1212,7 @@
     {
       "id": 86,
       "sectionId": 2,
-      "title": "[Real Exam] Few-Shot Examples – Nuanced Behavior",
+      "title": "Few-Shot Examples – Nuanced Behavior",
       "text": "Your schema includes a `skills: string[]` field. Production monitoring reveals: (1) compound phrases like \"Python and SQL\" are occasionally split, (2) implied but unstated skills occasionally appear, (3) similar documents produce wildly different array lengths (2–16 entries). Your prompt currently says \"list all skills mentioned.\" What is the most effective improvement?",
       "options": {
         "A": "Add post-extraction normalization that maps skills to a canonical taxonomy and deduplicates similar entries",
@@ -1226,7 +1226,7 @@
     {
       "id": 87,
       "sectionId": 2,
-      "title": "[Real Exam] Batch Processing Strategy",
+      "title": "Batch Processing Strategy",
       "text": "Your team is extracting structured data from 50,000 legacy legal contracts under a two-week deadline. Initial testing with 500 sample documents achieves 82% success on the first attempt. Which batch processing strategy is most cost-efficient while still meeting the deadline?",
       "options": {
         "A": "Use the real-time API for all 50,000 documents since the batch API 24-hour processing window creates unacceptable deadline risk",
@@ -1240,7 +1240,7 @@
     {
       "id": 88,
       "sectionId": 7,
-      "title": "[Real Exam] Multi-Domain Prompts",
+      "title": "Multi-Domain Prompts",
       "text": "Your automated reviewer uses a single prompt covering security issues, API design, and business logic correctness. Business logic edge cases achieve only 34% recall. When you add few-shot examples for business logic, recall improves to 47% but API design recall drops. How do you address this trade-off?",
       "options": {
         "A": "Split the review into separate focused prompts — one for security and API design, another for business logic — each with dedicated examples",
@@ -1254,7 +1254,7 @@
     {
       "id": 89,
       "sectionId": 7,
-      "title": "[Real Exam] Branch-Level Coverage",
+      "title": "Branch-Level Coverage",
       "text": "Your code review prompts include both implementation changes and the corresponding test file. The LLM correctly flags functions with no tests but fails to identify when conditional branches or error handling paths within tested functions lack coverage. What is the most effective way to improve detection without overcomplicating the pipeline?",
       "options": {
         "A": "Add explicit instructions directing the model to enumerate each conditional branch and exception path, then verify each has a corresponding test case",
@@ -1268,7 +1268,7 @@
     {
       "id": 90,
       "sectionId": 7,
-      "title": "[Real Exam] Cross-File Bug Detection",
+      "title": "Cross-File Bug Detection",
       "text": "Your pipeline reviews every PR using a single API call with a static prompt containing the diff and full text of each changed file. Reviews consistently miss bugs involving cross-file interactions. Cross-file bugs account for 35% of production incidents. What is the most cost-effective change?",
       "options": {
         "A": "Redesign the review as a turn-limited agentic task where the model can read files and search the codebase via tools",
@@ -1282,7 +1282,7 @@
     {
       "id": 91,
       "sectionId": 10,
-      "title": "[Real Exam] CLAUDE.md – Suppressing False Positives",
+      "title": "CLAUDE.md – Suppressing False Positives",
       "text": "The automated review consistently flags patterns your team uses intentionally: force-unwrapping optionals in test files, using large coordinate structs, importing internally-maintained deprecated modules. Developers are dismissing roughly 30% of all findings. What prevents the model from generating these findings by supplying project conventions as persistent context?",
       "options": {
         "A": "Build post-processing keyword filters that suppress findings containing terms like \"force unwrap\" or \"deprecated import\"",
@@ -1296,7 +1296,7 @@
     {
       "id": 92,
       "sectionId": 7,
-      "title": "[Real Exam] Claude Code – Resource Caps",
+      "title": "Claude Code – Resource Caps",
       "text": "During testing, reviews on large PRs (50+ changed files) sometimes take over 30 minutes and cost $12 per run. Your team needs each invocation to abort once it reaches a fixed iteration count AND a hard dollar amount — enforced by Claude Code itself, not the surrounding job runner. Which configuration change directly enforces both caps?",
       "options": {
         "A": "Add `--max-turns 10 --max-budget-usd 2.00` to the `claude` invocation",
@@ -1310,7 +1310,7 @@
     {
       "id": 93,
       "sectionId": 7,
-      "title": "[Real Exam] Output Token Limit",
+      "title": "Output Token Limit",
       "text": "Your automated review uses tool_use with a `report_findings` tool returning a JSON array. On a large PR touching 30+ files, the response hits the `max_tokens` limit and is truncated mid-JSON, causing the downstream parser to crash. What is the most effective way to handle this?",
       "options": {
         "A": "Switch from tool_use to prompting Claude to return findings as a markdown list, reporting only critical and high severity findings",
@@ -1324,7 +1324,7 @@
     {
       "id": 94,
       "sectionId": 7,
-      "title": "[Real Exam] Batch API Feasibility",
+      "title": "Batch API Feasibility",
       "text": "Your CI pipeline performs security-focused code reviews on approximately 50 PRs daily, currently costing $150/day. You are evaluating the Message Batches API for its 50% cost reduction. What factor most determines whether batch processing is actionable for this use case?",
       "options": {
         "A": "Whether review feedback arriving up to 24 hours after PR creation remains actionable for your workflow",
@@ -1338,7 +1338,7 @@
     {
       "id": 95,
       "sectionId": 7,
-      "title": "[Real Exam] Claude Code – Startup Time",
+      "title": "Claude Code – Startup Time",
       "text": "Your automated review CI jobs take 18 seconds to initialize before Claude begins analyzing code. Profiling reveals the delay comes from auto-discovery of CLAUDE.md files throughout your monorepo. You need to cut startup time while ensuring reviews still enforce team coding standards in your top-level CLAUDE.md. What is the most effective approach?",
       "options": {
         "A": "Run with `--bare` mode and pass `--append-system-prompt-file /CLAUDE.md` to explicitly load your project standards while skipping all auto-discovery",
@@ -1352,7 +1352,7 @@
     {
       "id": 96,
       "sectionId": 7,
-      "title": "[Real Exam] Precision vs Recall",
+      "title": "Precision vs Recall",
       "text": "After deploying automated code review, you notice high precision but low recall — real bugs are slipping through. The prompt instructs Claude to \"only report high-confidence issues\" and \"err on the side of not commenting.\" What is the most effective way to substantially improve bug detection while keeping false positives manageable?",
       "options": {
         "A": "Remove the conservative filtering instructions and prompt Claude to report all potential issues, then apply a programmatic filter to remove false positives",
@@ -1366,7 +1366,7 @@
     {
       "id": 97,
       "sectionId": 7,
-      "title": "[Real Exam] Self-Review Bias",
+      "title": "Self-Review Bias",
       "text": "A developer uses Claude Code to refactor a function during their development session. Before committing, they ask the same Claude session to review the code. A separate automated CI review catches several bugs that the same-session review missed. What best explains this discrepancy?",
       "options": {
         "A": "The CI environment has access to the full codebase context while the local session only has the current file",
@@ -1380,7 +1380,7 @@
     {
       "id": 98,
       "sectionId": 2,
-      "title": "[Real Exam] Batch API – Cost Reduction",
+      "title": "Batch API – Cost Reduction",
       "text": "Your pipeline includes a release notes generation step that classifies and summarizes approximately 200 commits at the end of each weekly release cycle. Each commit requires a separate API call using a Sonnet-tier model. Results are not needed until the following morning (8+ hours acceptable wait). You want to reduce per-token API cost while keeping the same model and prompts. Which approach best reduces cost?",
       "options": {
         "A": "Issue the 200 Messages API requests in parallel using concurrent connections, since concurrency lowers the per-token price",
@@ -1394,7 +1394,7 @@
     {
       "id": 99,
       "sectionId": 7,
-      "title": "[Real Exam] Prompt Filtering – Finding Suppression",
+      "title": "Prompt Filtering – Finding Suppression",
       "text": "Your automated code review is missing genuine bugs. Investigation reveals your review prompt includes: \"Only flag critical issues that would cause immediate production failures. Ignore minor concerns and anything you are uncertain about.\" Which prompt change best resolves missed bugs without breaking structured, tagged output for downstream filtering?",
       "options": {
         "A": "Enable extended thinking and instruct the model to reason step-by-step about each code change before producing its review",
@@ -1408,7 +1408,7 @@
     {
       "id": 100,
       "sectionId": 7,
-      "title": "[Real Exam] Claude Code – Cross-File Tool Access",
+      "title": "Claude Code – Cross-File Tool Access",
       "text": "Your pipeline runs: `claude -p --dangerously-skip-permissions --system-prompt \"$PROMPT\" < diff.txt`. Reviews complete but Claude only comments on the piped diff — it never reads surrounding files. Which change will cause Claude to read related files?",
       "options": {
         "A": "Stop piping the diff via stdin and instead embed the diff contents inside the prompt string",
@@ -1422,7 +1422,7 @@
     {
       "id": 101,
       "sectionId": 7,
-      "title": "[Real Exam] Feedback Loop – Dismissed Findings",
+      "title": "Feedback Loop – Dismissed Findings",
       "text": "You built an LLM-powered code review tool that outputs structured findings with `category` and `description`. Developers can click dismiss on findings they consider unhelpful — currently 30% are dismissed. What change to your output structure would best help you understand what your system is getting wrong?",
       "options": {
         "A": "Add a `detected_pattern` field recording the code construct (e.g., \"single-letter loop variable\") that triggered each finding",
@@ -1436,7 +1436,7 @@
     {
       "id": 102,
       "sectionId": 7,
-      "title": "[Real Exam] Context-Specific False Positives",
+      "title": "Context-Specific False Positives",
       "text": "After deploying automated code review, approximately 35% of flagged findings are false positives: team conventions flagged as issues, security warnings for patterns safe in your deployment context, and performance suggestions that hurt your specific use case. Which approach best enables the model to generalise to novel code patterns it has not seen before?",
       "options": {
         "A": "Implement post-processing that uses keyword matching to filter out findings containing terms like \"conventions\" or \"context-dependent\"",
@@ -1450,7 +1450,7 @@
     {
       "id": 103,
       "sectionId": 3,
-      "title": "[Real Exam] Agentic Loop – Stop Reason",
+      "title": "Agentic Loop – Stop Reason",
       "text": "A customer contacts the agent about a warranty claim on a power drill. Resolving this requires multiple sequential tool calls: `get_customer`, `get_product`, and then either `process_refund` or `unable_to_honor`. What is the primary mechanism your application uses to determine whether to continue the loop or stop?",
       "options": {
         "A": "You check the `stop_reason` field in each API response — the loop continues while it equals \"tool_use\" and stops when it changes to \"end_turn\" or another terminal value",
@@ -1464,7 +1464,7 @@
     {
       "id": 104,
       "sectionId": 3,
-      "title": "[Real Exam] Compliance – Hard Enforcement",
+      "title": "Compliance – Hard Enforcement",
       "text": "Compliance requires that refunds exceeding $500 must automatically escalate to a human agent — this rule cannot be left to model discretion. However, logs show the agent occasionally processes high-value refunds directly (5% failure rate). How should you achieve guaranteed human escalation?",
       "options": {
         "A": "Implement a hook to intercept tool calls: when the refund amount exceeds $500, block it and initiate human escalation programmatically",
@@ -1478,7 +1478,7 @@
     {
       "id": 105,
       "sectionId": 6,
-      "title": "[Real Exam] Structured Error Metadata",
+      "title": "Structured Error Metadata",
       "text": "Production logs reveal inconsistent error handling: when `lookup_order` fails, the agent sometimes retries (wrong for permanent errors), sometimes asks users for clarification (wrong for transient errors). Current error response: `{\"isError\": true, \"content\": [{\"text\": \"Transaction Failed\"}]}`. What change most improves error handling?",
       "options": {
         "A": "Enhance error responses with structured metadata: include `errorCategory` field (transient/validation/permission) so the agent knows how to respond",
@@ -1492,7 +1492,7 @@
     {
       "id": 106,
       "sectionId": 3,
-      "title": "[Real Exam] Escalation – Explicit Customer Request",
+      "title": "Escalation – Explicit Customer Request",
       "text": "A customer sends: \"This is frustrating. I have explained my issue twice and nothing is being resolved. I want to talk to a real person NOW.\" The agent has all customer account information and conversation history. The agent cannot resolve the specific issue anyway. What should the agent do?",
       "options": {
         "A": "Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating",
@@ -1506,7 +1506,7 @@
     {
       "id": 107,
       "sectionId": 6,
-      "title": "[Real Exam] Actionable Error Messages",
+      "title": "Actionable Error Messages",
       "text": "Your agent uses `lookup_order` which catches all exceptions and returns a tool_result with `is_error: true` and message \"That operation failed.\" The agent retries identically or escalates immediately. Which change gives Claude the information it needs to select the correct recovery action?",
       "options": {
         "A": "Return error-type-specific messages with `is_error: true`, e.g., \"Order not found (id: {id}): verify the order ID\" and \"Connection timeout: try lookup_order again, or use lookup_order_archive\"",
@@ -1520,7 +1520,7 @@
     {
       "id": 108,
       "sectionId": 6,
-      "title": "[Real Exam] MCP Tool Error Handling",
+      "title": "MCP Tool Error Handling",
       "text": "When implementing your `lookup_order` MCP tool, the backend sometimes returns errors (e.g., \"Order not found\" or temporary database failures). What is the correct way to handle these errors back to the agent?",
       "options": {
         "A": "Log the error server-side and return an empty result to avoid confusing the model",
@@ -1534,7 +1534,7 @@
     {
       "id": 109,
       "sectionId": 3,
-      "title": "[Real Exam] Context Management – Verbose Tool Output",
+      "title": "Context Management – Verbose Tool Output",
       "text": "Your agent has called `lookup_order` multiple times while investigating a customer return requests. Each response includes 40+ fields, making tool outputs represent the majority of the conversation context. The customer mentions two more orders they want to discuss. What is the most efficient way to avoid consuming additional context for future lookups?",
       "options": {
         "A": "Move all tool responses to a vector database with semantic indexing, retrieving relevant portions as the conversation continues",
@@ -1548,7 +1548,7 @@
     {
       "id": 110,
       "sectionId": 3,
-      "title": "[Real Exam] Mid-Process Tool Failure",
+      "title": "Mid-Process Tool Failure",
       "text": "During a billing dispute resolution, your agent successfully retrieves customer info via `get_customer` and order details via `lookup_order`, but when attempting `process_refund`, it returns a timeout error. The agent has enough information to explain the charges and verify refund eligibility but cannot actually process the refund. What response best balances first-contact resolution with appropriate error handling?",
       "options": {
         "A": "Explain the billing, confirm refund eligibility, acknowledge the system issue preventing immediate processing, and offer escalation or a callback",
@@ -1562,7 +1562,7 @@
     {
       "id": 111,
       "sectionId": 3,
-      "title": "[Real Exam] Escalation Triggers",
+      "title": "Escalation Triggers",
       "text": "You are implementing escalation logic for when the agent should call `escalate_to_human`. Which approach most reliably identifies cases that genuinely require human intervention?",
       "options": {
         "A": "Instruct the agent to escalate when: the customer requests a human, the issue requires policy exceptions, or the agent cannot make progress toward resolution",
@@ -1576,7 +1576,7 @@
     {
       "id": 112,
       "sectionId": 3,
-      "title": "[Real Exam] Returning Customer – Stale Data",
+      "title": "Returning Customer – Stale Data",
       "text": "A customer returns 4 hours after their initial session about the same billing dispute. The previous 32-turn session contains tool results from 4 hours ago. When resuming, the agent references OLD data even after fresh tool calls return different results. What approach most reliably handles returning customers?",
       "options": {
         "A": "Resume with full history and add a system prompt instruction telling the agent to always prefer the most recent tool results",
@@ -1590,7 +1590,7 @@
     {
       "id": 113,
       "sectionId": 3,
-      "title": "[Real Exam] Mid-Process Escalation",
+      "title": "Mid-Process Escalation",
       "text": "Your agent is handling a billing dispute. After calling `get_customer` and `lookup_order`, it identifies the dispute involves a promotional pricing error requiring manager approval — beyond the agent authorization level. How should the workflow handle this mid-process escalation?",
       "options": {
         "A": "Compile a structured handoff (customer details + order info + identified issue) then call `escalate_to_human` with a reference ID",
@@ -1604,7 +1604,7 @@
     {
       "id": 114,
       "sectionId": 3,
-      "title": "[Real Exam] Multi-Turn Memory",
+      "title": "Multi-Turn Memory",
       "text": "The agent verifies customer identity through a multi-step process before resetting passwords. During testing, after the customer answers security questions, the agent asks them to provide their name again, as if the earlier exchange never happened. What is the most likely cause?",
       "options": {
         "A": "The conversation history is not being passed in subsequent API requests",
@@ -1618,7 +1618,7 @@
     {
       "id": 115,
       "sectionId": 3,
-      "title": "[Real Exam] Escalation Content – What to Pass",
+      "title": "Escalation Content – What to Pass",
       "text": "After investigating a billing dispute over 25+ turns, you identified that duplicate charges occurred due to a payment gateway timeout. The refund exceeds your $500 authorization limit. You must call `escalate_to_human`. The human agent will not have access to your conversation history. What content should you pass?",
       "options": {
         "A": "The complete conversation transcript with all tool results",
@@ -1632,7 +1632,7 @@
     {
       "id": 116,
       "sectionId": 3,
-      "title": "[Real Exam] Agentic Decision Making",
+      "title": "Agentic Decision Making",
       "text": "When the agent calls `lookup_order` and receives order details showing the item was purchased 45 days ago, how does the agentic loop determine whether to call `escalate_to_human` next?",
       "options": {
         "A": "The agent executes the remaining steps in a tool sequence planned at the start of the request",
@@ -1646,7 +1646,7 @@
     {
       "id": 117,
       "sectionId": 3,
-      "title": "[Real Exam] Guaranteeing Outcomes",
+      "title": "Guaranteeing Outcomes",
       "text": "Production logs show that when the agent handles complex billing disputes requiring 6+ tool calls, it sometimes exhausts its `max_turns` limit without resolving or escalating. The goal is to guarantee every interaction ends with either `process_refund` OR `escalate_to_human`. Which approach achieves this guarantee?",
       "options": {
         "A": "Split the workflow into two sequential agent invocations with separate turn budgets",
@@ -1660,7 +1660,7 @@
     {
       "id": 118,
       "sectionId": 10,
-      "title": "[Real Exam] CLAUDE.md Debugging",
+      "title": "CLAUDE.md Debugging",
       "text": "You documented API error handling conventions in a CLAUDE.md file at your project root. Claude Code sometimes follows these conventions and sometimes uses generic try/catch blocks. The inconsistency appears across different teams. What is the most efficient first diagnostic step?",
       "options": {
         "A": "Run `/memory` to check which memory files are loaded and verify your CLAUDE.md is included",
@@ -1674,7 +1674,7 @@
     {
       "id": 119,
       "sectionId": 10,
-      "title": "[Real Exam] Plan Mode vs Direct Execution",
+      "title": "Plan Mode vs Direct Execution",
       "text": "A critical bug is affecting production users. Error logs show exceptions in the OrderProcessing module with a clear stack trace pointing to a specific function. No human has worked on this codebase before. What is the most effective approach?",
       "options": {
         "A": "Use direct execution to examine the stack trace, read the relevant code, and implement a fix once you identify the root cause",
@@ -1688,7 +1688,7 @@
     {
       "id": 120,
       "sectionId": 10,
-      "title": "[Real Exam] MCP Server Scopes",
+      "title": "MCP Server Scopes",
       "text": "Your team is configuring MCP servers in Claude Code. You want to add a shared venue lookup server that all team members should have access to, and a personal music playlist server that only you are testing. Which configuration approach correctly applies MCP server scopes?",
       "options": {
         "A": "Add both servers to your local `~/.claude.json`",
@@ -1702,7 +1702,7 @@
     {
       "id": 121,
       "sectionId": 10,
-      "title": "[Real Exam] PostToolUse Hook – Formatting",
+      "title": "PostToolUse Hook – Formatting",
       "text": "Your team CLAUDE.md includes: \"Use 4-space indentation and always run Prettier formatting.\" Code reviews reveal roughly 15% of Claude-generated code violates this. Adding emphatic instructions reduces violations to 15% but does not eliminate them. What is the most effective way to ensure all generated code is consistently formatted?",
       "options": {
         "A": "Split the formatting rules into path-scoped `.claude/rules/` files that load when Claude works on matching file types",
@@ -1716,7 +1716,7 @@
     {
       "id": 122,
       "sectionId": 6,
-      "title": "[Real Exam] MCP Prompts – Slash Commands",
+      "title": "MCP Prompts – Slash Commands",
       "text": "Your team has connected a custom MCP server that provides DevOps workflow templates. The server exposes several MCP prompts along with tools. How do these MCP prompts become accessible within Claude Code?",
       "options": {
         "A": "They are added to Claude Code tool registry alongside the server tools, invoked automatically by the model when relevant",
@@ -1730,7 +1730,7 @@
     {
       "id": 123,
       "sectionId": 10,
-      "title": "[Real Exam] Skills – Version Controlled",
+      "title": "Skills – Version Controlled",
       "text": "Your team frequently migrates React components to Vue. You want to register this as `/migrate-component`, and the workflow should stay in sync as the team iterates on it. Where should you place the skill file?",
       "options": {
         "A": "In the project `.claude/settings.json` using a `skillOverrides` entry on each developer machine",
@@ -1744,7 +1744,7 @@
     {
       "id": 124,
       "sectionId": 10,
-      "title": "[Real Exam] Bug Fixing – Test Cases",
+      "title": "Bug Fixing – Test Cases",
       "text": "You asked Claude to write a data migration script, but the initial output does not correctly handle records with null values in required fields. What is the most efficient path to a working solution?",
       "options": {
         "A": "Add \"think harder about edge cases\" to your prompt and request a complete rewrite of the migration logic",
@@ -1758,7 +1758,7 @@
     {
       "id": 125,
       "sectionId": 10,
-      "title": "[Real Exam] Configuration Mechanism Mapping",
+      "title": "Configuration Mechanism Mapping",
       "text": "Your team has three requirements: (1) Claude must NEVER modify files in `db/migrations/`, (2) Claude should prefer custom logging over `console.log`, (3) All TypeScript files must be auto-formatted with Prettier after every edit. All three are in CLAUDE.md. Claude sometimes violates requirement 1. How should you restructure these requirements?",
       "options": {
         "A": "Add `Edit(/db/migrations/**)` to `permissions.deny` in project settings, keep logging preference in CLAUDE.md, add a PostToolUse hook for Prettier on TypeScript files",
@@ -1772,7 +1772,7 @@
     {
       "id": 126,
       "sectionId": 10,
-      "title": "[Real Exam] Monorepo – @imports",
+      "title": "Monorepo – @imports",
       "text": "Your monorepo contains shared coding standards: `security-rules.md`, `api-design.md`, and a third. Your 15 packages each have different needs. Currently, package CLAUDE.md files duplicate all three standards, applying irrelevant guidance to each package. What is the most effective approach?",
       "options": {
         "A": "Put all standards in the root CLAUDE.md with override instructions like \"ignore security-rules.md when package does not handle user data\"",
@@ -1786,7 +1786,7 @@
     {
       "id": 127,
       "sectionId": 10,
-      "title": "[Real Exam] When to Use Plan Mode",
+      "title": "When to Use Plan Mode",
       "text": "You are implementing a caching layer for API responses to speed up the `/products` endpoint. You have a rough idea — Redis with a 5-minute TTL — but you are not sure what other considerations a robust implementation requires. What is the most effective way to start your iterative workflow?",
       "options": {
         "A": "Start with a minimal request: \"Add Redis caching to /products with 5-minute TTL.\" Add features and fix issues through follow-up prompts",
@@ -1800,7 +1800,7 @@
     {
       "id": 128,
       "sectionId": 10,
-      "title": "[Real Exam] Plan Mode vs Direct – Simple Change",
+      "title": "Plan Mode vs Direct – Simple Change",
       "text": "You need to add a date validation check ensuring event dates are in the future. This requires adding a conditional statement to one existing function in the reservation flow. What is the most efficient approach?",
       "options": {
         "A": "Use direct execution to make the change",
@@ -1814,7 +1814,7 @@
     {
       "id": 129,
       "sectionId": 10,
-      "title": "[Real Exam] TDD for Iterative Refinement",
+      "title": "TDD for Iterative Refinement",
       "text": "You are implementing a complex graph traversal algorithm with specific performance requirements and edge cases. You want to most effectively enable progressive improvement across multiple sessions with Claude. What approach will most effectively enable this?",
       "options": {
         "A": "Have Claude extensively research the algorithm and create a detailed implementation plan using extended thinking, then implement",
@@ -1828,7 +1828,7 @@
     {
       "id": 130,
       "sectionId": 10,
-      "title": "[Real Exam] Interdependent Bug Fixes",
+      "title": "Interdependent Bug Fixes",
       "text": "You asked Claude Code to build a PDF report generation feature. The initial output has three formatting issues: table columns too narrow, dates without proper formatting, and incorrect page break handling. These issues interact — changing column widths affects how dates display and content height affects page breaks. What is the most effective approach?",
       "options": {
         "A": "Provide all three issues in a single detailed message with exact specifications for each, allowing Claude to address them together",
@@ -1842,7 +1842,7 @@
     {
       "id": 131,
       "sectionId": 10,
-      "title": "[Real Exam] Architectural Decisions",
+      "title": "Architectural Decisions",
       "text": "You are tasked with adding real-time updates to the application. This could be implemented using WebSockets, Server-Sent Events, or polling, each with different infrastructure requirements. What is the most effective way to begin this task?",
       "options": {
         "A": "Use direct execution to implement polling first, then evaluate whether to upgrade to WebSockets later",
@@ -1856,7 +1856,7 @@
     {
       "id": 132,
       "sectionId": 10,
-      "title": "[Real Exam] Slash Commands – Team Workflow",
+      "title": "Slash Commands – Team Workflow",
       "text": "Your team wants Claude to follow a detailed code review checklist (8 items) when reviewing pull requests — invoked when starting reviews. Claude is also used extensively for writing features, debugging, and generating documentation. Currently, developers manually paste the checklist at the start of each review session. Which approach best addresses this workflow need?",
       "options": {
         "A": "Create a `/review` slash command containing the checklist, invoked when starting reviews",

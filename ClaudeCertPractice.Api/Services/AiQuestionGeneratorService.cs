@@ -114,7 +114,8 @@ public class AiQuestionGeneratorService
             - Test concepts from the learning material (not trivia about the page itself)
             - Are scenario-based like a professional certification exam
             - Have exactly 4 options labeled A, B, C, D with one correct answer
-            - Include a short title, clear question text, and explanation starting with "Why X:" for the correct letter
+            - Include a short title and a full scenario-based question stem (2-4 sentences setting up the situation before asking the question; do not abbreviate)
+            - Include an explanation starting with "Why X:" for the correct letter
             - Do not repeat topics from these already-generated titles: [{{avoid}}]
             {{batchNote}}
 

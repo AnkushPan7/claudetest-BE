@@ -168,7 +168,13 @@ public static class QuizEndpoints
         var isCorrect = selected == q.CorrectAnswer.ToUpperInvariant();
         session.Answers[index] = (selected, isCorrect);
 
-        return Results.Ok(new AnswerSubmitDto(index, session.Questions.Count, selected));
+        return Results.Ok(new AnswerSubmitDto(
+            index,
+            session.Questions.Count,
+            selected,
+            q.CorrectAnswer.ToUpperInvariant(),
+            isCorrect,
+            q.Explanation));
     }
 
     private static IResult GetReview(
