@@ -136,6 +136,55 @@ public class UserService
         }
     }
 
+    public async Task<AdminOverviewDto> GetAllUsersOverviewAsync(CancellationToken ct = default)
+    {
+        await _lock.WaitAsync(ct);
+        try
+        {
+            var store = await LoadStoreAsync(ct);
+            var users = store.Users.Values
+                .Select(BuildAdminOverview)
+                .OrderBy(u => u.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            return new AdminOverviewDto(users.Count, users);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    private static AdminUserOverview BuildAdminOverview(StoredUser user)
+    {
+        var results = user.Results
+            .OrderByDescending(r => r.CompletedAt)
+            .ToList();
+
+        var scores = results
+            .Select(GetResultScore)
+            .Where(s => s.HasValue)
+            .Select(s => s!.Value)
+            .ToList();
+
+        return new AdminUserOverview(
+            user.Email,
+            user.Name,
+            user.CreatedAt,
+            results.Count,
+            scores.Count > 0 ? scores[0] : null,
+            scores.Count > 0 ? scores.Max() : null,
+            scores.Count > 0 ? (int)Math.Round(scores.Average()) : null,
+            results.Count > 0 ? results[0].CompletedAt : null);
+    }
+
+    private static int? GetResultScore(StoredResult result)
+    {
+        if (result.ScaledScore.HasValue) return result.ScaledScore.Value;
+        if (result.PercentCorrect > 0) return (int)Math.Round(result.PercentCorrect * 10);
+        return null;
+    }
+
     public async Task<ResultDetailDto?> GetResultDetailAsync(
         string email,
         string resultId,

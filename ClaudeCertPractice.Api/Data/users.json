@@ -2,7 +2,7 @@
   "Users": {
     "ankush.panchal@appunik.com": {
       "Email": "ankush.panchal@appunik.com",
-      "Name": "ankush",
+      "Name": "Ankush Panchal",
       "CreatedAt": "2026-07-03T12:46:29.8114859Z",
       "Results": [
         {
@@ -145,6 +145,12 @@
           ]
         }
       ]
+    },
+    "admin@appunik.com": {
+      "Email": "admin@appunik.com",
+      "Name": "appunik",
+      "CreatedAt": "2026-07-03T13:12:44.6640986Z",
+      "Results": []
     }
   }
 }
