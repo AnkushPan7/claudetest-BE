@@ -18,8 +18,6 @@ builder.Configuration.AddJsonFile(
     reloadOnChange: true);
 
 builder.Services.Configure<QuizSettings>(builder.Configuration.GetSection(QuizSettings.SectionName));
-builder.Services.Configure<AdminSettings>(builder.Configuration.GetSection(AdminSettings.SectionName));
-builder.Services.AddSingleton<AdminService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -67,7 +65,6 @@ app.UseCors();
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 app.MapQuizEndpoints();
 app.MapUserEndpoints();
-app.MapAdminEndpoints();
 
 // Development: API + Swagger only. Run the React UI separately (npm run dev in frontend/).
 if (app.Environment.IsDevelopment())

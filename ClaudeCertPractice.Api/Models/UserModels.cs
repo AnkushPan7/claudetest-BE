@@ -33,21 +33,3 @@ public record ResultDetailDto(
 public record UserHistoryDto(
     UserDto User,
     IReadOnlyList<ResultHistoryEntry> Results);
-
-public record AdminLoginRequest(string Email, string Password);
-
-public record AdminLoginDto(string Email);
-
-public record AdminUserOverview(
-    string Email,
-    string Name,
-    DateTime CreatedAt,
-    int TotalExams,
-    int? LatestScore,
-    int? BestScore,
-    int? AvgScore,
-    DateTime? LastExamAt);
-
-public record AdminOverviewDto(
-    int TotalUsers,
-    IReadOnlyList<AdminUserOverview> Users);
