@@ -1,0 +1,150 @@
+{
+  "Users": {
+    "ankush.panchal@appunik.com": {
+      "Email": "ankush.panchal@appunik.com",
+      "Name": "ankush",
+      "CreatedAt": "2026-07-03T12:46:29.8114859Z",
+      "Results": [
+        {
+          "Id": "2bbe10cdb2234238a1da560951c448f1",
+          "SessionId": "28e01306da3944eeb782aa8a4e71055b",
+          "CompletedAt": "2026-07-03T12:46:48.5149735Z",
+          "Total": 6,
+          "Answered": 5,
+          "Correct": 2,
+          "PercentCorrect": 33.3,
+          "SourceMode": "Json",
+          "ScaledScore": 130,
+          "Questions": []
+        },
+        {
+          "Id": "4095538cf38342db9967735278eacebb",
+          "SessionId": "61e352310e7a4274bede56754d04f2bb",
+          "CompletedAt": "2026-07-03T12:52:08.5372354Z",
+          "Total": 7,
+          "Answered": 7,
+          "Correct": 2,
+          "PercentCorrect": 28.6,
+          "SourceMode": "Ai",
+          "ScaledScore": 130,
+          "Questions": []
+        },
+        {
+          "Id": "199e1b96381943b69e5941cabfe7ab16",
+          "SessionId": "96d60564be704c5e8910db16a36fc080",
+          "CompletedAt": "2026-07-03T13:00:11.2896851Z",
+          "Total": 6,
+          "Answered": 6,
+          "Correct": 1,
+          "PercentCorrect": 16.7,
+          "SourceMode": "Json",
+          "ScaledScore": 115,
+          "Questions": [
+            {
+              "Index": 0,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Escalation \u2013 Explicit Customer Request",
+              "Text": "A customer sends: \u0022This is frustrating. I have explained my issue twice and nothing is being resolved. I want to talk to a real person NOW.\u0022 The agent has all customer account information and conversation history. The agent cannot resolve the specific issue anyway. What should the agent do?",
+              "Options": {
+                "A": "Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating",
+                "B": "Immediately call \u0060escalate_to_human\u0060 with the conversation history",
+                "C": "First call \u0060get_customer\u0060 and \u0060lookup_order\u0060 to gather account context, then escalate to a human agent",
+                "D": "Briefly explain what the agent can help with and offer to resolve the issue quickly"
+              },
+              "SelectedAnswer": "D",
+              "CorrectAnswer": "B",
+              "IsCorrect": false,
+              "Explanation": "Customer explicitly demanded a human NOW, agent cannot resolve the issue, and agent already has all context. Escalate immediately with conversation history so the human agent has full context.",
+              "Answered": true
+            },
+            {
+              "Index": 1,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Mid-Process Escalation",
+              "Text": "Your agent is handling a billing dispute. After calling \u0060get_customer\u0060 and \u0060lookup_order\u0060, it identifies the dispute involves a promotional pricing error requiring manager approval \u2014 beyond the agent authorization level. How should the workflow handle this mid-process escalation?",
+              "Options": {
+                "A": "Compile a structured handoff (customer details \u002B order info \u002B identified issue) then call \u0060escalate_to_human\u0060 with a reference ID",
+                "B": "Persist the complete conversation and tool response history to a database, then call \u0060escalate_to_human\u0060",
+                "C": "Attempt \u0060process_refund\u0060 anyway, escalating only if the refund fails",
+                "D": "Call \u0060escalate_to_human\u0060 passing only the customer original message"
+              },
+              "SelectedAnswer": "C",
+              "CorrectAnswer": "A",
+              "IsCorrect": false,
+              "Explanation": "Preserve all gathered intelligence in a structured handoff. Human agent receives complete context: customer details, order info, root cause, and reference ID \u2014 no customer re-explanation needed.",
+              "Answered": true
+            },
+            {
+              "Index": 2,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Agentic Loop \u2013 Stop Reason",
+              "Text": "A customer contacts the agent about a warranty claim on a power drill. Resolving this requires multiple sequential tool calls: \u0060get_customer\u0060, \u0060get_product\u0060, and then either \u0060process_refund\u0060 or \u0060unable_to_honor\u0060. What is the primary mechanism your application uses to determine whether to continue the loop or stop?",
+              "Options": {
+                "A": "You check the \u0060stop_reason\u0060 field in each API response \u2014 the loop continues while it equals \u0022tool_use\u0022 and stops when it changes to \u0022end_turn\u0022 or another terminal value",
+                "B": "You manually set the \u0060tool_choice\u0060 parameter to \u0022none\u0022 after the final expected tool call to force Claude to stop requesting tools",
+                "C": "You track the number of tool calls made and exit the loop once a predefined maximum is reached",
+                "D": "You check whether Claude response contains a text content block \u2014 if text is present, the agent has produced its final answer"
+              },
+              "SelectedAnswer": "D",
+              "CorrectAnswer": "A",
+              "IsCorrect": false,
+              "Explanation": "stop_reason is the official API mechanism: stop_reason = \u0022tool_use\u0022 \u2192 execute tool and continue; stop_reason = \u0022end_turn\u0022 \u2192 stop loop and return final response.",
+              "Answered": true
+            },
+            {
+              "Index": 3,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Escalation Triggers",
+              "Text": "You are implementing escalation logic for when the agent should call \u0060escalate_to_human\u0060. Which approach most reliably identifies cases that genuinely require human intervention?",
+              "Options": {
+                "A": "Instruct the agent to escalate when: the customer requests a human, the issue requires policy exceptions, or the agent cannot make progress toward resolution",
+                "B": "Implement sentiment analysis that monitors for frustration indicators (negative language, exclamation marks) and triggers escalation when reaching a threshold",
+                "C": "Build a rules engine that maps specific issue types, customer segments, and product categories to escalation decisions",
+                "D": "Configure the agent to escalate after three consecutive tool calls that fail to resolve the customer issue"
+              },
+              "SelectedAnswer": "C",
+              "CorrectAnswer": "A",
+              "IsCorrect": false,
+              "Explanation": "Semantic escalation triggers describe actual situations where human intervention adds value: customer wants a human, policy exception needed, or no progress possible.",
+              "Answered": true
+            },
+            {
+              "Index": 4,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Context Management \u2013 Verbose Tool Output",
+              "Text": "Your agent has called \u0060lookup_order\u0060 multiple times while investigating a customer return requests. Each response includes 40\u002B fields, making tool outputs represent the majority of the conversation context. The customer mentions two more orders they want to discuss. What is the most efficient way to avoid consuming additional context for future lookups?",
+              "Options": {
+                "A": "Move all tool responses to a vector database with semantic indexing, retrieving relevant portions as the conversation continues",
+                "B": "Proceed with additional lookups without modifying the existing tool output content",
+                "C": "Have the model generate a natural language summary of each order key details to replace the existing tool output context",
+                "D": "Extract only return-relevant fields (items, purchase date, return window, return status) and replace the full tool output with just those fields"
+              },
+              "SelectedAnswer": "D",
+              "CorrectAnswer": "D",
+              "IsCorrect": true,
+              "Explanation": "For return requests, only 5-6 fields matter out of 40\u002B. Filter tool output to return-relevant fields at extraction time \u2014 context consumption drops dramatically per lookup.",
+              "Answered": true
+            },
+            {
+              "Index": 5,
+              "SectionName": "Agentic Architecture \u0026 Orchestration",
+              "Title": "Multi-Turn Memory",
+              "Text": "The agent verifies customer identity through a multi-step process before resetting passwords. During testing, after the customer answers security questions, the agent asks them to provide their name again, as if the earlier exchange never happened. What is the most likely cause?",
+              "Options": {
+                "A": "The conversation history is not being passed in subsequent API requests",
+                "B": "The prompt lacks instructions telling Claude to remember information across multiple exchanges",
+                "C": "The verification tool is clearing the agent internal state after each successful validation step",
+                "D": "Claude memory retention is limited to two conversation turns by default, requiring explicit configuration to extend"
+              },
+              "SelectedAnswer": "D",
+              "CorrectAnswer": "A",
+              "IsCorrect": false,
+              "Explanation": "Claude has zero persistent memory between API calls. If the application fails to include prior messages in the API request, Claude starts fresh every call \u2014 the most common multi-turn implementation bug.",
+              "Answered": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

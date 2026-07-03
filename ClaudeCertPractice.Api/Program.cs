@@ -26,6 +26,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ExamGuideService>();
 builder.Services.AddSingleton<QuestionBankService>();
 builder.Services.AddSingleton<QuizSessionService>();
+builder.Services.AddSingleton<UserService>();
 builder.Services.AddHttpClient<LearningContentService>();
 builder.Services.AddHttpClient<AiQuestionGeneratorService>();
 
@@ -63,6 +64,7 @@ app.UseCors();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 app.MapQuizEndpoints();
+app.MapUserEndpoints();
 
 // Development: API + Swagger only. Run the React UI separately (npm run dev in frontend/).
 if (app.Environment.IsDevelopment())

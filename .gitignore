@@ -10,3 +10,4 @@ appsettings.*.local.json
 logs/
 *.log
 *.cache
+Data/users.json
