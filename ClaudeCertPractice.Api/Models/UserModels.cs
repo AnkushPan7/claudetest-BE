@@ -33,3 +33,27 @@ public record ResultDetailDto(
 public record UserHistoryDto(
     UserDto User,
     IReadOnlyList<ResultHistoryEntry> Results);
+
+public record AdminLoginRequest(string Email, string Password);
+
+public record AdminLoginResponse(string Token, DateTime ExpiresAt);
+
+public record AdminUserSummary(
+    string Email,
+    string Name,
+    DateTime CreatedAt,
+    int ResultCount);
+
+public record AdminResultSummary(
+    string Id,
+    string UserEmail,
+    string UserName,
+    string SessionId,
+    DateTime CompletedAt,
+    int Total,
+    int Answered,
+    int Correct,
+    double PercentCorrect,
+    string SourceMode,
+    int? ScaledScore,
+    bool HasDetail);

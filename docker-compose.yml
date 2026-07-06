@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: claudecert
+      POSTGRES_PASSWORD: claudecert
+      POSTGRES_DB: claudecert
+    ports:
+      - "5432:5432"
+    volumes:
+      - claudecert_pgdata:/var/lib/postgresql/data
+
+volumes:
+  claudecert_pgdata:

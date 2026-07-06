@@ -1,6 +1,13 @@
+using System.Text;
 using ClaudeCertPractice.Api.Configuration;
+using ClaudeCertPractice.Api.Data;
+using ClaudeCertPractice.Api.Data.Entities;
 using ClaudeCertPractice.Api.Endpoints;
 using ClaudeCertPractice.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +25,45 @@ builder.Configuration.AddJsonFile(
     reloadOnChange: true);
 
 builder.Services.Configure<QuizSettings>(builder.Configuration.GetSection(QuizSettings.SectionName));
+builder.Services.Configure<AuthSettings>(options =>
+{
+    builder.Configuration.GetSection(AuthSettings.SectionName).Bind(options);
+    if (string.IsNullOrWhiteSpace(options.JwtSecret) || options.JwtSecret.Length < 32)
+    {
+        options.JwtSecret = builder.Configuration["JWT_SECRET"]
+            ?? "dev-only-jwt-secret-change-before-production-32chars";
+    }
+});
+
+var connectionString = DatabaseConnectionResolver.Resolve(builder.Configuration);
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+dataSourceBuilder.EnableDynamicJson();
+var npgsqlDataSource = dataSourceBuilder.Build();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(npgsqlDataSource));
+
+var jwtSecret = builder.Configuration.GetSection(AuthSettings.SectionName).Get<AuthSettings>()?.JwtSecret;
+if (string.IsNullOrWhiteSpace(jwtSecret) || jwtSecret.Length < 32)
+{
+    jwtSecret = builder.Configuration["JWT_SECRET"]
+        ?? "dev-only-jwt-secret-change-before-production-32chars";
+}
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
+        };
+    });
+builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -26,7 +72,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ExamGuideService>();
 builder.Services.AddSingleton<QuestionBankService>();
 builder.Services.AddSingleton<QuizSessionService>();
-builder.Services.AddSingleton<UserService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddHttpClient<LearningContentService>();
 builder.Services.AddHttpClient<AiQuestionGeneratorService>();
 
@@ -51,6 +98,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+await DbSeeder.InitializeAsync(app.Services, app.Environment);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -61,10 +110,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 app.MapQuizEndpoints();
 app.MapUserEndpoints();
+app.MapAuthEndpoints();
+app.MapAdminEndpoints();
 
 // Development: API + Swagger only. Run the React UI separately (npm run dev in frontend/).
 if (app.Environment.IsDevelopment())

@@ -1,25 +1,18 @@
-using System.Text.Json;
 using System.Text.RegularExpressions;
+using ClaudeCertPractice.Api.Data;
+using ClaudeCertPractice.Api.Data.Entities;
 using ClaudeCertPractice.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClaudeCertPractice.Api.Services;
 
 public class UserService
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        WriteIndented = true,
-    };
+    private readonly AppDbContext _db;
 
-    private readonly string _dataPath;
-    private readonly SemaphoreSlim _lock = new(1, 1);
-
-    public UserService(IWebHostEnvironment env)
+    public UserService(AppDbContext db)
     {
-        var dataDir = Path.Combine(env.ContentRootPath, "Data");
-        Directory.CreateDirectory(dataDir);
-        _dataPath = Path.Combine(dataDir, "users.json");
+        _db = db;
     }
 
     public static bool IsValidEmail(string email)
@@ -40,33 +33,28 @@ public class UserService
         if (trimmedName.Length < 2)
             throw new ArgumentException("Name must be at least 2 characters.");
 
-        await _lock.WaitAsync(ct);
-        try
+        var existing = await _db.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail, ct);
+        if (existing is not null)
         {
-            var store = await LoadStoreAsync(ct);
-            if (store.Users.TryGetValue(normalizedEmail, out var existing))
-            {
-                existing.Name = trimmedName;
-            }
-            else
-            {
-                store.Users[normalizedEmail] = new StoredUser
-                {
-                    Email = normalizedEmail,
-                    Name = trimmedName,
-                    CreatedAt = DateTime.UtcNow,
-                    Results = [],
-                };
-            }
+            if (existing.Role == UserRoles.Admin)
+                throw new ArgumentException("This email is reserved for admin use.");
 
-            await SaveStoreAsync(store, ct);
-            var user = store.Users[normalizedEmail];
-            return new UserDto(user.Email, user.Name, user.CreatedAt);
+            existing.Name = trimmedName;
+            await _db.SaveChangesAsync(ct);
+            return new UserDto(existing.Email, existing.Name, existing.CreatedAt);
         }
-        finally
+
+        var user = new UserEntity
         {
-            _lock.Release();
-        }
+            Email = normalizedEmail,
+            Name = trimmedName,
+            Role = UserRoles.User,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync(ct);
+        return new UserDto(user.Email, user.Name, user.CreatedAt);
     }
 
     public async Task<UserHistoryDto?> GetHistoryAsync(string email, CancellationToken ct = default)
@@ -74,26 +62,21 @@ public class UserService
         var normalizedEmail = NormalizeEmail(email);
         if (!IsValidEmail(normalizedEmail)) return null;
 
-        await _lock.WaitAsync(ct);
-        try
-        {
-            var store = await LoadStoreAsync(ct);
-            if (!store.Users.TryGetValue(normalizedEmail, out var user))
-                return null;
+        var user = await _db.Users
+            .AsNoTracking()
+            .Include(u => u.Results)
+            .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.Role == UserRoles.User, ct);
 
-            var results = user.Results
-                .OrderByDescending(r => r.CompletedAt)
-                .Select(ToEntry)
-                .ToList();
+        if (user is null) return null;
 
-            return new UserHistoryDto(
-                new UserDto(user.Email, user.Name, user.CreatedAt),
-                results);
-        }
-        finally
-        {
-            _lock.Release();
-        }
+        var results = user.Results
+            .OrderByDescending(r => r.CompletedAt)
+            .Select(ToEntry)
+            .ToList();
+
+        return new UserHistoryDto(
+            new UserDto(user.Email, user.Name, user.CreatedAt),
+            results);
     }
 
     public async Task<ResultHistoryEntry?> SaveResultAsync(
@@ -105,35 +88,35 @@ public class UserService
         if (!IsValidEmail(normalizedEmail))
             throw new ArgumentException("A valid email address is required.");
 
-        await _lock.WaitAsync(ct);
-        try
-        {
-            var store = await LoadStoreAsync(ct);
-            if (!store.Users.TryGetValue(normalizedEmail, out var user))
-                return null;
+        var user = await _db.Users
+            .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.Role == UserRoles.User, ct);
+        if (user is null) return null;
 
-            var entry = new StoredResult
+        var entry = new ExamResultEntity
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            UserId = user.Id,
+            SessionId = request.SessionId,
+            CompletedAt = DateTime.UtcNow,
+            Total = request.Total,
+            Answered = request.Answered,
+            Correct = request.Correct,
+            PercentCorrect = request.PercentCorrect,
+            SourceMode = request.SourceMode,
+            ScaledScore = request.ScaledScore,
+        };
+
+        if (request.Questions is not null)
+        {
+            foreach (var question in request.Questions)
             {
-                Id = Guid.NewGuid().ToString("N"),
-                SessionId = request.SessionId,
-                CompletedAt = DateTime.UtcNow,
-                Total = request.Total,
-                Answered = request.Answered,
-                Correct = request.Correct,
-                PercentCorrect = request.PercentCorrect,
-                SourceMode = request.SourceMode,
-                ScaledScore = request.ScaledScore,
-                Questions = request.Questions?.Select(ToStoredQuestion).ToList() ?? [],
-            };
+                entry.Questions.Add(ToStoredQuestion(question));
+            }
+        }
 
-            user.Results.Add(entry);
-            await SaveStoreAsync(store, ct);
-            return ToEntry(entry);
-        }
-        finally
-        {
-            _lock.Release();
-        }
+        _db.ExamResults.Add(entry);
+        await _db.SaveChangesAsync(ct);
+        return ToEntry(entry);
     }
 
     public async Task<ResultDetailDto?> GetResultDetailAsync(
@@ -145,34 +128,84 @@ public class UserService
         if (!IsValidEmail(normalizedEmail) || string.IsNullOrWhiteSpace(resultId))
             return null;
 
-        await _lock.WaitAsync(ct);
-        try
-        {
-            var store = await LoadStoreAsync(ct);
-            if (!store.Users.TryGetValue(normalizedEmail, out var user))
-                return null;
+        var result = await _db.ExamResults
+            .AsNoTracking()
+            .Include(r => r.Questions)
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(
+                r => r.Id == resultId && r.User.Email == normalizedEmail && r.User.Role == UserRoles.User,
+                ct);
 
-            var result = user.Results.FirstOrDefault(r =>
-                r.Id.Equals(resultId, StringComparison.OrdinalIgnoreCase));
-            if (result is null) return null;
+        if (result is null) return null;
 
-            var questions = result.Questions
-                .OrderBy(q => q.Index)
-                .Select(ToQuestionReviewItem)
-                .ToList();
+        var questions = result.Questions
+            .OrderBy(q => q.Index)
+            .Select(ToQuestionReviewItem)
+            .ToList();
 
-            return new ResultDetailDto(ToEntry(result), questions);
-        }
-        finally
-        {
-            _lock.Release();
-        }
+        return new ResultDetailDto(ToEntry(result), questions);
+    }
+
+    public async Task<IReadOnlyList<AdminUserSummary>> GetAllUsersAsync(CancellationToken ct = default)
+    {
+        return await _db.Users
+            .AsNoTracking()
+            .Where(u => u.Role == UserRoles.User)
+            .OrderByDescending(u => u.CreatedAt)
+            .Select(u => new AdminUserSummary(
+                u.Email,
+                u.Name,
+                u.CreatedAt,
+                u.Results.Count))
+            .ToListAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<AdminResultSummary>> GetAllResultsAsync(CancellationToken ct = default)
+    {
+        return await _db.ExamResults
+            .AsNoTracking()
+            .Where(r => r.User.Role == UserRoles.User)
+            .OrderByDescending(r => r.CompletedAt)
+            .Select(r => new AdminResultSummary(
+                r.Id,
+                r.User.Email,
+                r.User.Name,
+                r.SessionId,
+                r.CompletedAt,
+                r.Total,
+                r.Answered,
+                r.Correct,
+                r.PercentCorrect,
+                r.SourceMode,
+                r.ScaledScore,
+                r.Questions.Count > 0))
+            .ToListAsync(ct);
+    }
+
+    public async Task<ResultDetailDto?> GetAdminResultDetailAsync(string resultId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(resultId)) return null;
+
+        var result = await _db.ExamResults
+            .AsNoTracking()
+            .Include(r => r.Questions)
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.Id == resultId && r.User.Role == UserRoles.User, ct);
+
+        if (result is null) return null;
+
+        var questions = result.Questions
+            .OrderBy(q => q.Index)
+            .Select(ToQuestionReviewItem)
+            .ToList();
+
+        return new ResultDetailDto(ToEntry(result), questions);
     }
 
     private static string NormalizeEmail(string email) =>
         email.Trim().ToLowerInvariant();
 
-    private static ResultHistoryEntry ToEntry(StoredResult r) =>
+    private static ResultHistoryEntry ToEntry(ExamResultEntity r) =>
         new(
             r.Id,
             r.SessionId,
@@ -185,7 +218,7 @@ public class UserService
             r.ScaledScore,
             r.Questions.Count > 0);
 
-    private static StoredQuestion ToStoredQuestion(QuestionReviewItem q) =>
+    private static ResultQuestionEntity ToStoredQuestion(QuestionReviewItem q) =>
         new()
         {
             Index = q.Index,
@@ -200,7 +233,7 @@ public class UserService
             Answered = q.Answered,
         };
 
-    private static QuestionReviewItem ToQuestionReviewItem(StoredQuestion q) =>
+    private static QuestionReviewItem ToQuestionReviewItem(ResultQuestionEntity q) =>
         new(
             q.Index,
             q.SectionName,
@@ -212,61 +245,4 @@ public class UserService
             q.IsCorrect,
             q.Explanation,
             q.Answered);
-
-    private async Task<UserStore> LoadStoreAsync(CancellationToken ct)
-    {
-        if (!File.Exists(_dataPath))
-            return new UserStore();
-
-        await using var stream = File.OpenRead(_dataPath);
-        return await JsonSerializer.DeserializeAsync<UserStore>(stream, JsonOptions, ct)
-            ?? new UserStore();
-    }
-
-    private async Task SaveStoreAsync(UserStore store, CancellationToken ct)
-    {
-        await using var stream = File.Create(_dataPath);
-        await JsonSerializer.SerializeAsync(stream, store, JsonOptions, ct);
-    }
-
-    private sealed class UserStore
-    {
-        public Dictionary<string, StoredUser> Users { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-    }
-
-    private sealed class StoredUser
-    {
-        public string Email { get; set; } = "";
-        public string Name { get; set; } = "";
-        public DateTime CreatedAt { get; set; }
-        public List<StoredResult> Results { get; set; } = [];
-    }
-
-    private sealed class StoredResult
-    {
-        public string Id { get; set; } = "";
-        public string SessionId { get; set; } = "";
-        public DateTime CompletedAt { get; set; }
-        public int Total { get; set; }
-        public int Answered { get; set; }
-        public int Correct { get; set; }
-        public double PercentCorrect { get; set; }
-        public string SourceMode { get; set; } = "";
-        public int? ScaledScore { get; set; }
-        public List<StoredQuestion> Questions { get; set; } = [];
-    }
-
-    private sealed class StoredQuestion
-    {
-        public int Index { get; set; }
-        public string SectionName { get; set; } = "";
-        public string Title { get; set; } = "";
-        public string Text { get; set; } = "";
-        public Dictionary<string, string> Options { get; set; } = new();
-        public string? SelectedAnswer { get; set; }
-        public string CorrectAnswer { get; set; } = "";
-        public bool IsCorrect { get; set; }
-        public string Explanation { get; set; } = "";
-        public bool Answered { get; set; }
-    }
 }
