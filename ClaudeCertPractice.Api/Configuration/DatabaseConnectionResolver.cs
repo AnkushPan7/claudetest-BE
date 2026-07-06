@@ -4,16 +4,17 @@ public static class DatabaseConnectionResolver
 {
     public static string Resolve(IConfiguration configuration)
     {
-        var fromConfig = configuration.GetConnectionString("DefaultConnection");
-        if (!string.IsNullOrWhiteSpace(fromConfig))
-            return fromConfig;
-
+        // Render injects DATABASE_URL; prefer it over appsettings localhost defaults.
         var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
         if (!string.IsNullOrWhiteSpace(databaseUrl))
             return ParsePostgresUrl(databaseUrl);
 
+        var fromConfig = configuration.GetConnectionString("DefaultConnection");
+        if (!string.IsNullOrWhiteSpace(fromConfig))
+            return fromConfig;
+
         throw new InvalidOperationException(
-            "Database connection not configured. Set ConnectionStrings:DefaultConnection or DATABASE_URL.");
+            "Database connection not configured. Set DATABASE_URL or ConnectionStrings:DefaultConnection.");
     }
 
     private static string ParsePostgresUrl(string databaseUrl)
