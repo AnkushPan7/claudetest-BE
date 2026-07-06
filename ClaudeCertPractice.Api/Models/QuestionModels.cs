@@ -47,7 +47,7 @@ public record SessionDto(
     IReadOnlyList<int> QuestionIds,
     string SourceMode);
 
-public record SectionInfo(int Id, string Name, string Range);
+public record SectionInfo(int Id, string Name, string Range, int QuestionCount = 0);
 
 public record Question(
     int Id,

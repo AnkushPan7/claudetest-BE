@@ -23,7 +23,8 @@ public class ExamGuideService
 
     public int LegacySectionToDomain(int sectionId)
     {
-        if (sectionId is >= 4 and <= 5)
+        // sectionId 1–5 are official CCA-F domain ids (used by questions.json from PDFs).
+        if (sectionId is >= 1 and <= 5)
             return sectionId;
 
         return _guide.LegacySectionToDomain.TryGetValue(sectionId.ToString(), out var domainId)

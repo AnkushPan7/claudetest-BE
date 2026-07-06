@@ -99,7 +99,18 @@ public static class QuizEndpoints
         else
         {
             var meta = bank.GetMetadata();
+            var available = bank.GetFilteredPoolCount(request.SectionIds);
+            if (available == 0)
+                return Results.BadRequest("No questions available for the selected domain(s).");
+
             var count = Math.Clamp(request.Count ?? meta.TotalQuestions, 1, meta.BankQuestionCount);
+            if (count > available)
+            {
+                return Results.BadRequest(
+                    $"Only {available} question{(available == 1 ? "" : "s")} available for the selected domain(s). " +
+                    $"Reduce the question count or clear the domain filter.");
+            }
+
             var ids = bank.PickRandomIds(count, request.SectionIds);
             questions = ids
                 .Select(id => bank.GetById(id))
