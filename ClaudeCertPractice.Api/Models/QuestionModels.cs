@@ -1,5 +1,11 @@
 namespace ClaudeCertPractice.Api.Models;
 
+public record QuestionBankInfo(
+    string Id,
+    string Name,
+    int QuestionCount,
+    IReadOnlyList<SectionInfo> Sections);
+
 public record ExamMetadata(
     string ExamTitle,
     int TotalQuestions,
@@ -16,7 +22,9 @@ public record ExamMetadata(
     int PracticePassingScore = 900,
     string? ResponseFormat = null,
     string? ExamScenariosNote = null,
-    IReadOnlyList<ExamScenarioInfo>? Scenarios = null);
+    IReadOnlyList<ExamScenarioInfo>? Scenarios = null,
+    IReadOnlyList<QuestionBankInfo>? QuestionBanks = null,
+    string? DefaultBankId = null);
 
 public record ExamScenarioInfo(int Id, string Name, IReadOnlyList<string> PrimaryDomains);
 
@@ -39,7 +47,8 @@ public record CreateSessionRequest(
     int? Count = null,
     int[]? SectionIds = null,
     string? Source = null,
-    string? LearningUrl = null);
+    string? LearningUrl = null,
+    string? BankId = null);
 
 public record SessionDto(
     string SessionId,

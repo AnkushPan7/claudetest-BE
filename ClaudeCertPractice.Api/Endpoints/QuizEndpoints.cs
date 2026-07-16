@@ -98,8 +98,12 @@ public static class QuizEndpoints
         }
         else
         {
-            var meta = bank.GetMetadata();
-            var available = bank.GetFilteredPoolCount(request.SectionIds);
+            var bankId = bank.NormalizeBankId(request.BankId);
+            if (!bank.BankExists(bankId))
+                return Results.BadRequest($"Unknown question bank: {request.BankId}");
+
+            var meta = bank.GetMetadata(bankId);
+            var available = bank.GetFilteredPoolCount(bankId, request.SectionIds);
             if (available == 0)
                 return Results.BadRequest("No questions available for the selected domain(s).");
 
@@ -111,9 +115,9 @@ public static class QuizEndpoints
                     $"Reduce the question count or clear the domain filter.");
             }
 
-            var ids = bank.PickRandomIds(count, request.SectionIds);
+            var ids = bank.PickRandomIds(bankId, count, request.SectionIds);
             questions = ids
-                .Select(id => bank.GetById(id))
+                .Select(id => bank.GetById(bankId, id))
                 .Where(q => q is not null)
                 .Cast<Question>()
                 .ToList();
@@ -122,7 +126,8 @@ public static class QuizEndpoints
         if (questions.Count == 0)
             return Results.BadRequest("No questions available for this session.");
 
-        var session = sessions.Create(questions, useAi ? "Ai" : "Json");
+        var sessionBankId = useAi ? null : bank.NormalizeBankId(request.BankId);
+        var session = sessions.Create(questions, useAi ? "Ai" : "Json", sessionBankId);
 
         return Results.Ok(new SessionDto(
             session.SessionId,
@@ -146,7 +151,7 @@ public static class QuizEndpoints
         var q = session.Questions[index];
         var sectionName = session.SourceMode == "Ai"
             ? examGuide.GetDomainName(q.SectionId)
-            : bank.GetDomainNameForQuestion(q);
+            : bank.GetDomainNameForQuestion(session.BankId, q);
 
         return Results.Ok(new QuestionPublicDto(
             q.Id,
@@ -203,7 +208,7 @@ public static class QuizEndpoints
             var q = session.Questions[i];
             var sectionName = session.SourceMode == "Ai"
                 ? examGuide.GetDomainName(q.SectionId)
-                : bank.GetDomainNameForQuestion(q);
+                : bank.GetDomainNameForQuestion(session.BankId, q);
 
             if (!session.Answers.TryGetValue(i, out var answer))
             {

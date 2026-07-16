@@ -5,6 +5,7 @@
   "main": "add-real-exam-questions.js",
   "scripts": {
     "build-questions": "node extract-pdf-text.js \"../../../Downloads/Claude_Architect_Exam_Study_Guide_260531_232603 (1).pdf\" \"../../../Downloads/ClaudeCertificateExam-ANSWERS (1).pdf\" && node build-questions-from-pdfs.js",
+    "build-nilesh-questions": "node build-questions-nilesh.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
