@@ -18,8 +18,9 @@ $required = @(
     "ClaudeCertPractice.Api.dll",
     "appsettings.json",
     "Data\exam-guide.json",
-    "Data\questions.json"
-)
+    "Data\questions-ankush.json",
+    "Data\questions-yagnesh.json",
+    "Data\questions-nilesh.json"
 Write-Host "--- Required files ---" -ForegroundColor Yellow
 foreach ($rel in $required) {
     $full = Join-Path $PublishPath $rel

@@ -1,14 +1,29 @@
 /**
- * Build questions.json from extracted PDF text (Study Guide + Answer Sheet).
+ * Build separate question banks from extracted PDF text:
+ *   - Ankush  ← ClaudeCertificateExam-ANSWERS
+ *   - Yagnesh ← Claude_Architect_Exam_Study_Guide
+ *
  * Run: node extract-pdf-text.js <study.pdf> <answers.pdf>
  *      node build-questions-from-pdfs.js
  */
 const fs = require('fs');
 const path = require('path');
 
-const STUDY_GUIDE_TXT = path.join(__dirname, 'Claude_Architect_Exam_Study_Guide_260531_232603 (1).txt');
-const ANSWERS_TXT = path.join(__dirname, 'ClaudeCertificateExam-ANSWERS (1).txt');
-const OUTPUT = path.join(__dirname, '..', 'ClaudeCertPractice.Api', 'Data', 'questions.json');
+const STUDY_GUIDE_TXT = path.join(__dirname, 'Claude_Architect_Exam_Study_Guide_260531_232603 (2).txt');
+const STUDY_GUIDE_TXT_FALLBACK = path.join(__dirname, 'Claude_Architect_Exam_Study_Guide_260531_232603 (1).txt');
+const ANSWERS_TXT = path.join(__dirname, 'ClaudeCertificateExam-ANSWERS (2).txt');
+const ANSWERS_TXT_FALLBACK = path.join(__dirname, 'ClaudeCertificateExam-ANSWERS (1).txt');
+
+const OUTPUT_ANKUSH = path.join(__dirname, '..', 'ClaudeCertPractice.Api', 'Data', 'questions-ankush.json');
+const OUTPUT_YAGNESH = path.join(__dirname, '..', 'ClaudeCertPractice.Api', 'Data', 'questions-yagnesh.json');
+
+const SECTIONS = [
+  { id: 1, name: 'Agentic Architecture & Orchestration', range: 'Domain 1' },
+  { id: 2, name: 'Tool Design & MCP Integration', range: 'Domain 2' },
+  { id: 3, name: 'Claude Code Configuration & Workflows', range: 'Domain 3' },
+  { id: 4, name: 'Prompt Engineering & Structured Output', range: 'Domain 4' },
+  { id: 5, name: 'Context Management & Reliability', range: 'Domain 5' },
+];
 
 /** Official CCA-F domain id (1–5) per Study Guide question number. */
 const STUDY_GUIDE_DOMAIN = {
@@ -27,6 +42,12 @@ const SCENARIO_EXAM_DOMAIN = {
   41: 1, 42: 5, 43: 5, 44: 2, 45: 1, 46: 2, 47: 2, 48: 2, 49: 2, 50: 2,
   51: 2, 52: 2, 53: 2, 54: 2, 55: 2, 56: 2, 57: 2, 58: 2, 59: 2, 60: 2,
 };
+
+function resolveInput(preferred, fallback) {
+  if (fs.existsSync(preferred)) return preferred;
+  if (fs.existsSync(fallback)) return fallback;
+  return null;
+}
 
 function cleanText(s) {
   return s
@@ -209,7 +230,7 @@ function parseAnswersPdf(text) {
     }
 
     questions.push({
-      id: 60 + num,
+      id: num,
       sectionId: SCENARIO_EXAM_DOMAIN[num],
       source: 'scenario-exam',
       title: num === 55 ? 'send_notification Timeouts: Cannot Determine If Message Was Sent' : title,
@@ -239,51 +260,55 @@ function parseAnswersPdf(text) {
   return questions.sort((a, b) => a.id - b.id);
 }
 
+function writeBank(outputPath, questions) {
+  const domainCounts = {};
+  for (const q of questions) {
+    domainCounts[q.sectionId] = (domainCounts[q.sectionId] || 0) + 1;
+  }
+  console.log(`  Domain counts:`, domainCounts);
+
+  const bank = {
+    examTitle: 'Claude Certified Architect – Foundations (CCA-F)',
+    totalQuestions: questions.length,
+    sections: SECTIONS,
+    questions: questions.map(({ source, ...q }) => q),
+  };
+
+  fs.writeFileSync(outputPath, JSON.stringify(bank, null, 2) + '\n');
+  console.log(`  Wrote ${outputPath} (${questions.length} questions)`);
+}
+
 function main() {
-  if (!fs.existsSync(STUDY_GUIDE_TXT) || !fs.existsSync(ANSWERS_TXT)) {
+  const studyPath = resolveInput(STUDY_GUIDE_TXT, STUDY_GUIDE_TXT_FALLBACK);
+  const answersPath = resolveInput(ANSWERS_TXT, ANSWERS_TXT_FALLBACK);
+
+  if (!studyPath || !answersPath) {
     console.error('Missing extracted PDF text. Run extract-pdf-text.js first.');
+    console.error(`  Study guide: ${studyPath || 'NOT FOUND'}`);
+    console.error(`  Answers: ${answersPath || 'NOT FOUND'}`);
     process.exit(1);
   }
 
-  const studyText = fs.readFileSync(STUDY_GUIDE_TXT, 'utf8');
-  const answersText = fs.readFileSync(ANSWERS_TXT, 'utf8');
+  console.log(`Study guide text: ${studyPath}`);
+  console.log(`Answers text: ${answersPath}`);
+
+  const studyText = fs.readFileSync(studyPath, 'utf8');
+  const answersText = fs.readFileSync(answersPath, 'utf8');
 
   const studyQuestions = parseStudyGuide(studyText);
   const scenarioQuestions = parseAnswersPdf(answersText);
 
-  console.log(`Parsed Study Guide: ${studyQuestions.length} questions`);
-  console.log(`Parsed Scenario Exam: ${scenarioQuestions.length} questions`);
-
+  console.log(`\nYagnesh (Study Guide): ${studyQuestions.length} questions`);
   if (studyQuestions.length !== 60) {
     console.warn(`Expected 60 study guide questions, got ${studyQuestions.length}`);
   }
+  writeBank(OUTPUT_YAGNESH, studyQuestions);
+
+  console.log(`\nAnkush (Scenario Answers): ${scenarioQuestions.length} questions`);
   if (scenarioQuestions.length < 59) {
     console.warn(`Expected ~60 scenario questions, got ${scenarioQuestions.length}`);
   }
-
-  const allQuestions = [...studyQuestions, ...scenarioQuestions];
-
-  const domainCounts = {};
-  for (const q of allQuestions) {
-    domainCounts[q.sectionId] = (domainCounts[q.sectionId] || 0) + 1;
-  }
-  console.log('Domain counts:', domainCounts);
-
-  const bank = {
-    examTitle: 'Claude Certified Architect – Foundations (CCA-F)',
-    totalQuestions: allQuestions.length,
-    sections: [
-      { id: 1, name: 'Agentic Architecture & Orchestration', range: 'Domain 1' },
-      { id: 2, name: 'Tool Design & MCP Integration', range: 'Domain 2' },
-      { id: 3, name: 'Claude Code Configuration & Workflows', range: 'Domain 3' },
-      { id: 4, name: 'Prompt Engineering & Structured Output', range: 'Domain 4' },
-      { id: 5, name: 'Context Management & Reliability', range: 'Domain 5' },
-    ],
-    questions: allQuestions.map(({ source, ...q }) => q),
-  };
-
-  fs.writeFileSync(OUTPUT, JSON.stringify(bank, null, 2) + '\n');
-  console.log(`Wrote ${OUTPUT} (${allQuestions.length} questions)`);
+  writeBank(OUTPUT_ANKUSH, scenarioQuestions);
 }
 
 main();

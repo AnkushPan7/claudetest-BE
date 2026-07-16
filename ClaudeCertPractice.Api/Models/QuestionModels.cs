@@ -65,7 +65,8 @@ public record Question(
     string Text,
     Dictionary<string, string> Options,
     string CorrectAnswer,
-    string Explanation);
+    string Explanation,
+    Dictionary<string, string>? OptionExplanations = null);
 
 public record QuestionPublicDto(
     int Id,
@@ -85,7 +86,8 @@ public record AnswerSubmitDto(
     string SelectedAnswer,
     string CorrectAnswer,
     bool IsCorrect,
-    string Explanation);
+    string Explanation,
+    string? WrongAnswerExplanation = null);
 
 public record SessionSummaryDto(
     string SessionId,
@@ -108,4 +110,6 @@ public record QuestionReviewItem(
     string CorrectAnswer,
     bool IsCorrect,
     string Explanation,
-    bool Answered);
+    bool Answered,
+    string? WrongAnswerExplanation = null,
+    Dictionary<string, string>? OptionExplanations = null);

@@ -1,0 +1,873 @@
+{
+  "examTitle": "Claude Certified Architect – Foundations (CCA-F)",
+  "totalQuestions": 60,
+  "sections": [
+    {
+      "id": 1,
+      "name": "Agentic Architecture & Orchestration",
+      "range": "Domain 1"
+    },
+    {
+      "id": 2,
+      "name": "Tool Design & MCP Integration",
+      "range": "Domain 2"
+    },
+    {
+      "id": 3,
+      "name": "Claude Code Configuration & Workflows",
+      "range": "Domain 3"
+    },
+    {
+      "id": 4,
+      "name": "Prompt Engineering & Structured Output",
+      "range": "Domain 4"
+    },
+    {
+      "id": 5,
+      "name": "Context Management & Reliability",
+      "range": "Domain 5"
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "sectionId": 3,
+      "title": "Code Review – Severity Consistency",
+      "text": "Your automated code review system shows inconsistent severity ratings — similar issues like null pointer risks receive 'critical' severity in some PRs but only 'medium' in others. Developer trust is declining because teams can't predict which findings require immediate attention. What's the most effective way to improve severity consistency?",
+      "options": {
+        "A": "Request that Claude include its reasoning for each severity assignment, then use that reasoning to manually calibrate ratings during review",
+        "B": "Include explicit severity criteria in your prompt with concrete code examples for each severity level",
+        "C": "Add a CLAUDE.md file that lists issue types and their default severities, instructing Claude to reference this mapping when assigning severity",
+        "D": "Modify the prompt to ask Claude to rate severity relative to other issues in the same PR, so the most severe issue is always marked critical"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: The root cause is Claude has no grounded definition of 'critical' vs 'medium' in your context. Without a rubric, it infers — and inference varies. Option B fixes this by giving Claude a precise rubric with concrete code examples for each severity level. With examples, Claude matches pattern to label consistently every time. A only diagnoses the problem — you'd still get inconsistent ratings, just with explanations. C is less precise without concrete examples. D is dangerous: if all issues are minor, one still gets called 'critical,' making ratings meaningless across PRs."
+    },
+    {
+      "id": 2,
+      "sectionId": 3,
+      "title": "Claude Code – Automated Pipeline",
+      "text": "Your pipeline script runs `claude 'analyze this and report for security issues'` but the job hangs indefinitely. Claude Code is waiting for user input. What's the best approach to run Claude Code in an automated pipeline?",
+      "options": {
+        "A": "Redirect stdin from /dev/null",
+        "B": "Add the --batch flag to the command",
+        "C": "Add the -p flag: `claude -p 'analyze this and report for security issues'`",
+        "D": "Set an environment variable to enable non-interactive mode before running"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: The -p (print/non-interactive) flag tells Claude Code to run once, output result to stdout, then exit — without waiting for user input. This is the designed solution for CI/CD pipelines. A may cause Claude Code to crash or error. B is not a valid Claude Code flag. D alone does not switch Claude Code to non-interactive mode."
+    },
+    {
+      "id": 3,
+      "sectionId": 3,
+      "title": "Code Review – False Positive Rate",
+      "text": "Analysis of your automated code review shows significant variation in false positive rates: Security & correctness findings have 4% FP rate, style & naming findings have 45% FP rate, and documentation findings have 48% FP rate. Developers have started dismissing findings without review. What approach best restores developer trust while improving the system?",
+      "options": {
+        "A": "Keep all categories enabled while adding few-shot examples to improve each category's accuracy over the coming weeks",
+        "B": "Apply a uniform strictness reduction across all categories to bring the overall false positive rate to an acceptable level",
+        "C": "Keep all categories but display a confidence score with each finding, letting developers decide which to investigate",
+        "D": "Temporarily disable high false-positive categories (style, naming, documentation) and run only high-precision categories while improving precision"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: This is a trust contamination problem. The 45-48% FP categories are destroying confidence in the 4% FP categories. Developers can't distinguish good alerts from noise, so they ignore everything. D fixes this surgically: keep what works (security/correctness at 4% FP), remove what's broken temporarily, fix noisy categories offline then re-enable once precision improves. Trust is restored immediately. A requires weeks while trust collapses now. B penalises the already-accurate categories. C adds cognitive load to already-fatigued developers."
+    },
+    {
+      "id": 4,
+      "sectionId": 4,
+      "title": "Batch API – Document Routing",
+      "text": "Your extraction system processes two document types: standard monthly reports (archived after processing) and urgent exception reports (need trigger actions within 1 hour of receipt). Both use the same JSON schema. You want to minimize API costs while meeting latency requirements. How should you architect the processing pipeline?",
+      "options": {
+        "A": "Submit all documents to the real-time Messages API to ensure consistent processing latency across document types",
+        "B": "Route standard reports to the Batch API for 50% cost savings, and route urgent exception reports to the real-time Messages API",
+        "C": "Queue all documents and submit hourly batches, flagging urgent documents for expedited handling",
+        "D": "Submit all documents to the Batch API with custom_ids for tracking, immediately process urgent documents when results arrive"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Two-tier routing matches each document type to the API that fits its requirement: • Standard monthly reports (no time pressure) → Batch API: 50% cheaper, processes within 24hrs • Urgent exception reports (action within 1 hour) → Real-time Messages API: immediate response A meets latency but wastes money. C means urgent reports could wait up to 1 hour in the queue, violating the SLA. D means urgent reports could take up to 24 hours — completely violates the 1-hour requirement."
+    },
+    {
+      "id": 5,
+      "sectionId": 4,
+      "title": "Structured Output – JSON Reliability",
+      "text": "Your extraction pipeline occasionally receives responses that don't parse as valid JSON, causing downstream processing failures. What is the most reliable approach to ensure Claude returns valid, schema-compliant structured data?",
+      "options": {
+        "A": "Add explicit formatting instructions to the prompt with JSON examples, emphasizing that Claude must return only valid JSON with no surrounding text",
+        "B": "Use regular expressions to locate and extract JSON from the response text, handling cases where Claude includes explanatory text",
+        "C": "Define a tool with a JSON schema specifying the expected structure, using tool use to constrain Claude's output to schema-compliant data",
+        "D": "Implement a retry loop that catches JSON parse errors and re-prompts Claude with the error details, asking it to correct the validation issues"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Tool use with a JSON schema is API-level enforcement. Claude must fill structured parameters that are automatically validated against the schema. It's not a prompt instruction Claude 'might' follow — it's an architectural constraint built into the API. A works most of the time, not guaranteed. B treats the symptom, not the cause — fragile on nested/complex JSON. D adds latency and cost without addressing the root cause."
+    },
+    {
+      "id": 6,
+      "sectionId": 4,
+      "title": "Human Review – Semantic Errors",
+      "text": "After deployment, you find that 12% of extractions contain semantic errors that pass JSON schema validation (e.g., a duration like '30 minutes' stored in a numeric field expecting seconds). Human reviewers can only check 20% of extractions. Which approach most effectively allocates reviewer attention?",
+      "options": {
+        "A": "Prioritize review of all extractions where required fields are empty or explicitly marked as not found",
+        "B": "Randomly sample 20% of extractions for review, using corrections to track accuracy and identify error patterns",
+        "C": "Have the model output field-level confidence scores, then calibrate review thresholds using a labeled validation set",
+        "D": "Review all extractions from documents with formatting anomalies such as unusual layouts or mixed content types"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Field-level confidence scores are the model's uncertainty signals. Calibrating thresholds on a labeled validation set means directing reviewers to extractions with the highest probability of semantic errors — risk-based prioritization. A only catches a subset (filled fields can still be wrong values). B measures quality but doesn't preferentially catch error-prone extractions. D is a proxy indicator that misses semantic errors in well-formatted documents."
+    },
+    {
+      "id": 7,
+      "sectionId": 4,
+      "title": "Tool Use – Forcing Specific Tools",
+      "text": "Your pipeline uses a tool called `extract_metadata` with a JSON schema for paper details. You've also defined `citation_formatter` and `reference_list` tools. Claude sometimes calls `citation_formatter` first, which fails because structured metadata extraction must happen first. What's the most effective way to ensure `extract_metadata` is called first?",
+      "options": {
+        "A": "Set `tool_choice` to `'any'` so Claude must use a tool, combined with system prompt instructions prioritizing `extract_metadata`",
+        "B": "Set `tool_choice` to `{\"type\": \"tool\", \"name\": \"extract_metadata\"}` and process subsequent calls in the pipeline",
+        "C": "Set `tool_choice` to `'auto'` and reorder the tool definitions so `extract_metadata` appears first",
+        "D": "Set `tool_choice` to `'auto'` so `extract_metadata` appears first in the tool array, ensuring Claude prioritizes it"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} forces Claude to call that specific tool. This is the only approach that ENFORCES, not suggests, which tool gets called. 'any' means Claude must use SOME tool but picks which one. 'auto' means Claude decides freely. Tool ordering in the definition array gives a slight preference but is NOT a guarantee."
+    },
+    {
+      "id": 8,
+      "sectionId": 4,
+      "title": "Semantic Validation – Retry Logic",
+      "text": "Your invoice extraction uses tool use with strict JSON schemas. JSON syntax errors never occur, but 12% of extractions fail semantic validation (line items don't sum to total, vendor IDs wrong format). These currently route to manual review. What's the most effective approach to reduce manual review while maintaining accuracy?",
+      "options": {
+        "A": "Implement post-processing logic that automatically corrects common errors, such as recalculating total from line items when sums don't match",
+        "B": "When validation fails, make a follow-up request with the document, extraction, and validation errors for model correction",
+        "C": "Retry the extraction up to 3 times when validation fails, accepting the first result that passes validation",
+        "D": "Add stricter schema constraints with detailed field descriptions to prevent the model from generating invalid values"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Targeted correction with validation error context: Claude sees the original document, what it extracted, and exactly what failed. It can fix the SPECIFIC error with full context. A is dangerous for financial data — assumes line items are correct and total is wrong, but line items could be the error. C is blind retries with no new information — same input produces the same result. D can't prevent math not adding up through schema alone."
+    },
+    {
+      "id": 9,
+      "sectionId": 4,
+      "title": "Retry Logic – When It Fails",
+      "text": "Your extraction system implements automatic retries when validation fails. Each retry appends the specific validation error to the prompt and resolves most failures within 2-3 attempts. For which failure pattern would additional retries be LEAST effective?",
+      "options": {
+        "A": "The model extracts citation counts as locale-formatted strings ('1,234') when the schema requires integers",
+        "B": "The model extracts keywords as a nested object organized by category when the schema requires a flat array of strings",
+        "C": "The model extracts 'et al.' for co-authors when the full author list exists only in an external document not in the input",
+        "D": "The model extracts dates as ISO 8601 datetime strings ('2023-03-15T00:00:00') when the schema requires only the date portion"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Retries fix HOW Claude outputs data. They cannot fix WHAT data is available. The full co-author list does not exist anywhere in the document being processed. No matter how many retries or how clearly you explain the validation error, Claude cannot produce information that isn't in its input. A is a format error — Claude knows the number, just formatted it wrong. B is a structure error — Claude has the data, just organized it differently. D is a precision error — Claude just needs to truncate the datetime."
+    },
+    {
+      "id": 10,
+      "sectionId": 4,
+      "title": "Conflicting Data Sources",
+      "text": "Monitoring reveals that specifications sometimes appear inconsistently within source documents. A summary section might state 'Battery: 4000mAh' while the detailed specs table shows 'Battery: 4200mAh.' Your current schema uses a single `battery_capacity_mah` field. The inconsistency occurs in 15% of documents, and the detailed specs table is more accurate 90% of the time. What's the most effective approach?",
+      "options": {
+        "A": "Implement schema validation that rejects results containing conflicting values, requiring manual review for affected documents",
+        "B": "Add a `conflict_detected` boolean field that flags inconsistencies, triggering manual review for affected documents",
+        "C": "Include extraction instructions specifying to prefer values from the detailed specs table when multiple values exist",
+        "D": "Change to an array field that captures all values found with their source locations, letting downstream systems apply preference rules"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: You already have the critical information: the detailed specs table is more reliable 90% of the time. Apply that knowledge directly at the extraction layer: tell Claude to prefer the detailed specs table when values conflict. A sends 15% of documents to manual review unnecessarily when you already have a resolution rule. B flags conflicts but still routes to humans when you have a clear preference rule. D over-engineers — defer a decision you can already make at extraction time."
+    },
+    {
+      "id": 11,
+      "sectionId": 4,
+      "title": "Context Window – Tool Definition Tokens",
+      "text": "Your extraction system uses tool use with a JSON schema containing 12 fields and detailed descriptions, totaling approximately 2,100 tokens. For documents under 150K tokens, this yields 98% accuracy. For documents between 135–190K tokens, accuracy drops to 71%, with information from the first half of documents rarely extracted accurately. What is the most likely cause?",
+      "options": {
+        "A": "Very long documents exceed the model's effective attention span regardless of context limits",
+        "B": "Schemas exceeding 8-10 fields increase decision complexity during parameter generation, independent of document length",
+        "C": "Tool definitions consume input context tokens. Combined with system prompts and document content, the total approaches or exceeds the context window, causing truncation of earlier document content",
+        "D": "The model distributes attention proportionally across input context length, causing fields mentioned early to receive less relative attention"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Do the math: Document (150–190K tokens) + Tool definition (~2,100 tokens) + System prompt = approaches or exceeds the 200K context window. When the combined input exceeds the window, earlier content gets truncated. That's exactly why the first half of long documents isn't being extracted accurately — it's literally not in the context anymore. A is not a technical concept. B doesn't explain the length-correlated degradation. D doesn't explain the sharp accuracy drop at a specific token range — truncation is the mechanical explanation."
+    },
+    {
+      "id": 12,
+      "sectionId": 4,
+      "title": "Long Document Strategy",
+      "text": "Evaluation shows 94% extraction accuracy on short meeting transcripts (<30 minutes) but only 64% accuracy on longer transcripts (>60 minutes) where discussions meander and key decisions are scattered throughout. Transcripts of BOTH lengths fit within the model's context window. What pattern most effectively improves accuracy on longer documents?",
+      "options": {
+        "A": "Add few-shot examples demonstrating correct extraction from lengthy meetings with scattered information",
+        "B": "Upgrade to a more capable model tier for the extraction task",
+        "C": "Split lengthy transcripts into chunks, extract from each chunk separately, then merge and deduplicate the results",
+        "D": "Add a pre-extraction step where the model summarizes key discussions and conclusions, then perform extraction on that summary"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Both lengths fit within the context window — so this is NOT a truncation problem. This is a signal-to-noise problem. Long meandering transcripts bury key decisions in irrelevant discussion. D solves this with a 2-step pipeline: Step 1 summarizes (concentrates signal, strips noise), Step 2 extracts from clean summary. Chunking (C) fixes truncation, not scatter. Few-shot examples (A) don't address the structural problem. B doesn't fix input structure with a better model."
+    },
+    {
+      "id": 13,
+      "sectionId": 4,
+      "title": "Output Normalization",
+      "text": "Your extraction pipeline processes restaurant menus and must output structured JSON with fields for item names, descriptions, prices, and dietary info. Source menus are inconsistent: prices appear as '$12' vs '12.00', dietary info as icons vs text. What's the most reliable approach for consistent output?",
+      "options": {
+        "A": "Use separate extraction calls for each field to ensure consistent handling of each type",
+        "B": "Extract data as-is and normalize formats in post-processing code after Claude returns",
+        "C": "Define a strict output schema AND include format normalization rules in your prompt",
+        "D": "Request multiple extraction attempts per document and select the most common format"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Two-layer enforcement: (1) Strict schema defines the exact structure and data type required; (2) Normalization rules in prompt tell Claude HOW to convert (e.g., 'Extract prices as numeric values without currency symbols'). Claude normalizes at extraction time — output arrives already clean. A is more calls with no normalization fix. B is fragile — every new menu format breaks your code. D is expensive and unreliable — 'most common' doesn't mean correct."
+    },
+    {
+      "id": 14,
+      "sectionId": 4,
+      "title": "Few-Shot Examples – Nuanced Behavior",
+      "text": "Your schema includes a `skills: string[]` field. Production monitoring reveals: (1) compound phrases like 'Python and SQL' are occasionally split, (2) implied but unstated skills occasionally appear, (3) similar documents produce wildly different array lengths (2–16 entries). Your prompt currently says 'list all skills mentioned.' What's the most effective improvement?",
+      "options": {
+        "A": "Add post-extraction normalization that maps skills to a canonical taxonomy and deduplicates similar entries",
+        "B": "Add constraints: 'Extract 10–20 skills maximum, one skill per entry, only explicitly named skills'",
+        "C": "Enrich the schema to `{skill: string, confidence: float, source: string}` to capture extraction metadata",
+        "D": "Add few-shot examples demonstrating compound phrase handling, explicit mention criteria, and appropriate entry volumes"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: All three problems are nuanced behavioural issues. Few-shot examples show Claude exactly how to handle each case: • Compound phrases: show input 'Python and SQL' → correct output • Implied skills: show that unstated inferred skills should NOT appear • Length consistency: show appropriate skill counts for similar documents D is the only option addressing all three simultaneously. Constraints (B) don't resolve the compound phrase ambiguity. Metadata schema (C) fixes none of the three problems. Post-processing normalization (A) only partially addresses length."
+    },
+    {
+      "id": 15,
+      "sectionId": 4,
+      "title": "Batch Processing Strategy",
+      "text": "Your team is extracting structured data from 50,000 legacy legal contracts under a two-week deadline. Initial testing with 500 sample documents achieves 82% success on the first attempt, with the remaining 18% failing due to diverse issues (missing fields, malformed dates, incorrect parties). Which batch processing strategy is most cost-efficient while still meeting the deadline?",
+      "options": {
+        "A": "Use the real-time API for all 50,000 documents since the batch API's 24-hour processing window creates unacceptable deadline risk",
+        "B": "Split documents into 10 sequential batches of 5,000 each, analyzing results and refining prompts between batches",
+        "C": "Submit all 50,000 documents via batch API, then submit failed extractions via real-time API to identify failure patterns",
+        "D": "Process ~2,000 sample documents via real-time API to identify failure patterns and refine prompts, then batch process all 50,000 with the corrected prompt"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Learn first, scale second. Real-time on 2,000 docs (small cost) surfaces all major failure mode patterns. Refine prompts. Then submit all 50,000 via Batch API for 50% cost savings. Two weeks easily accommodates this: fast real-time testing → prompt fix → 1-2 batch runs. A is full cost, no savings. B means 10 batches × 24hr = 10 days minimum just in processing time, plus analysis. C processes 50,000 with a known flawed prompt then pays again to fix failures — backwards."
+    },
+    {
+      "id": 16,
+      "sectionId": 3,
+      "title": "Multi-Domain Prompts",
+      "text": "Your automated reviewer uses a single prompt covering security issues, API design, and business logic correctness. Business logic edge cases achieve only 34% recall. When you add few-shot examples for business logic, recall improves to 47% but API design recall drops. How do you address this trade-off to improve detection across both categories?",
+      "options": {
+        "A": "Split the review into separate focused prompts — one for security and API design, another for business logic — each with dedicated examples",
+        "B": "Provide the full repository as context instead of just the changed files to give the model deeper visibility",
+        "C": "Upgrade to a more capable model tier, since its stronger reasoning will handle both concern types in a single prompt",
+        "D": "Replace the few-shot examples with a detailed checklist of specific logic edge cases to verify"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: This is a competing attention problem. One prompt covering three different review types forces Claude to split focus. Adding examples for one category dilutes attention to others. A eliminates the competition: each prompt is fully optimised for its domain with dedicated examples. No trade-off, no dilution. B adds more noise. C doesn't fix prompt architecture. D changes the teaching mechanism but doesn't fix the domain competition."
+    },
+    {
+      "id": 17,
+      "sectionId": 3,
+      "title": "Branch-Level Coverage",
+      "text": "Your code review prompts include both implementation changes and the corresponding test file. The LLM correctly flags functions that have no tests at all, but fails to identify when conditional branches or error handling paths within tested functions lack coverage. What's the most effective way to improve detection of branch-level coverage gaps without overcomplicating the pipeline?",
+      "options": {
+        "A": "Add explicit instructions directing the model to enumerate each conditional branch and exception path, then verify each has a corresponding test case",
+        "B": "Include few-shot examples showing code with an uncovered branch paired with the review comment identifying the specific missing test case",
+        "C": "Restructure the prompt to use two separate LLM calls: first extract all conditional branches, then identify missing coverage",
+        "D": "Implement a multi-pass pipeline where separate LLM calls first extract branches, then identify missing coverage"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Claude already detects missing tests at the function level — it understands the concept. The gap is recognition at branch level within functions — a pattern it's not currently detecting. Few-shot examples directly teach this: show code with an uncovered null-check branch, paired with the exact review comment it should generate. A tells Claude what to do; examples show it how to recognize the gap. C and D over-complicate the pipeline for a problem solvable in a single pass with well-crafted examples."
+    },
+    {
+      "id": 18,
+      "sectionId": 3,
+      "title": "Cross-File Bug Detection",
+      "text": "Your pipeline reviews every PR using a single API call with a static prompt containing the diff and full text of each changed file. Reviews consistently miss bugs involving cross-file interactions (e.g., a function renamed in one file but callers in unchanged files still use the old name). Cross-file bugs account for 35% of production incidents. What's the most cost-effective change?",
+      "options": {
+        "A": "Redesign the review as a turn-limited agentic task where the model can read files and search the codebase via tools",
+        "B": "Run parallel review passes per changed file with direct dependents included in each pass, then aggregate findings",
+        "C": "Use static analysis to build a dependency graph of changed code, then expand the prompt to include all files within two hops of the changed files",
+        "D": "Add chain-of-thought instructions asking the model to list all external references in the diff, then reason about cross-file impact"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: The root cause is missing context — affected files aren't in the prompt. Static analysis deterministically identifies which files depend on changed code. Include files within 2 hops. One API call with all relevant context. Most cost-effective because: one API call, only adds relevant files, static analysis is fast and cheap, deterministic inclusion. A is expensive — model explores freely with many tool calls. B is multiple API calls per file. D can't reason about files it can't see — CoT doesn't conjure missing context."
+    },
+    {
+      "id": 19,
+      "sectionId": 3,
+      "title": "CLAUDE.md – Suppressing False Positives",
+      "text": "The automated review consistently flags patterns your team uses intentionally: force-unwrapping optionals in test files, using large coordinate structs, importing internally-maintained deprecated modules. Developers are dismissing roughly 30% of all findings. What prevents the model from generating these findings in the first place by supplying project conventions as persistent context in every review?",
+      "options": {
+        "A": "Build post-processing keyword filters that suppress findings containing terms like 'force unwrap' or 'deprecated import'",
+        "B": "Document the team's accepted patterns and intentional conventions in the project's CLAUDE.md file",
+        "C": "Have developers add inline suppress-comments at flagged lines in the diff",
+        "D": "Configure the review to analyze only the changed lines in the diff without surrounding file context"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: CLAUDE.md is the designed mechanism for project-level persistent context. It tells Claude about team conventions before every review session. Claude reads it, knows force-unwrapping in test files is intentional, and never generates those false positives. A suppresses findings AFTER generation — wasteful and brittle. C requires developer effort on every instance, doesn't scale. D reduces context and causes Claude to miss real bugs — wrong direction."
+    },
+    {
+      "id": 20,
+      "sectionId": 3,
+      "title": "Claude Code – Resource Caps",
+      "text": "During initial testing of the automated review pipeline, reviews on large PRs (50+ changed files) sometimes take over 30 minutes and cost $12 per run. Your team needs each invocation to abort once it reaches a fixed iteration count AND a hard dollar amount — enforced by Claude Code itself, not the surrounding job runner. Which configuration change directly enforces both caps?",
+      "options": {
+        "A": "Add `--max-turns 10 --max-budget-usd 2.00` to the `claude` invocation",
+        "B": "Switch the --model flag to a smaller, cheaper model so each iteration uses fewer tokens",
+        "C": "Set `timeout-minutes: 5` on the GitHub Actions job step and monitor per-run costs via Anthropic Console",
+        "D": "Set `--permission-mode dontAsk` to auto-deny any tool permission requests not in the explicitly allowed set"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: --max-turns caps the number of agentic iterations. --max-budget-usd caps the dollar amount. Both flags are built into Claude Code CLI and enforced BY Claude Code itself — exactly what the question requires. B reduces cost per iteration but no hard cap. C is enforced by the job runner, not Claude Code itself. D controls permission handling — has zero effect on iteration count or cost caps."
+    },
+    {
+      "id": 21,
+      "sectionId": 3,
+      "title": "Output Token Limit",
+      "text": "Your automated review calls the Claude API for each PR, using tool_use with a `report_findings` tool that returns a JSON array. During testing on a large PR touching 30+ files, the response hits the `max_tokens` limit and is truncated mid-JSON, causing the downstream parser to crash. What is the most effective way to handle this?",
+      "options": {
+        "A": "Switch from tool_use to prompting Claude to return findings as a markdown list, with instructions to report only critical and high severity findings",
+        "B": "Add retry logic that detects truncated JSON and re-sends the request with instructions to report only critical/high severity findings",
+        "C": "Split the review into multiple API calls that each analyze a subset of the changed files, then merge the resulting findings arrays",
+        "D": "Increase `max_tokens` to the model's maximum and instruct Claude to keep finding descriptions under 50 words each"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: The root cause is too much output required from a single API call. Split input into batches (5-10 files per call), each call generates partial findings within token limits, merge arrays at the end. This scales infinitely as PR sizes grow. A loses structured JSON and drops medium severity issues. B still has the same single-call architecture and still truncates. D has a hard ceiling — can't set max_tokens to infinity, very large PRs still truncate."
+    },
+    {
+      "id": 22,
+      "sectionId": 3,
+      "title": "Batch API Feasibility",
+      "text": "Your CI pipeline performs security-focused code reviews on approximately 50 PRs daily, currently costing $150/day. Reviewers are told to re-review each PR once tests pass. You're evaluating the Message Batches API for its 50% cost reduction. What factor most determines whether batch processing is actionable for this use case?",
+      "options": {
+        "A": "Whether review feedback arriving up to 24 hours after PR creation remains actionable for your workflow",
+        "B": "Whether reducing per-review latency from 30-60 seconds to near-instant matters for your workflow",
+        "C": "Whether your result processing can handle reviews arriving in a different order than submitted",
+        "D": "Whether you can structure each review as a single request without multi-turn refinement"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The Batch API's defining trade-off is: 50% cheaper BUT results take up to 24 hours. If developers can tolerate this delay, it works. If they need feedback within hours, it breaks the workflow entirely. This constraint is binary and workflow-specific. B is backwards — batch is SLOWER, not faster. C is a minor technical issue solvable with custom_ids. D is already satisfied (single-turn reviews) — not a determining factor."
+    },
+    {
+      "id": 23,
+      "sectionId": 3,
+      "title": "Claude Code – Startup Time",
+      "text": "Your automated review CI jobs take 18 seconds to initialize before Claude begins analyzing code. Profiling reveals the delay comes from auto-discovery of CLAUDE.md files throughout your monorepo. You need to cut startup time while ensuring reviews still enforce your team's coding standards, which are documented in your top-level CLAUDE.md file. What is the most effective approach?",
+      "options": {
+        "A": "Run with `--bare` mode and pass `--append-system-prompt-file /CLAUDE.md` to explicitly load your project standards while skipping all auto-discovery",
+        "B": "Keep the default initialization and add `--exclude-dynamic-system-prompt-sections` to reduce prompt size",
+        "C": "Replace the default prompt entirely using `--system-prompt-file /CLAUDE.md`",
+        "D": "Run with `--bare` mode and specify all review criteria directly in the `-p` prompt argument for each CI invocation"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: --bare skips all auto-discovery (eliminates the 18-second monorepo scan). --append-system-prompt-file explicitly loads just the top-level CLAUDE.md (preserves team standards). Both requirements met in one command. B is not a valid Claude Code flag. C replaces the entire default system prompt — goes too far and breaks other default behaviors. D eliminates CLAUDE.md mechanism and embeds standards in every CI command — unmaintainable."
+    },
+    {
+      "id": 24,
+      "sectionId": 3,
+      "title": "Precision vs Recall",
+      "text": "After deploying automated code review, you notice high precision but low recall — real bugs are slipping through. Investigation reveals the prompt instructs Claude to 'only report high-confidence issues' and 'err on the side of not commenting.' Developers appreciate the low noise. What is the most effective way to substantially improve bug detection while keeping false positives manageable?",
+      "options": {
+        "A": "Remove the conservative filtering instructions and prompt Claude to report all potential issues, then apply a programmatic filter to remove false positives",
+        "B": "Expand the context window by including related test files, git history, and the module dependency graph",
+        "C": "Split the review into a finding stage where Claude flags every potential issue with confidence and severity scores, then apply risk-scoring to maintain current precision levels",
+        "D": "Add detailed few-shot examples demonstrating the bug categories Claude should flag with the instruction to maintain current precision levels"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Two-stage pipeline decouples recall from precision: Stage 1 detects ALL potential issues with confidence/severity scores (high recall). Stage 2 filters by risk score to surface only actionable findings (precision controlled). Never ask one prompt to simultaneously maximise recall AND maintain precision — they pull in opposite directions. A collapses precision. B improves context but doesn't create a systematic recall/precision balance. D contradicts itself: 'detect more but keep precision the same' without an architectural mechanism."
+    },
+    {
+      "id": 25,
+      "sectionId": 3,
+      "title": "Self-Review Bias",
+      "text": "A developer uses Claude Code to refactor a function during their development session. Before committing, they ask the same Claude session to review the code to learn about potential issues. A separate automated CI review catches several bugs that the same-session review missed. What best explains this discrepancy?",
+      "options": {
+        "A": "The CI environment has access to the full codebase context while the local session only has the current file",
+        "B": "Claude retains context about its prior reasoning in the session, making it less likely to question its own decisions",
+        "C": "The CI review uses a more specific prompt tailored for catching bugs, while the developer's request was more general",
+        "D": "The extended session length caused the context window to fill with conversation history during the coding session"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: This is the anchoring bias problem. Claude refactored the code and has reasoning in context for WHY it made each decision. When asked to review the same code, it's anchored to its own prior reasoning and less likely to critically challenge decisions it already committed to. The CI review is a fresh, independent context with no prior reasoning — genuine independent review. This is why you should never ask the same model in the same session to both write AND review the same code."
+    },
+    {
+      "id": 26,
+      "sectionId": 4,
+      "title": "Batch API – Cost Reduction",
+      "text": "Your pipeline includes a release notes generation step that classifies and summarizes approximately 200 commits at the end of each weekly release cycle. Each commit requires a separate API call using a Sonnet-tier model. Results aren't needed until the following morning (8+ hours acceptable wait). You want to reduce per-token API cost while keeping the same model and prompts. Which approach best reduces cost?",
+      "options": {
+        "A": "Issue the 200 Messages API requests in parallel using concurrent connections, since concurrency lowers the per-token price",
+        "B": "Concatenate all 200 commit messages into a single Messages API request",
+        "C": "Submit the 200 requests to the Message Batches API with unique custom_ids, collect results next morning",
+        "D": "Switch the summarization calls from Sonnet-tier to Haiku-tier model"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Batch API: same model, same prompts, 50% cost savings, results within 24 hours. All conditions met. A: Concurrency improves speed, NOT per-token cost. You pay the same rate regardless. B changes the task structure and violates 'no change to prompts.' D violates the explicit constraint of keeping the same model tier."
+    },
+    {
+      "id": 27,
+      "sectionId": 3,
+      "title": "Prompt Filtering – Finding Suppression",
+      "text": "Your automated code review is missing genuine bugs. Investigation reveals your review prompt includes: 'Only flag critical issues that would cause immediate production failures. Ignore minor concerns and anything you're uncertain about.' Developers confirm some missed bugs are real. Which prompt change best resolves the cause of missed bugs without breaking the team's requirement that review output remain structured, tagged output for downstream filtering?",
+      "options": {
+        "A": "Enable extended thinking and instruct the model to reason step-by-step about each code change before producing its review",
+        "B": "Remove all severity-related instructions from the prompt and let the model use its default judgment",
+        "C": "Instruct the model to report ALL findings with a confidence level and severity tag, deferring filtering to downstream",
+        "D": "Add a second review pass that re-reads the diff using the same prompt, looking for anything the first pass may have missed"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: The problem is filtering happening inside the prompt. Claude suppresses findings before reporting them. C fixes this: Claude reports everything with confidence/severity metadata. Downstream filtering system decides what to surface. Structured tagged output preserved. A: Extended thinking doesn't remove the over-filtering instruction. B: Removing instructions may lose structured tags. D: Same prompt = same filtering = same bugs missed."
+    },
+    {
+      "id": 28,
+      "sectionId": 3,
+      "title": "Claude Code – Cross-File Tool Access",
+      "text": "Your pipeline runs: `claude -p --dangerously-skip-permissions --system-prompt \"$PROMPT\" < diff.txt`. Reviews complete and return feedback, but Claude only comments on the piped diff — it never reads surrounding files in the codebase. This causes Claude to miss bugs when the diff modifies a function called by many other modules. Which change to the invocation will cause Claude to read related files?",
+      "options": {
+        "A": "Stop piping the diff via stdin and instead embed the diff contents inside the prompt string",
+        "B": "Replace `--system-prompt` with `--append-system-prompt` and add file navigation tools",
+        "C": "Remove `--system-prompt` and add `--allowedTools` with file-reading tools",
+        "D": "Keep `--system-prompt` AND add `--allowedTools` to include file-reading/code navigation tools"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: --allowedTools controls what Claude CAN DO (what it can access). The system prompt contains the review instructions. You need both: instructions (system prompt) AND file-reading capability (allowedTools). A changes input method but doesn't give Claude file access. B changes where instructions live but still doesn't enable file-reading tools. C removes review instructions — you need BOTH the prompt AND the tools."
+    },
+    {
+      "id": 29,
+      "sectionId": 3,
+      "title": "Feedback Loop – Dismissed Findings",
+      "text": "You built an LLM-powered code review tool that outputs structured findings with `category` ('security', 'style') and `description`. Developers can click 'dismiss' on findings they consider unhelpful — currently 30% of findings are dismissed. What change to your output structure would best help you understand what your system is getting wrong and improve your prompts?",
+      "options": {
+        "A": "Add a `detected_pattern` field recording the code construct (e.g., 'single-letter loop variable') that triggered each finding",
+        "B": "Expand the `description` field to include more detailed explanations of why each issue matters and how to fix it",
+        "C": "Remove the `issue_category` field and track dismissals at the individual finding level",
+        "D": "Add a `model_confidence` field (0.0–1.0) and filter out findings below a threshold before final output"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The `detected_pattern` field creates a feedback loop: dismissed finding → look at the pattern → identify what your system is over-flagging → fix the prompt/rules. If 'single-letter loop variable i' is dismissed 90% of the time, that pattern is generating false positives. B helps developers understand findings, not you understand dismissals. C loses categorical signal. D reduces output volume but doesn't reveal WHY things are being dismissed."
+    },
+    {
+      "id": 30,
+      "sectionId": 3,
+      "title": "Context-Specific False Positives",
+      "text": "After deploying automated code review, developers report that approximately 35% of flagged findings are false positives: team conventions flagged as issues, security warnings for patterns safe in your deployment context, and performance suggestions that hurt your specific use case. You want to reduce false positives while maintaining genuine issue detection. Which approach best enables the model to generalise to novel code patterns it hasn't seen before?",
+      "options": {
+        "A": "Implement post-processing that uses keyword matching to filter out findings containing terms like 'conventions' or 'context-dependent'",
+        "B": "Include few-shot examples in your prompt showing annotated code snippets that should NOT be flagged, explaining WHY they are acceptable",
+        "C": "Create a comprehensive written specification of all patterns that should not be flagged",
+        "D": "Add instructions to your system prompt to 'be conservative' and 'only flag definite issues'"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: The key phrase is 'generalise to novel code patterns.' Few-shot examples don't just tell Claude what not to flag — they teach the REASONING PRINCIPLE behind why something is acceptable. When Claude learns the principle from examples, it can apply that same reasoning to new patterns it's never seen. A is brittle (novel patterns don't contain the right keywords). C can't enumerate every case — lists don't generalise. D is vague and gives Claude no concrete guidance on what's acceptable."
+    },
+    {
+      "id": 31,
+      "sectionId": 1,
+      "title": "Agentic Loop – Stop Reason",
+      "text": "A customer contacts the agent about a warranty claim on a power drill. Resolving this requires multiple sequential tool calls: `get_customer`, `get_product`, and then either `process_refund` or `unable_to_honor`. What is the primary mechanism your application uses to determine whether to continue the loop or stop?",
+      "options": {
+        "A": "You check the `stop_reason` field in each API response — the loop continues while it equals `'tool_use'` and stops when it changes to `'end_turn'` or another terminal value",
+        "B": "You manually set the `tool_choice` parameter to `'none'` after the final expected tool call to force Claude to stop requesting tools",
+        "C": "You track the number of tool calls made and exit the loop once a predefined maximum is reached",
+        "D": "You check whether Claude's response contains a text content block — if text is present, the agent has produced its final answer"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: stop_reason is the official, API-designed mechanism for agentic loop control: • stop_reason = 'tool_use' → execute tool, send result back, continue loop • stop_reason = 'end_turn' → stop loop, return final response Claude signals when it's done. Your loop reads that signal. B requires pre-knowing when Claude is done. C is a safety cap, not the primary control. D is unreliable — Claude can include text alongside tool_use blocks as intermediate reasoning."
+    },
+    {
+      "id": 32,
+      "sectionId": 1,
+      "title": "Compliance – Hard Enforcement",
+      "text": "Compliance requires that refunds exceeding $500 must automatically escalate to a human agent — this rule cannot be left to model discretion. However, logs show the agent occasionally processes high-value refunds directly (5% failure rate). How should you achieve guaranteed human escalation?",
+      "options": {
+        "A": "Implement a hook to intercept tool calls: when the refund amount exceeds $500, block it and initiate human escalation programmatically",
+        "B": "Add few-shot examples to the prompt showing correct escalation behavior at various refund amounts",
+        "C": "Modify the refund tool to return an error with message 'Amount exceeds policy limit — please transfer to human operator'",
+        "D": "Strengthen the system prompt with emphatic language: 'CRITICAL POLICY: All refunds over $500 MUST trigger human escalation'"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The key phrase: 'cannot be left to model discretion.' Application-level hook enforces the rule in CODE, not in prompts. Claude cannot bypass this — it's a programmatic gate. 100% reliable enforcement. B, C, D all still rely on Claude making the correct decision. Even with perfect instructions, examples, or error messages, there's some failure probability. 'Cannot be left to model discretion' = enforce in application code."
+    },
+    {
+      "id": 33,
+      "sectionId": 2,
+      "title": "Structured Error Metadata",
+      "text": "Production logs reveal inconsistent error handling: when `lookup_order` fails, the agent sometimes retries (wrong for permanent errors), sometimes asks users for clarification (wrong for transient errors). The agent cannot distinguish between error types. Current error response: `{\"isError\": true, \"content\": [{\"text\": \"Transaction Failed\"}]}`. What change most improves error handling?",
+      "options": {
+        "A": "Enhance error responses with structured metadata: include `errorCategory` field (`transient`/`validation`/`permission`) so the agent knows how to respond",
+        "B": "Implement retry logic with exponential backoff in your MCP server for all errors, returning to the agent only after all retries are exhausted",
+        "C": "Create an `analyze_error` MCP tool the agent calls after any failure to determine the error category and appropriate action",
+        "D": "Add few-shot examples to the system prompt demonstrating how to interpret error message patterns and select appropriate responses"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The root cause is missing information in the error response. The MCP server knows what type of error occurred — it should communicate that: errorCategory: 'transient' → retry; 'validation' → tell user issue; 'permission' → tell user they lack access. B retries ALL errors — permanent errors (order not found) will retry unnecessarily. C requires an extra round-trip when the server already knows the error type. D makes Claude parse text to infer type — fragile."
+    },
+    {
+      "id": 34,
+      "sectionId": 1,
+      "title": "Escalation – Explicit Customer Request",
+      "text": "A customer sends: 'This is frustrating. I've explained my issue twice and nothing is being resolved. I want to talk to a real person NOW.' The agent has all customer account information and conversation history. The agent cannot resolve the specific issue anyway. What should the agent do?",
+      "options": {
+        "A": "Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating",
+        "B": "Immediately call `escalate_to_human` with the conversation history",
+        "C": "First call `get_customer` and `lookup_order` to gather account context, then escalate to a human agent",
+        "D": "Briefly explain what the agent can help with and offer to resolve the issue quickly"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Three facts make this unambiguous: (1) Customer explicitly demanded a human NOW; (2) Agent cannot resolve the issue anyway; (3) Agent already has all context. Escalate immediately with conversation history so the human agent has full context — customer doesn't repeat everything a third time. A asks another question when customer has already explained twice. C wastes time on tool calls for data the agent already has. D tries to retain them in the bot after an explicit human request — disrespectful."
+    },
+    {
+      "id": 35,
+      "sectionId": 2,
+      "title": "Actionable Error Messages",
+      "text": "Anthropic's tool use documentation states: 'Write instructive error messages. Instead of generic errors like \"Failed,\" include what went wrong and what Claude should do next.' Your agent uses `lookup_order` which catches all exceptions and returns a tool_result with `is_error: true` and message 'That operation failed.' The agent retries identically or escalates immediately. Which change gives Claude the information it needs to select the correct recovery action?",
+      "options": {
+        "A": "Return error-type-specific messages with `is_error: true`, e.g., 'Order not found (id: {id}): verify the order ID' and 'Connection timeout: try lookup_order again, or use lookup_order_archive'",
+        "B": "Implement retry logic with exponential backoff inside each tool implementation, returning normal results to the agent",
+        "C": "Add an error classification step in the agentic loop that intercepts tool errors before Claude sees them and routes appropriately",
+        "D": "Remove `is_error: true` and return error details as normal tool content"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Error messages are instructions for Claude. Specific messages → correct decisions. 'Order not found: verify order ID' → don't retry same ID. 'Connection timeout: try again' → retry is valid. B hides transient errors from Claude but still retries permanent errors unnecessarily. C is extra complexity when the server already knows the error type. D: Claude won't recognize it as an error and may interpret error text as data."
+    },
+    {
+      "id": 36,
+      "sectionId": 2,
+      "title": "MCP Tool Error Handling",
+      "text": "When implementing your `lookup_order` MCP tool, the backend sometimes returns errors (e.g., 'Order not found' or temporary database failures). What is the correct way to handle these errors back to the agent?",
+      "options": {
+        "A": "Log the error server-side and return an empty result to avoid confusing the model",
+        "B": "Throw an exception from the tool handler so the agent framework can catch and log it",
+        "C": "Return the error message in the tool result content with the `is_error` flag set to true",
+        "D": "Return a success response with a 'status' field indicating the error type"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: This is the official Anthropic API mechanism for tool error communication: `is_error: true` + descriptive message in content. Claude explicitly knows the tool failed, knows WHY it failed, and can reason about recovery. A: Claude thinks tool succeeded with no data — proceeds incorrectly. B: Exceptions don't become Claude-readable messages. D: Claude sees success (no is_error flag) and must parse a custom 'status' field — not the designed mechanism."
+    },
+    {
+      "id": 37,
+      "sectionId": 5,
+      "title": "Context Management – Verbose Tool Output",
+      "text": "Your agent has called `lookup_order` multiple times while investigating a customer's return requests. Each response includes 40+ fields, making tool outputs represent the majority of the conversation's context. The customer mentions two more orders they want to discuss. What is the most efficient way to avoid consuming additional context for future lookups?",
+      "options": {
+        "A": "Move all tool responses to a vector database with semantic indexing, retrieving relevant portions as the conversation continues",
+        "B": "Proceed with additional lookups without modifying the existing tool output content",
+        "C": "Have the model generate a natural language summary of each order's key details to replace the existing tool output context",
+        "D": "Extract only return-relevant fields (items, purchase date, return window, return status) and replace the full tool output with just those fields"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: The task is return requests — only 5-6 fields matter out of 40+. Filter tool output to only return-relevant fields at extraction time. Context consumption drops ~85% per lookup. A is massively over-engineered for a problem solved by field filtering. B makes the problem worse. C requires extra LLM calls and produces unstructured output less useful than structured filtered fields."
+    },
+    {
+      "id": 38,
+      "sectionId": 1,
+      "title": "Mid-Process Tool Failure",
+      "text": "During a billing dispute resolution, your agent successfully retrieves customer info via `get_customer` and order details via `lookup_order`, but when attempting `process_refund`, it returns a timeout error. The agent has enough information to explain the charges and verify refund eligibility but cannot actually process the refund. What response best balances first-contact resolution with appropriate error handling?",
+      "options": {
+        "A": "Explain the billing, confirm refund eligibility, acknowledge the system issue preventing immediate processing, and offer escalation or a callback",
+        "B": "Escalate immediately to a human agent since the refund action cannot be completed",
+        "C": "Confirm the refund will be processed and close the conversation, since the agent has all necessary information",
+        "D": "Implement automatic retries with exponential backoff for `process_refund`, keeping the conversation open while processing"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Do what you CAN, be honest about what you CAN'T, provide a path forward. Customer gets billing explanation and eligibility confirmation. Honest acknowledgment of system issue. Clear next step. B wastes valuable gathered context before using it. C is a LIE — the refund has NOT been processed. D: Infrastructure timeouts last minutes to hours — customer waiting indefinitely is terrible UX."
+    },
+    {
+      "id": 39,
+      "sectionId": 1,
+      "title": "Escalation Triggers",
+      "text": "You're implementing escalation logic for when the agent should call `escalate_to_human`. Your team proposes four approaches. Which most reliably identifies cases that genuinely require human intervention?",
+      "options": {
+        "A": "Instruct the agent to escalate when: the customer requests a human, the issue requires policy exceptions, or the agent cannot make progress toward resolution",
+        "B": "Implement sentiment analysis that monitors for frustration indicators (negative language, exclamation marks) and triggers escalation when reaching a threshold",
+        "C": "Build a rules engine that maps specific issue types, customer segments, and product categories to escalation decisions",
+        "D": "Configure the agent to escalate after three consecutive tool calls that fail to resolve the customer's issue"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Semantic escalation triggers describe the actual situations where human intervention adds value: customer wants a human (must respect), policy exception needed (beyond agent authority), no progress possible (agent is stuck). B: Frustration ≠ need for human. Frustrated customers often just need a clear answer the agent CAN provide. C: Rigid rules fail on novel situations outside the rule set. D: Tool failures = infrastructure issues, not necessarily need for human judgment."
+    },
+    {
+      "id": 40,
+      "sectionId": 5,
+      "title": "Returning Customer – Stale Data",
+      "text": "A customer returns 4 hours after their initial session about the same billing dispute. The previous 32-turn session contains tool results from 4 hours ago. When resuming, the agent references OLD data even after fresh tool calls return different results — stale tool results are anchoring the agent's reasoning. What approach most reliably handles returning customers?",
+      "options": {
+        "A": "Resume with full history and add a system prompt instruction telling the agent to always prefer the most recent tool results",
+        "B": "Start a new session, inject a structured summary of the previous interaction (issue type, actions taken, resolution status) — forces all data lookups to be fresh",
+        "C": "Resume with full history and configure the agent to automatically re-call all previously used tools at session start",
+        "D": "Resume with full history but filter out previous tool result messages, keeping only the most recent tool calls"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: New session = zero stale tool results in context. Structured summary = customer continuity preserved. All tool calls in new session = 100% fresh data. No anchoring possible. A: Stale data still visible in context — 'prefer recent' is a soft instruction, old data continues to influence. C: Adds more tool results to an already long context. D: Stripping tool results from 32 turns may break logical flow of conversation."
+    },
+    {
+      "id": 41,
+      "sectionId": 1,
+      "title": "Mid-Process Escalation",
+      "text": "Your agent is handling a billing dispute. After calling `get_customer` and `lookup_order`, it identifies the dispute involves a promotional pricing error requiring manager approval — beyond the agent's authorization level. How should the workflow handle this mid-process escalation?",
+      "options": {
+        "A": "Compile a structured handoff (customer details + order info + identified issue) then call `escalate_to_human` with a reference ID",
+        "B": "Persist the complete conversation and tool response history to a database, then call `escalate_to_human`",
+        "C": "Attempt `process_refund` anyway, escalating only if the refund fails",
+        "D": "Call `escalate_to_human` passing only the customer's original message"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The agent already did valuable work — all gathered intelligence must be preserved and handed off. Human agent receives complete context: customer details + order info + root cause + reference ID. Resolves faster, no customer re-explanation needed. B is over-engineered. C: NEVER act outside authorization — the agent identified the issue is beyond its authority. D: Throws away everything the agent learned — human starts from scratch."
+    },
+    {
+      "id": 42,
+      "sectionId": 1,
+      "title": "Multi-Turn Memory",
+      "text": "The agent verifies customer identity through a multi-step process before resetting passwords. During testing, after the customer answers security questions, the agent asks them to provide their name again, as if the earlier exchange never happened. What's the most likely cause?",
+      "options": {
+        "A": "The conversation history isn't being passed in subsequent API requests",
+        "B": "The prompt lacks instructions telling Claude to remember information across multiple exchanges",
+        "C": "The verification tool is clearing the agent's internal state after each successful validation step",
+        "D": "Claude's memory retention is limited to two conversation turns by default, requiring explicit configuration to extend"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Claude has ZERO persistent memory between API calls. Every call is stateless. If the application fails to include prior messages in the API request, Claude starts fresh every call — asking for information already provided. This is the most common multi-turn agent implementation bug. B: Claude doesn't need special instructions to use context it can see. C: Tools don't erase Claude's context window. D: COMPLETELY FALSE — no such default limit exists."
+    },
+    {
+      "id": 43,
+      "sectionId": 1,
+      "title": "Escalation Content – What to Pass",
+      "text": "After investigating a billing dispute over 25+ turns, you've identified that duplicate charges occurred due to a payment gateway timeout. The refund exceeds your $500 authorization limit. You must call `escalate_to_human`. The human agent won't have access to your conversation history. What content should you pass to `escalate_to_human` to best enable resolution?",
+      "options": {
+        "A": "The complete conversation transcript with all tool results",
+        "B": "Your diagnosis and the refund amount only",
+        "C": "A structured summary: customer ID, root cause, refund amount, and recommended action",
+        "D": "The customer's original complaint verbatim plus tool result excerpts showing duplicate transactions"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: The human agent needs exactly what they need, nothing more: Customer ID (locate account), Root cause (understand without re-investigating), Refund amount (know what to process), Recommended action (know what to do). Clean, structured, immediately actionable. A: Human must wade through 25+ turns to find relevant information. B: Missing customer ID and recommended action. D: Partial — missing diagnosed root cause and clear recommended action."
+    },
+    {
+      "id": 44,
+      "sectionId": 1,
+      "title": "Agentic Decision Making",
+      "text": "When the agent calls `lookup_order` and receives order details showing the item was purchased 45 days ago, how does the agentic loop determine whether to call `escalate_to_human` next?",
+      "options": {
+        "A": "The agent executes the remaining steps in a tool sequence planned at the start of the request",
+        "B": "The order details are added to the conversation and the model reasons about which action to take next",
+        "C": "The agent follows a pre-configured decision tree mapping order attributes to specific tool calls",
+        "D": "The orchestration layer automatically routes to the next tool based on the order's status field"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Core mechanism of Claude's agentic loop: tool_result → appended to conversation → new API call → Claude reasons → next tool OR final response. Claude decides at each step based on accumulated context. 45 days old may exceed return policy → may need manager exception → escalate. Not a pre-planned sequence (A), not a rules engine (C), not external routing (D). Dynamic, contextual reasoning on accumulating evidence."
+    },
+    {
+      "id": 45,
+      "sectionId": 1,
+      "title": "Guaranteeing Outcomes",
+      "text": "Production logs show that when the agent handles complex billing disputes requiring 6+ tool calls, it sometimes exhausts its `max_turns` limit without resolving or escalating — it just stops. The team's goal is to guarantee that every customer interaction ends with either `process_refund` OR `escalate_to_human`. Which approach achieves this guarantee?",
+      "options": {
+        "A": "Split the workflow into two sequential agent invocations with separate turn budgets",
+        "B": "Implement a pre-tool-use hook that terminates the loop and escalates when approaching the maximum call count",
+        "C": "Add system prompt instructions telling the agent to call `escalate_to_human` if the loop ends without resolution",
+        "D": "Add orchestration layer code that checks the agent's outcome after each loop terminates — if neither `process_refund` nor `escalate_to_human` was called, call `escalate_to_human` with accumulated context"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Post-loop safety net enforced in application code. After the loop completes for ANY reason: was process_refund called? was escalate_to_human called? If neither → orchestration layer forces escalation. Works for ALL termination causes including max_turns. C: Instructions are processed INSIDE the loop — if max_turns is hit, Claude may not execute them. A: Still doesn't guarantee the second agent ends in resolution/escalation. B: Preventative hook may interrupt legitimate in-progress investigation."
+    },
+    {
+      "id": 46,
+      "sectionId": 3,
+      "title": "CLAUDE.md Debugging",
+      "text": "You've documented API error handling conventions in a `CLAUDE.md` file at your project root. Claude Code sometimes follows these conventions and sometimes uses generic try/catch blocks. The inconsistency appears across different teams. What's the most efficient first diagnostic step?",
+      "options": {
+        "A": "Run `/memory` to check which memory files are loaded and verify your CLAUDE.md is included",
+        "B": "Add more detailed code examples to your CLAUDE.md with YAML frontmatter showing the exact error handling patterns",
+        "C": "Search for conflicting instructions in `~/.claude/CLAUDE.md` that might override your project conventions",
+        "D": "Create path-specific rules in `.claude/rules/` with YAML frontmatter specifying the error handling conventions"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: /memory shows which context/memory files are currently loaded in the session. This 5-second check answers the most fundamental question: 'Is my CLAUDE.md even in Claude's context?' If it's not loaded, that explains everything immediately. B is a fix, not a diagnostic. C is the second diagnostic step (after confirming your file IS loaded). D is another fix attempt before identifying the root cause. Always diagnose before fixing."
+    },
+    {
+      "id": 47,
+      "sectionId": 3,
+      "title": "Plan Mode vs Direct Execution",
+      "text": "A critical bug is affecting production users. Error logs show exceptions in the OrderProcessing module with a clear stack trace pointing to a specific function. No human has worked on this codebase before. What's the most effective approach?",
+      "options": {
+        "A": "Use direct execution to examine the stack trace, read the relevant code, and implement a fix once you identify the root cause",
+        "B": "Start with direct execution to gather initial information, then switch to plan mode to design a comprehensive solution before implementing",
+        "C": "Use plan mode to analyze the error in context of the module's architecture and dependencies before attempting any fixes",
+        "D": "Enter plan mode to explore the module's architecture and enumerate potential root causes before attempting any fixes"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Clear stack trace + specific function identified + production is down = direct execution. The problem location is already known. Direct execution: read the trace → read the code at that location → identify the bug → fix it. Plan mode is for ambiguous, wide-scope problems. When the stack trace hands you the answer, planning overhead is waste. B, C, D add unnecessary delay when production is burning."
+    },
+    {
+      "id": 48,
+      "sectionId": 2,
+      "title": "MCP Server Scopes",
+      "text": "Your team is configuring MCP servers in Claude Code. You want to add a shared venue lookup server that all team members should have access to, and a personal music playlist server that only you are testing. Which configuration approach correctly applies MCP server scopes?",
+      "options": {
+        "A": "Add both servers to your local `~/.claude.json`",
+        "B": "Add venue server to `.mcp.json` and playlist server to `~/.claude.json`",
+        "C": "Add both servers to the project-level `.mcp.json` file",
+        "D": "Add venue server to `~/.claude.json` and playlist server to `.mcp.json`"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: Two MCP configuration scopes: •.mcp.json (project-level): committed to repo → available to all team members • ~/.claude.json (user-level): personal machine only → private to you Venue lookup = shared →.mcp.json. Playlist = personal testing → ~/.claude.json. A: Venue server only on your machine. C: Playlist exposed to team. D: Both scopes are backwards."
+    },
+    {
+      "id": 49,
+      "sectionId": 3,
+      "title": "PostToolUse Hook – Formatting",
+      "text": "Your team's CLAUDE.md includes a rule: 'Use 4-space indentation and always run Prettier formatting.' Code reviews reveal roughly 15% of Claude-generated code violates this. Adding emphatic instructions ('IMPORTANT: YOU MUST') reduces violations to 15% but doesn't eliminate them. What is the most effective way to ensure all generated code is consistently formatted?",
+      "options": {
+        "A": "Split the formatting rules into path-scoped `.claude/rules/` files that load when Claude works on matching file types",
+        "B": "Configure a PostToolUse hook with an Edit/Write matcher that automatically runs Prettier on each file Claude modifies",
+        "C": "Add a Stop hook with a prompt-based check that evaluates whether generated code follows formatting standards",
+        "D": "Extract the formatting rules into a dedicated skill with more detailed examples of correct formatting"
+      },
+      "correctAnswer": "B",
+      "explanation": "Why B: 15% violations persist despite emphatic instructions — prompt engineering ceiling has been hit. The fix is automation: PostToolUse hook triggers automatically AFTER every Edit/Write. Prettier runs on the modified file regardless of what Claude generated. 100% of file writes get correctly formatted. A, C, D are all still instruction or model-dependent approaches. Once you hit the instruction ceiling, you switch to automated enforcement."
+    },
+    {
+      "id": 50,
+      "sectionId": 2,
+      "title": "MCP Prompts – Slash Commands",
+      "text": "Your team has connected a custom MCP server that provides DevOps workflow templates. The server exposes several MCP prompts along with tools. How do these MCP prompts become accessible within Claude Code?",
+      "options": {
+        "A": "They are added to Claude Code's tool registry alongside the server's tools, invoked automatically by the model when relevant",
+        "B": "They are automatically prepended to every conversation as additional system-level context",
+        "C": "They are surfaced as @-mentionable resources alongside files, fetched and attached to your message when referenced",
+        "D": "They appear as slash commands (e.g., `/mcp__servername__deploy_checklist`) that you can invoke with arguments"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Three MCP primitives, three different access patterns: • Tools → tool registry, Claude calls automatically • Resources → @-mentionable, attached when referenced • Prompts → slash commands (/mcp__servername__promptname) A describes MCP Tools. B is not how MCP prompts work. C describes MCP Resources. Prompts = slash commands, always."
+    },
+    {
+      "id": 51,
+      "sectionId": 3,
+      "title": "Skills – Version Controlled",
+      "text": "Your team frequently migrates React components to Vue. You've written a step-by-step workflow for Claude Code. You want to register this as `/migrate-component`, and the workflow should stay in sync as the team iterates on it. Where should you place the skill file?",
+      "options": {
+        "A": "In the project's `.claude/settings.json` using a `skillOverrides` entry on each developer's machine",
+        "B": "In `~/.claude/skills/migrate-component/SKILL.md` at the project root, committed to version control",
+        "C": "In `.claude/skills/migrate-component/SKILL.md` at the project root, committed to version control",
+        "D": "As a detailed instruction block in the project's root `CLAUDE.md` file"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: .claude/skills/ (project-level) + committed to version control = shared with all team members and stays in sync as the team iterates. A: settings.json is for configuration, not skill definitions. B: ~/.claude/skills/ is personal/local — changes don't sync to team members. D: CLAUDE.md provides context, not slash commands — won't register /migrate-component."
+    },
+    {
+      "id": 52,
+      "sectionId": 3,
+      "title": "Bug Fixing – Test Cases",
+      "text": "You've asked Claude to write a data migration script, but the initial output doesn't correctly handle records with null values in required fields. What's the most efficient path to a working solution?",
+      "options": {
+        "A": "Add 'think harder about edge cases' to your prompt and request a complete rewrite of the migration logic",
+        "B": "Manually edit the generated code to fix the null handling, then continue working with Claude on other parts",
+        "C": "Describe the null value problem in detail and ask Claude to regenerate the entire script with improved edge case handling",
+        "D": "Provide a test case with example input containing null values and the expected output, then ask Claude to fix it"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Concrete test case (input + expected output) gives Claude the most precise, unambiguous specification: input = {name: null, age: 25}, expected = {name: 'UNKNOWN', age: 25}. Claude fixes that EXACT case. Targeted, no unnecessary regeneration. A is vague — Claude doesn't know which edge cases are failing. B defeats the purpose of using Claude. C regenerates everything when only null handling needs fixing — wasteful."
+    },
+    {
+      "id": 53,
+      "sectionId": 3,
+      "title": "Configuration Mechanism Mapping",
+      "text": "Your team has three requirements: (1) Claude must NEVER modify files in `db/migrations/`, (2) Claude should prefer custom logging over `console.log`, (3) All TypeScript files must be auto-formatted with Prettier after every edit. All three are in CLAUDE.md. Claude sometimes violates requirement 1. How should you restructure these requirements?",
+      "options": {
+        "A": "Add `Edit(/db/migrations/**)` to `permissions.deny` in project settings, keep logging preference in CLAUDE.md, add a PostToolUse hook for Prettier on TypeScript files",
+        "B": "Move all three requirements into `.claude/rules/` as path-scoped rules",
+        "C": "Rewrite all three in CLAUDE.md using stronger directive language and add a PreToolUse hook for TypeScript edits",
+        "D": "Configure hooks for all three: PreToolUse to block db/migrations, PostToolUse to run Prettier"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: Match requirement TYPE to the right configuration MECHANISM: • Hard prohibition (never modify migrations) → permissions.deny: system-level enforcement, Claude cannot perform the action • Behavioral preference (prefer custom logging) → CLAUDE.md instruction: guidance • Automated action (Prettier on TypeScript) → PostToolUse hook: guaranteed execution B, C, D don't correctly differentiate between enforcement mechanisms for different requirement types."
+    },
+    {
+      "id": 54,
+      "sectionId": 3,
+      "title": "Monorepo – @imports",
+      "text": "Your monorepo contains shared coding standards: `security-rules.md` (for services handling user data), `api-design.md` (for services exposing APIs), and a third. Your 15 packages each have different needs. Currently, package CLAUDE.md files duplicate all three standards, applying irrelevant guidance to each package. What's the most effective approach?",
+      "options": {
+        "A": "Put all standards in the root CLAUDE.md with override instructions like 'ignore security-rules.md when package doesn't handle user data'",
+        "B": "Create a `shared-standards.md` that combines all three, have each package CLAUDE.md reference only relevant parts",
+        "C": "Create `.claude/rules/` files for each standard with YAML frontmatter listing every relevant package directory",
+        "D": "Use `@imports` in each package's CLAUDE.md to reference only the specific standard files relevant to that package"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: @imports in each package's CLAUDE.md: clean, DRY, each package gets exactly what it needs. Security package imports security-rules.md. API package imports api-design.md. Standards live in one place — updates propagate automatically. Package maintainers control their own imports. A: Complex override instructions, all standards loaded for everything. B: Another consolidated file to maintain. C: Centralised config that removes package maintainer autonomy."
+    },
+    {
+      "id": 55,
+      "sectionId": 3,
+      "title": "When to Use Plan Mode",
+      "text": "You're implementing a caching layer for API responses to speed up the `/products` endpoint. You have a rough idea — Redis with a 5-minute TTL — but you're not sure what other considerations a robust implementation requires. What's the most effective way to start your iterative workflow?",
+      "options": {
+        "A": "Start with a minimal request: 'Add Redis caching to /products with 5-minute TTL.' Add features and fix issues through follow-up prompts",
+        "B": "Write a specification with your known requirements and 'TBD' markers for uncertain areas",
+        "C": "Use plan mode to analyze the current /products endpoint implementation, then provide your caching requirements before implementing",
+        "D": "Ask Claude to interview you about the caching requirements before implementing"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: You know what you want but don't know what you don't know. Plan mode on the existing endpoint surfaces: cache invalidation triggers, Redis failure handling, concurrent request handling, write-through vs read-through strategy. Understand the system → then build correctly. A: Jumping to implementation risks discovering cache invalidation bugs in production. B: Can't write TBDs for things you don't know you don't know. D: Claude analyzing the code surfaces considerations better than asking the user questions they can't answer."
+    },
+    {
+      "id": 56,
+      "sectionId": 3,
+      "title": "Plan Mode vs Direct – Simple Change",
+      "text": "You need to add a date validation check ensuring event dates are in the future. This requires adding a conditional statement to one existing function in the reservation flow. What's the most efficient approach?",
+      "options": {
+        "A": "Use direct execution to make the change",
+        "B": "Start with extended thinking mode enabled to ensure thorough reasoning about the validation logic",
+        "C": "Enter plan mode first to create a detailed implementation strategy before making the change",
+        "D": "Enter plan mode to analyze how the validation might impact other parts of the reservation flow"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: One conditional in one function: clear, targeted, contained change. Direct execution — just implement it. B: Extended thinking is for complex multi-step reasoning. 'date > today' is not complex. C and D: Plan mode is for wide-scope changes. One conditional statement doesn't need a strategy or impact analysis. Rule: Small + clear + contained = direct execution. Complex + ambiguous + wide scope = plan mode."
+    },
+    {
+      "id": 57,
+      "sectionId": 3,
+      "title": "TDD for Iterative Refinement",
+      "text": "You're implementing a complex graph traversal algorithm with specific performance requirements and edge cases. You want to most effectively enable progressive improvement across multiple sessions with Claude. What approach will most effectively enable this?",
+      "options": {
+        "A": "Have Claude extensively research the algorithm and create a detailed implementation plan using extended thinking, then implement",
+        "B": "Provide Claude with a reference implementation from documentation, then ask it to rewrite the code to match your codebase style",
+        "C": "Provide Claude with a detailed natural language specification of the algorithm, including all requirements and edge cases",
+        "D": "Write a test suite covering expected behavior, edge cases, and performance requirements before implementation — share test failures with each refinement request"
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: Tests are the perfect multi-session iterative refinement mechanism: same objective success criteria every session, Claude can see exactly which tests pass/fail, specific failure messages enable targeted fixes, progress is measurable. Tests persist across sessions. Natural language specs don't tell you objectively if you're making progress. A and B don't provide a systematic feedback loop for progressive improvement across sessions."
+    },
+    {
+      "id": 58,
+      "sectionId": 3,
+      "title": "Interdependent Bug Fixes",
+      "text": "You've asked Claude Code to build a PDF report generation feature. The initial output has three formatting issues: table columns too narrow (content truncation), dates without proper formatting, and incorrect page break handling. You've noticed these issues interact — changing column widths affects how dates display, content height affects page breaks. What's the most effective approach for iterating toward a working solution?",
+      "options": {
+        "A": "Provide all three issues in a single detailed message with exact specifications for each, allowing Claude to address them together",
+        "B": "Address the column width issue first with specific measurements, verify it works, then fix date formatting within the corrected column structure",
+        "C": "Start fresh with a detailed prompt specifying all formatting requirements upfront, rather than fixing the specific technical issues",
+        "D": "Show Claude an example of a correctly formatted report and ask it to match that output"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: The key signal: issues are INTERDEPENDENT. Column widths → date display space → content height → page break positions. Fix them sequentially and each fix shifts the context for the next — you chase a moving target indefinitely. Simultaneous fix: Claude accounts for all interdependencies in one coherent update. C wastes working database queries. D works for visual consistency but not interconnected technical constraints. Rule: Independent bugs = fix sequentially. Interdependent bugs = fix simultaneously."
+    },
+    {
+      "id": 59,
+      "sectionId": 3,
+      "title": "Architectural Decisions",
+      "text": "You're tasked with adding real-time updates to the application. This could be implemented using WebSockets, Server-Sent Events, or polling, each with different infrastructure requirements. What's the most effective way to begin this task?",
+      "options": {
+        "A": "Use direct execution to implement polling first, then evaluate whether to upgrade to WebSockets later",
+        "B": "Start direct execution with WebSockets, then refactor if infrastructure issues arise",
+        "C": "Enter plan mode to explore the architecture, evaluate trade-offs, and present options for team approval before implementing",
+        "D": "Use direct execution with a prompt asking Claude to analyze all approaches and implement the one it determines is best"
+      },
+      "correctAnswer": "C",
+      "explanation": "Why C: Multiple valid architectural options with different infrastructure implications = plan mode + team approval. WebSockets (bi-directional, persistent connections), SSE (simpler, one-directional), Polling (simplest infra). Trade-offs affect deployment, costs, scaling — team must decide. A: Deliberate technical debt. B: Assumes answer without evaluating. D: Delegates architectural decisions to Claude — humans must own architecture and infrastructure choices."
+    },
+    {
+      "id": 60,
+      "sectionId": 3,
+      "title": "Slash Commands – Team Workflow",
+      "text": "Your team wants Claude to follow a detailed code review checklist (8 items) when reviewing pull requests — invoked when starting reviews. Claude is also used extensively for writing features, debugging, and generating documentation. Currently, developers manually paste the checklist at the start of each review session. Which approach best addresses this workflow need?",
+      "options": {
+        "A": "Create a `/review` slash command containing the checklist, invoked when starting reviews",
+        "B": "Create a dedicated review subagent with the checklist embedded in its configuration",
+        "C": "Configure plan mode as the default for code review sessions",
+        "D": "Add the checklist to the project's CLAUDE.md file under a 'Code Review' section"
+      },
+      "correctAnswer": "A",
+      "explanation": "Why A: /review slash command = on-demand invocation. Developer types /review → checklist loaded → review begins. Doesn't appear for feature writing, debugging, or documentation tasks. Eliminates manual pasting. Team uses it consistently. B is over-engineering for a slash command job. C: Plan mode is unrelated to executing a checklist. D: CLAUDE.md loads for EVERY session — the checklist would pollute feature writing, debugging, and documentation sessions with irrelevant review content. End of Study Guide All 60 questions covered. You're ready for the exam."
+    }
+  ]
+}

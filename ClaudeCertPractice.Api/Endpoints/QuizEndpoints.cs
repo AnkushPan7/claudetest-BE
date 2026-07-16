@@ -190,7 +190,8 @@ public static class QuizEndpoints
             selected,
             q.CorrectAnswer.ToUpperInvariant(),
             isCorrect,
-            q.Explanation));
+            q.Explanation,
+            ExplanationHelper.ResolveWrongAnswerExplanation(q, selected)));
     }
 
     private static IResult GetReview(
@@ -222,7 +223,9 @@ public static class QuizEndpoints
                     q.CorrectAnswer,
                     false,
                     q.Explanation,
-                    false));
+                    false,
+                    null,
+                    q.OptionExplanations));
                 continue;
             }
 
@@ -236,7 +239,9 @@ public static class QuizEndpoints
                 q.CorrectAnswer,
                 answer.IsCorrect,
                 q.Explanation,
-                true));
+                true,
+                ExplanationHelper.ResolveWrongAnswerExplanation(q, answer.Selected),
+                q.OptionExplanations));
         }
 
         return Results.Ok(new SessionReviewDto(sessionId, items));

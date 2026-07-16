@@ -244,5 +244,9 @@ public class UserService
             q.CorrectAnswer,
             q.IsCorrect,
             q.Explanation,
-            q.Answered);
+            q.Answered,
+            ExplanationHelper.ResolveWrongAnswerExplanation(
+                q.Explanation,
+                q.CorrectAnswer,
+                q.SelectedAnswer));
 }

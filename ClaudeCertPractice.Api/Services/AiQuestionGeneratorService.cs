@@ -75,9 +75,80 @@ public class AiQuestionGeneratorService
         }
 
         for (var i = 0; i < all.Count; i++)
-            all[i] = all[i] with { Id = i + 1 };
+            all[i] = ShuffleCorrectAnswerPosition(all[i] with { Id = i + 1 });
 
         return all;
+    }
+
+    /// <summary>
+    /// Randomly remaps A–D so the correct choice is not stuck on one letter
+    /// (models often copy example "correctAnswer": "B" from the prompt).
+    /// </summary>
+    private static Question ShuffleCorrectAnswerPosition(Question q)
+    {
+        var letters = new[] { "A", "B", "C", "D" };
+        var texts = letters
+            .Select(l => q.Options.TryGetValue(l, out var t) ? t : "")
+            .ToList();
+
+        if (texts.Count != 4 || texts.Any(string.IsNullOrWhiteSpace))
+            return q;
+
+        var oldCorrect = (q.CorrectAnswer ?? "A").Trim().ToUpperInvariant();
+        if (oldCorrect.Length == 0 || !"ABCD".Contains(oldCorrect[0]))
+            oldCorrect = "A";
+        else
+            oldCorrect = oldCorrect[..1];
+
+        if (!q.Options.ContainsKey(oldCorrect))
+            oldCorrect = letters.FirstOrDefault(l => q.Options.ContainsKey(l)) ?? "A";
+
+        // Fisher–Yates shuffle of option slots
+        var order = new[] { 0, 1, 2, 3 };
+        for (var i = order.Length - 1; i > 0; i--)
+        {
+            var j = Random.Shared.Next(i + 1);
+            (order[i], order[j]) = (order[j], order[i]);
+        }
+
+        var newOptions = new Dictionary<string, string>();
+        var oldToNew = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        for (var newIdx = 0; newIdx < 4; newIdx++)
+        {
+            var oldIdx = order[newIdx];
+            newOptions[letters[newIdx]] = texts[oldIdx];
+            oldToNew[letters[oldIdx]] = letters[newIdx];
+        }
+
+        var newCorrect = oldToNew[oldCorrect];
+
+        var explanation = q.Explanation ?? "";
+        // Rewrite "Why X:" prefix to the new correct letter when present
+        explanation = System.Text.RegularExpressions.Regex.Replace(
+            explanation,
+            $@"^Why\s+{oldCorrect}\s*:",
+            $"Why {newCorrect}:",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        Dictionary<string, string>? newOptionExplanations = null;
+        if (q.OptionExplanations is { Count: > 0 })
+        {
+            newOptionExplanations = new Dictionary<string, string>();
+            foreach (var (oldLetter, text) in q.OptionExplanations)
+            {
+                var key = oldLetter.Trim().ToUpperInvariant();
+                if (oldToNew.TryGetValue(key, out var mapped))
+                    newOptionExplanations[mapped] = text;
+            }
+        }
+
+        return q with
+        {
+            Options = newOptions,
+            CorrectAnswer = newCorrect,
+            Explanation = explanation,
+            OptionExplanations = newOptionExplanations,
+        };
     }
 
     private async Task<List<Question>> GenerateBatchAsync(
@@ -116,17 +187,25 @@ public class AiQuestionGeneratorService
             - Have exactly 4 options labeled A, B, C, D with one correct answer
             - Include a short title and a full scenario-based question stem (2-4 sentences setting up the situation before asking the question; do not abbreviate)
             - Include an explanation starting with "Why X:" for the correct letter
+            - Also include brief reasons why each incorrect option is wrong
+            - CRITICAL: Vary the correct answer letter across the set. Do NOT default to B. Across the {{count}} questions, distribute correctAnswer roughly evenly among A, B, C, and D (about {{count / 4}} each when possible). Never make every question have the same correct letter.
             - Do not repeat topics from these already-generated titles: [{{avoid}}]
             {{batchNote}}
 
-            Return ONLY a JSON array (no markdown fences) with objects:
+            Return ONLY a JSON array (no markdown fences) with objects like this example
+            (correctAnswer may be A, B, C, or D — this sample uses C only as an illustration):
             {
               "sectionId": 1,
               "title": "short topic",
               "text": "question stem",
               "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
-              "correctAnswer": "B",
-              "explanation": "Why B: ..."
+              "correctAnswer": "C",
+              "explanation": "Why C: ...",
+              "optionExplanations": {
+                "A": "Why A is wrong: ...",
+                "B": "Why B is wrong: ...",
+                "D": "Why D is wrong: ..."
+              }
             }
 
             {{_examGuide.AiSectionIdLine()}}
@@ -182,7 +261,8 @@ public class AiQuestionGeneratorService
             Text: q.Text ?? "",
             Options: NormalizeOptions(q.Options),
             CorrectAnswer: (q.CorrectAnswer ?? "A").Trim().ToUpperInvariant()[..1],
-            Explanation: q.Explanation ?? "")).ToList();
+            Explanation: q.Explanation ?? "",
+            OptionExplanations: NormalizeOptions(q.OptionExplanations))).ToList();
     }
 
     private string? GetApiKey() => AnthropicApiKeyResolver.Resolve(_config);
@@ -205,5 +285,6 @@ public class AiQuestionGeneratorService
         public Dictionary<string, string>? Options { get; set; }
         public string? CorrectAnswer { get; set; }
         public string? Explanation { get; set; }
+        public Dictionary<string, string>? OptionExplanations { get; set; }
     }
 }

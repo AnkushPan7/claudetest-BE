@@ -5,7 +5,7 @@ namespace ClaudeCertPractice.Api.Services;
 
 public class QuestionBankService
 {
-    public const string DefaultBankId = "ankush-yagnesh";
+    public const string DefaultBankId = "ankush";
 
     private readonly ExamGuideService _examGuide;
     private readonly IReadOnlyDictionary<string, LoadedBank> _banks;
@@ -24,10 +24,15 @@ public class QuestionBankService
 
         _banks = new Dictionary<string, LoadedBank>
         {
-            [DefaultBankId] = LoadBank(
-                DefaultBankId,
-                "Ankush & Yagnesh",
-                Path.Combine(dataDir, "questions.json"),
+            ["ankush"] = LoadBank(
+                "ankush",
+                "Ankush",
+                Path.Combine(dataDir, "questions-ankush.json"),
+                jsonOptions),
+            ["yagnesh"] = LoadBank(
+                "yagnesh",
+                "Yagnesh",
+                Path.Combine(dataDir, "questions-yagnesh.json"),
                 jsonOptions),
             ["nilesh"] = LoadBank(
                 "nilesh",

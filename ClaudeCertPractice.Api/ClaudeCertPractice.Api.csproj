@@ -21,7 +21,10 @@
     <Compile Remove="ClaudeCertPractice.Api\**" />
     <Content Remove="ClaudeCertPractice.Api\**" />
     <None Remove="ClaudeCertPractice.Api\**" />
-    <Content Update="Data\questions.json">
+    <Content Update="Data\questions-ankush.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Data\questions-yagnesh.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Data\questions-nilesh.json">
