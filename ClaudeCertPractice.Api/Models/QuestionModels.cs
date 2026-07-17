@@ -87,7 +87,8 @@ public record AnswerSubmitDto(
     string CorrectAnswer,
     bool IsCorrect,
     string Explanation,
-    string? WrongAnswerExplanation = null);
+    string? WrongAnswerExplanation = null,
+    Dictionary<string, string>? OptionExplanations = null);
 
 public record SessionSummaryDto(
     string SessionId,

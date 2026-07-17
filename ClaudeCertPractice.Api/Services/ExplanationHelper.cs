@@ -16,6 +16,32 @@ public static class ExplanationHelper
             selectedAnswer,
             question.OptionExplanations);
 
+    public static Dictionary<string, string>? ResolveOptionExplanations(Question question)
+    {
+        var notes = ExtractOptionNotes(question.Explanation, question.OptionExplanations);
+        if (notes.Count == 0) return question.OptionExplanations is { Count: > 0 }
+            ? question.OptionExplanations
+            : null;
+
+        // Prefer explicit map entries; fill gaps from parsed explanation text.
+        var merged = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var letter in new[] { "A", "B", "C", "D" })
+        {
+            if (question.OptionExplanations is not null
+                && question.OptionExplanations.TryGetValue(letter, out var fromMap)
+                && !string.IsNullOrWhiteSpace(fromMap))
+            {
+                merged[letter] = fromMap.Trim();
+            }
+            else if (notes.TryGetValue(letter, out var note) && !string.IsNullOrWhiteSpace(note))
+            {
+                merged[letter] = note.Trim();
+            }
+        }
+
+        return merged.Count > 0 ? merged : null;
+    }
+
     public static string? ResolveWrongAnswerExplanation(
         string explanation,
         string correctAnswer,

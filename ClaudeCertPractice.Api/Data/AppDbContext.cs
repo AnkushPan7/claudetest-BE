@@ -36,6 +36,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             entity.Property(q => q.ExamResultId).HasMaxLength(64);
             entity.Property(q => q.Options).HasColumnType("jsonb");
+            entity.Property(q => q.OptionExplanations).HasColumnType("jsonb");
             entity.HasOne(q => q.ExamResult)
                 .WithMany(r => r.Questions)
                 .HasForeignKey(q => q.ExamResultId)

@@ -36,7 +36,13 @@
         "D": "Pass a condensed summary of all prior stages that preserves the main findings and attributes them to sources by name only."
       },
       "correctAnswer": "B",
-      "explanation": "Passing the synthesis draft with a structured source index preserves citation traceability without bloating the\ncontext window. The source index maps claims to URLs and excerpts, giving the report generator everything it\nneeds for proper citations without the full 120K+ tokens of raw content."
+      "explanation": "Passing the synthesis draft with a structured source index preserves citation traceability without bloating the\ncontext window. The source index maps claims to URLs and excerpts, giving the report generator everything it\nneeds for proper citations without the full 120K+ tokens of raw content.",
+      "optionExplanations": {
+        "A": "Passing all 120K+ accumulated tokens of raw content bloats the context window unnecessarily, wasting tokens and potentially exceeding limits when the report generator only needs the synthesis draft and citations.",
+        "B": "Passing the synthesis draft with a structured source index preserves citation traceability without bloating the context window. The source index maps claims to URLs and excerpts, giving the report generator everything it needs for proper citations without the full 120K+ tokens of raw content.",
+        "C": "Deferring citation matching to post-processing introduces a critical flaw: the report generator won't have access to sources while writing, risking unsupported claims and making it harder to integrate citations naturally into the narrative.",
+        "D": "Attributing findings by name only (without URLs or excerpts) makes it impossible for readers to verify claims or access the original sources, defeating the purpose of proper academic/professional citations."
+      }
     },
     {
       "id": 2,
@@ -50,7 +56,13 @@
         "D": "Instruct the synthesis agent to structure reports with explicit sections distinguishing well-established findings from contested ones, preserving original source characterizations and methodological context."
       },
       "correctAnswer": "B",
-      "explanation": "A confidence calibration layer normalizes disparate uncertainty expressions into comparable probability scores\n(0.0-1.0). This enables systematic weight-averaging of findings, producing nuanced output that neither\n\nover-commits nor over-hedges, while preserving the relative reliability of each source."
+      "explanation": "A confidence calibration layer normalizes disparate uncertainty expressions into comparable probability scores\n(0.0-1.0). This enables systematic weight-averaging of findings, producing nuanced output that neither\n\nover-commits nor over-hedges, while preserving the relative reliability of each source.",
+      "optionExplanations": {
+        "A": "Filtering out uncertain information before it reaches the coordinator eliminates valuable data and creates a false sense of confidence—methodological variations and confidence intervals are legitimate findings that belong in nuanced reporting.",
+        "B": "A confidence calibration layer normalizes disparate uncertainty expressions into comparable probability scores (0.0-1.0). This enables systematic weight-averaging of findings, producing nuanced output that neither over-commits nor over-hedges, while preserving the relative reliability of each source.",
+        "C": "Requiring corroboration by at least two independent sources arbitrarily discards valid single-source findings (like peer-reviewed studies with rigorous methodology) and creates gaps in coverage based on availability rather than quality.",
+        "D": "Simply separating findings into sections without normalizing their confidence metrics still leaves the synthesis agent to arbitrarily weight or average conflicting estimates, perpetuating the original problem of inconsistent handling."
+      }
     },
     {
       "id": 3,
@@ -64,7 +76,13 @@
         "D": "Add detailed instructions to the coordinator's system prompt explaining the performance benefits of parallel execution and requesting it invoke both subagents at the same time."
       },
       "correctAnswer": "C",
-      "explanation": "An async orchestration layer outside the agent spawns parallel threads for independent subagents, then\naggregates results. This is the correct architectural pattern because the Claude Agent SDK coordinator\nprocesses tool calls sequentially within a single turn, so external parallelism is needed."
+      "explanation": "An async orchestration layer outside the agent spawns parallel threads for independent subagents, then\naggregates results. This is the correct architectural pattern because the Claude Agent SDK coordinator\nprocesses tool calls sequentially within a single turn, so external parallelism is needed.",
+      "optionExplanations": {
+        "A": "Emitting multiple tool calls in a single response still processes them sequentially within the agent's turn-taking logic; the Claude Agent SDK does not execute tool calls in parallel within a single message.",
+        "B": "Switching to a faster model reduces individual execution time but does nothing to address the sequential waiting pattern—the coordinator still invokes web search, waits, then invokes document analysis in series.",
+        "C": "An async orchestration layer outside the agent spawns parallel threads for independent subagents, then aggregates results. This is the correct architectural pattern because the Claude Agent SDK coordinator processes tool calls sequentially within a single turn, so external parallelism is needed.",
+        "D": "Prompting the coordinator to invoke both subagents simultaneously won't work because the underlying agent framework processes tool calls sequentially within a single turn, regardless of system prompt instructions."
+      }
     },
     {
       "id": 4,
@@ -78,7 +96,13 @@
         "D": "Pass reference identifiers and configure the subagent with read access to a shared memory store where other subagents deposited their results."
       },
       "correctAnswer": "B",
-      "explanation": "Subagents do not automatically inherit the coordinator's context. The correct approach is to include the\ncomplete findings directly in the synthesis subagent's prompt, ensuring it has all the information needed to\nproduce a coherent synthesis."
+      "explanation": "Subagents do not automatically inherit the coordinator's context. The correct approach is to include the\ncomplete findings directly in the synthesis subagent's prompt, ensuring it has all the information needed to\nproduce a coherent synthesis.",
+      "optionExplanations": {
+        "A": "Subagents operate as independent agents with their own context; they do not automatically inherit the coordinator's conversation history or tool results without explicit information passing.",
+        "B": "Subagents do not automatically inherit the coordinator's context. The correct approach is to include the complete findings directly in the synthesis subagent's prompt, ensuring it has all the information needed to produce a coherent synthesis.",
+        "C": "Allowing the synthesis subagent to request outputs from other subagents via callbacks introduces unnecessary complexity and creates circular dependencies—the coordinator should gather outputs first, then pass them.",
+        "D": "Using reference identifiers and a shared memory store adds architectural overhead and introduces potential consistency issues (stale reads, race conditions) that direct prompt inclusion avoids."
+      }
     },
     {
       "id": 5,
@@ -92,7 +116,13 @@
         "D": "Choosing from 18 tools instead of 4-5 relevant ones increases decision complexity beyond reliable selection thresholds."
       },
       "correctAnswer": "D",
-      "explanation": "Too many tools increases decision complexity, degrading the model's ability to select the right tool reliably.\nEach subagent should only have access to the 4-5 tools relevant to its specialization, reducing the decision\nspace and improving tool selection accuracy."
+      "explanation": "Too many tools increases decision complexity, degrading the model's ability to select the right tool reliably.\nEach subagent should only have access to the 4-5 tools relevant to its specialization, reducing the decision\nspace and improving tool selection accuracy.",
+      "optionExplanations": {
+        "A": "Tool definitions do consume tokens, but this causes context overflow—not poor selection behavior—and wouldn't specifically cause agents to choose tools outside their specialization.",
+        "B": "While conflicting role descriptions could cause confusion, the real issue is that having access to many irrelevant tools makes selection harder, not that the role descriptions are contradictory.",
+        "C": "The coordinator's tracking capability is irrelevant here; the problem is that each individual subagent has 18 tools available when it should only see 4-5, making poor choices at the agent level, not the coordination level.",
+        "D": "Too many tools increases decision complexity, degrading the model's ability to select the right tool reliably. Each subagent should only have access to the 4-5 tools relevant to its specialization, reducing the decision space and improving tool selection accuracy."
+      }
     },
     {
       "id": 6,
@@ -106,7 +136,13 @@
         "D": "The coordinator's max_tokens setting is too low, causing the Task tool invocation to be truncated before the subagent type parameter can be specified."
       },
       "correctAnswer": "A",
-      "explanation": "The coordinator can reason about delegation because it sees the AgentDefinitions, but it cannot actually\nspawn subagents because 'Task' is not in its allowedTools configuration. The model describes what it wants to\ndo but lacks the tool permission to execute it."
+      "explanation": "The coordinator can reason about delegation because it sees the AgentDefinitions, but it cannot actually\nspawn subagents because 'Task' is not in its allowedTools configuration. The model describes what it wants to\ndo but lacks the tool permission to execute it.",
+      "optionExplanations": {
+        "A": "The coordinator can reason about delegation because it sees the AgentDefinitions, but it cannot actually spawn subagents because 'Task' is not in its allowedTools configuration. The model describes what it wants to do but lacks the tool permission to execute it.",
+        "B": "Context forwarding configuration affects whether task details reach subagents cleanly, but it doesn't prevent task invocation itself—the coordinator would still attempt the delegation and either fail or proceed with partial data differently.",
+        "C": "Subagents not being listed in the system prompt wouldn't prevent invocation if they're in allowedTools; the model can infer available subagents from AgentDefinitions and call them regardless of explicit mention.",
+        "D": "Token truncation would create truncated or malformed tool calls that would appear in logs as errors; the logs show no errors and the coordinator continues as if delegation happened, indicating the tool call never executed at all."
+      }
     },
     {
       "id": 7,
@@ -120,7 +156,13 @@
         "D": "Enable prompt caching on the synthesis subagent to reduce the overhead of repeatedly transferring the same research findings."
       },
       "correctAnswer": "B",
-      "explanation": "The coordinator already has the findings in its context. For straightforward summarization requests, having the\ncoordinator respond directly eliminates the overhead of spawning a subagent and transferring 80K+ tokens,\ndramatically reducing response time."
+      "explanation": "The coordinator already has the findings in its context. For straightforward summarization requests, having the\ncoordinator respond directly eliminates the overhead of spawning a subagent and transferring 80K+ tokens,\ndramatically reducing response time.",
+      "optionExplanations": {
+        "A": "On-demand retrieval of findings would require additional round-trips between coordinator and subagent, adding latency rather than eliminating the 40+ second overhead of subagent spawning and transfer.",
+        "B": "The coordinator already has the findings in its context. For straightforward summarization requests, having the coordinator respond directly eliminates the overhead of spawning a subagent and transferring 80K+ tokens, dramatically reducing response time.",
+        "C": "Pre-generation and caching helps only if summaries are actually requested again; this doesn't address the core inefficiency of spawning a subagent when the coordinator already has the information needed.",
+        "D": "Prompt caching would reduce overhead marginally, but the fundamental problem is unnecessary subagent invocation itself—caching doesn't eliminate the spawn latency, round-trip delays, or the need to transfer 80K+ tokens."
+      }
     },
     {
       "id": 8,
@@ -134,7 +176,13 @@
         "D": "Implement a topic classification step where the coordinator categorizes requests as 'well-defined' or 'exploratory' and uses different instruction styles for each category."
       },
       "correctAnswer": "C",
-      "explanation": "Specifying research goals and quality criteria (coverage, diversity, recency) rather than procedural steps gives\nthe subagent autonomy to adapt its search strategy. This addresses all three issues: it can try alternatives\nwhen searches fail, adapt to emerging topics, and explore tangential sources."
+      "explanation": "Specifying research goals and quality criteria (coverage, diversity, recency) rather than procedural steps gives\nthe subagent autonomy to adapt its search strategy. This addresses all three issues: it can try alternatives\nwhen searches fail, adapt to emerging topics, and explore tangential sources.",
+      "optionExplanations": {
+        "A": "Adding fallback directives keeps the coordinator in control of search strategy; this maintains rigid procedural thinking and doesn't address why the subagent fails to explore tangentially or adapt to emerging topics.",
+        "B": "Removing all procedural details strips helpful structure entirely; this overshoots by eliminating guidance on quality standards (coverage, diversity, recency), leaving the subagent without clear success criteria.",
+        "C": "Specifying research goals and quality criteria (coverage, diversity, recency) rather than procedural steps gives the subagent autonomy to adapt its search strategy. This addresses all three issues: it can try alternatives when searches fail, adapt to emerging topics, and explore tangential sources.",
+        "D": "Classifying topics and using different instruction styles adds complexity without addressing the core issue—the subagent needs autonomy to choose search methods adaptively, not different instruction templates based on topic classification."
+      }
     },
     {
       "id": 9,
@@ -148,7 +196,13 @@
         "D": "Update the synthesis agent to render each content type appropriately — financial data as tables, news as prose."
       },
       "correctAnswer": "D",
-      "explanation": "The synthesis agent should render each content type in its natural format rather than forcing everything into\nbullet points. Financial data belongs in tables, news summaries in prose, and patent lists in structured formats.\nThis preserves the clarity inherent to each data type."
+      "explanation": "The synthesis agent should render each content type in its natural format rather than forcing everything into\nbullet points. Financial data belongs in tables, news summaries in prose, and patent lists in structured formats.\nThis preserves the clarity inherent to each data type.",
+      "optionExplanations": {
+        "A": "Converting everything to a common intermediate representation would actually obscure the natural structure of each data type rather than preserve it—financial data loses its tabular organization and news loses its narrative flow at an earlier stage.",
+        "B": "Forcing all outputs into prose summaries would destroy the clarity of financial comparisons that require side-by-side tabular analysis and would over-expand patent data unnecessarily into verbose text.",
+        "C": "Flattening structured financial data and patent lists into JSON claim-evidence fields would lose the comparative and hierarchical relationships that make financial margins and patent technology areas meaningful.",
+        "D": "The synthesis agent should render each content type in its natural format rather than forcing everything into bullet points. Financial data belongs in tables, news summaries in prose, and patent lists in structured formats. This preserves the clarity inherent to each data type."
+      }
     },
     {
       "id": 10,
@@ -162,7 +216,13 @@
         "D": "Persist the coordinator's conversation log containing all task delegations and responses, providing this to agents when resuming."
       },
       "correctAnswer": "B",
-      "explanation": "Structured exports per agent with a coordinator-managed manifest provides the best balance. The coordinator\nloads the manifest on resume and injects only the relevant state into each agent's prompt, avoiding full context\nreplay while maintaining fidelity of prior findings."
+      "explanation": "Structured exports per agent with a coordinator-managed manifest provides the best balance. The coordinator\nloads the manifest on resume and injects only the relevant state into each agent's prompt, avoiding full context\nreplay while maintaining fidelity of prior findings.",
+      "optionExplanations": {
+        "A": "Independent state files per agent lack coordination and would require the system to guess which files are current or relevant, risking stale or orphaned state files that don't reflect the actual progress across the pipeline.",
+        "B": "Structured exports per agent with a coordinator-managed manifest provides the best balance. The coordinator loads the manifest on resume and injects only the relevant state into each agent's prompt, avoiding full context replay while maintaining fidelity of prior findings.",
+        "C": "Vector search retrieves semantically similar results rather than exact prior findings, introducing approximation error and potentially mixing insights from different documents when precision about which specific work was completed matters most.",
+        "D": "Replaying the entire conversation log forces agents to re-process all prior context and responses, creating inefficiency and context bloat rather than efficiently injecting only the specific state needed to resume from document 13."
+      }
     },
     {
       "id": 11,
@@ -176,7 +236,13 @@
         "D": "Create a recursive agent hierarchy where analysis agents subdivide work among child agents until reaching single-precedent granularity."
       },
       "correctAnswer": "A",
-      "explanation": "The coordinator spawns parallel subagents for subsets of precedents, then aggregates results. This reduces\nlatency through parallelism while keeping the coordinator as the single point of observation and debugging,\nmaintaining system visibility."
+      "explanation": "The coordinator spawns parallel subagents for subsets of precedents, then aggregates results. This reduces\nlatency through parallelism while keeping the coordinator as the single point of observation and debugging,\nmaintaining system visibility.",
+      "optionExplanations": {
+        "A": "The coordinator spawns parallel subagents for subsets of precedents, then aggregates results. This reduces latency through parallelism while keeping the coordinator as the single point of observation and debugging, maintaining system visibility.",
+        "B": "A message queue with asynchronous workers decouples work execution from the coordinator, making it difficult for the coordinator to monitor progress, control priority, or debug which worker is analyzing which precedent in real time.",
+        "C": "Allowing the subagent to spawn its own children creates a hidden nested hierarchy that the coordinator cannot observe or control, breaking the coordinator's visibility into what subagents are spawned and how work is distributed.",
+        "D": "A recursive hierarchy that subdivides work down to single-precedent granularity creates exponential complexity and communication overhead that the coordinator must manage, and makes it harder to aggregate partial results incrementally."
+      }
     },
     {
       "id": 12,
@@ -190,7 +256,13 @@
         "D": "Give the synthesis agent direct access to web search tools so it can autonomously fill knowledge gaps without returning control to the coordinator."
       },
       "correctAnswer": "B",
-      "explanation": "The coordinator should evaluate synthesis output for gaps, then re-delegate with targeted queries before\nre-invoking synthesis. This creates an iterative refinement loop that improves completeness while keeping the\ncoordinator in control of the research workflow."
+      "explanation": "The coordinator should evaluate synthesis output for gaps, then re-delegate with targeted queries before\nre-invoking synthesis. This creates an iterative refinement loop that improves completeness while keeping the\ncoordinator in control of the research workflow.",
+      "optionExplanations": {
+        "A": "Increasing initial query breadth is a blunt instrument that wastes effort on irrelevant results; the real problem is that specific gaps are only identifiable after synthesis reveals what questions remain unanswered.",
+        "B": "The coordinator should evaluate synthesis output for gaps, then re-delegate with targeted queries before re-invoking synthesis. This creates an iterative refinement loop that improves completeness while keeping the coordinator in control of the research workflow.",
+        "C": "Merely documenting unfilled gaps in the final report does nothing to improve research completeness—it only informs the user after the fact that the research was incomplete, without triggering additional investigation.",
+        "D": "Giving the synthesis agent autonomous search capability removes the coordinator's oversight of what research directions are pursued and how resources are allocated, breaking the coordinator's ability to direct the workflow strategically."
+      }
     },
     {
       "id": 13,
@@ -204,7 +276,13 @@
         "D": "Have the coordinator pre-classify each analysis request before passing instructions to the document analysis agent."
       },
       "correctAnswer": "B",
-      "explanation": "Splitting into purpose-specific tools with defined input/output contracts eliminates ambiguity. Each tool has a\nclear contract for what it accepts and returns, removing the guesswork that caused 35% of requests to need\nre-clarification."
+      "explanation": "Splitting into purpose-specific tools with defined input/output contracts eliminates ambiguity. Each tool has a\nclear contract for what it accepts and returns, removing the guesswork that caused 35% of requests to need\nre-clarification.",
+      "optionExplanations": {
+        "A": "An enum parameter still leaves the single tool's generic logic intact, which is the root cause of ambiguous outputs—the tool won't reliably know how to format results differently based on mode selection without fundamental redesign.",
+        "B": "Splitting into purpose-specific tools with defined input/output contracts eliminates ambiguity. Each tool has a clear contract for what it accepts and returns, removing the guesswork that caused 35% of requests to need re-clarification.",
+        "C": "Enhanced descriptions address how users should phrase instructions, but the underlying tool logic remains unchanged and unable to reliably produce different output structures, so re-requests will persist.",
+        "D": "Pre-classification by a coordinator doesn't change the tool's behavior—it still receives free-text instructions and must decide output format, perpetuating the same ambiguity that causes 35% of requests to need clarification."
+      }
     },
     {
       "id": 14,
@@ -218,7 +296,13 @@
         "D": "Skip summarization and pass full raw outputs from web search and document analysis directly to the report generator."
       },
       "correctAnswer": "B",
-      "explanation": "Structured output that separates content from source metadata preserves attribution throughout the pipeline.\nEach agent maintains the link between claims and their sources as structured data, ensuring the report\ngenerator always has the metadata needed for proper citations."
+      "explanation": "Structured output that separates content from source metadata preserves attribution throughout the pipeline.\nEach agent maintains the link between claims and their sources as structured data, ensuring the report\ngenerator always has the metadata needed for proper citations.",
+      "optionExplanations": {
+        "A": "Embedding citations as inline text within a summary is fragile—text-based references can be corrupted, separated, or lost during subsequent processing steps, and the synthesis agent has no enforcement mechanism to ensure consistent formatting.",
+        "B": "Structured output that separates content from source metadata preserves attribution throughout the pipeline. Each agent maintains the link between claims and their sources as structured data, ensuring the report generator always has the metadata needed for proper citations.",
+        "C": "Re-querying the original agents to locate sources for claims in the final report adds latency and complexity, and risks finding incorrect sources if claims were paraphrased during summarization, rather than preserving the original metadata link.",
+        "D": "Passing raw unprocessed outputs defeats the purpose of summarization and creates massive token consumption and noise in the report generator, making it harder (not easier) to maintain source attribution through the noise."
+      }
     },
     {
       "id": 15,
@@ -232,7 +316,13 @@
         "D": "Implement pattern-based routing that categorizes queries by structure (single-fact vs. comparative vs. analytical) and maps each category to a predefined subagent combination."
       },
       "correctAnswer": "C",
-      "explanation": "The coordinator dynamically routes queries to only the subagents each query actually needs. This leverages\nthe LLM's ability to assess query complexity without requiring a separate classifier or rigid pattern matching,\nand naturally adapts as query patterns evolve.\nScenario: Structured Data Extraction\nYou are building a structured data extraction system using Claude. The system extracts information from unstructured\ndocuments, validates the output using JavaScript Object Notation (JSON) schemas, and maintains high accuracy. It\nmust handle edge cases gracefully and integrate with downstream systems."
+      "explanation": "The coordinator dynamically routes queries to only the subagents each query actually needs. This leverages\nthe LLM's ability to assess query complexity without requiring a separate classifier or rigid pattern matching,\nand naturally adapts as query patterns evolve.\nScenario: Structured Data Extraction\nYou are building a structured data extraction system using Claude. The system extracts information from unstructured\ndocuments, validates the output using JavaScript Object Notation (JSON) schemas, and maintains high accuracy. It\nmust handle edge cases gracefully and integrate with downstream systems.",
+      "optionExplanations": {
+        "A": "A hardcoded fast-path for factual questions risks misclassifying simple-sounding queries that actually require research depth, and creating a separate bypass path doesn't adapt as user behavior and query patterns evolve over time.",
+        "B": "Training a separate complexity classifier adds infrastructure complexity and requires periodic retraining, introducing latency for classifier inference; it's less flexible than having the coordinator (which already processes queries) make routing decisions directly.",
+        "C": "The coordinator dynamically routes queries to only the subagents each query actually needs. This leverages the LLM's ability to assess query complexity without requiring a separate classifier or rigid pattern matching, and naturally adapts as query patterns evolve. Scenario: Structured Data Extraction You are building a structured data extraction system using Claude. The system extracts information from unstructured documents, validates the output using JavaScript Object Notation (JSON) schemas, and maintains high accuracy. It must handle edge cases gracefully and integrate with downstream systems.",
+        "D": "Pattern-based routing with predefined mappings is rigid and won't adapt as query patterns evolve—new query types and use cases discovered by users won't fit existing categories without manual reconfiguration."
+      }
     },
     {
       "id": 16,
@@ -246,7 +336,13 @@
         "D": "The model distributes attention proportionally across input length, causing fields mentioned only once near the document's end to receive insufficient processing focus."
       },
       "correctAnswer": "B",
-      "explanation": "Tool definitions consume input context tokens. When combined with system prompts and the document\ncontent (175-190K tokens), the total approaches the 200K context limit. This causes the end of the document\nto be truncated or degraded, explaining why the final third is consistently missed."
+      "explanation": "Tool definitions consume input context tokens. When combined with system prompts and the document\ncontent (175-190K tokens), the total approaches the 200K context limit. This causes the end of the document\nto be truncated or degraded, explaining why the final third is consistently missed.",
+      "optionExplanations": {
+        "A": "Field count doesn't inherently degrade accuracy for documents that fit within the context window; the 98% accuracy on sub-150K documents with the same 12-field schema proves the schema complexity itself isn't the limiting factor.",
+        "B": "Tool definitions consume input context tokens. When combined with system prompts and the document content (175-190K tokens), the total approaches the 200K context limit. This causes the end of the document to be truncated or degraded, explaining why the final third is consistently missed.",
+        "C": "An effective attention span limit independent of context window size is not a documented model behavior; if the model has sufficient context tokens available, it can process the full document, so this conflates two different concepts.",
+        "D": "Proportional attention distribution is not how transformer models work—they don't automatically allocate attention linearly across input length, and this wouldn't explain why performance is fine up to 150K and then suddenly degrades at 175-190K."
+      }
     },
     {
       "id": 17,
@@ -260,7 +356,13 @@
         "D": "Add few-shot examples demonstrating extractions from documents with varied structures — showing how to identify citations in different formats and locate methodology details across section types."
       },
       "correctAnswer": "D",
-      "explanation": "Few-shot examples demonstrating extractions from documents with varied structures teach the model to\nrecognize citations and methodology details regardless of format or location. This addresses the root cause —\nthe model doesn't know how to find information in unfamiliar document layouts."
+      "explanation": "Few-shot examples demonstrating extractions from documents with varied structures teach the model to\nrecognize citations and methodology details regardless of format or location. This addresses the root cause —\nthe model doesn't know how to find information in unfamiliar document layouts.",
+      "optionExplanations": {
+        "A": "Making fields optional defeats the purpose of capturing required information and merely postpones the problem rather than solving why the model fails to extract data that exists in the documents.",
+        "B": "Retrying with the same prompt and schema won't help the model locate information in unfamiliar formats—it will simply repeat the same extraction failures without learning how to recognize varied document structures.",
+        "C": "Post-processing with regex searches for patterns but doesn't teach the model itself to recognize citations and methodology across different layouts, leaving future documents with new formats vulnerable to the same failures.",
+        "D": "Few-shot examples demonstrating extractions from documents with varied structures teach the model to recognize citations and methodology details regardless of format or location. This addresses the root cause — the model doesn't know how to find information in unfamiliar document layouts."
+      }
     },
     {
       "id": 18,
@@ -274,7 +376,13 @@
         "D": "Define a tool with a JSON schema specifying the expected structure, using tool_use to constrain Claude's output to schema-compliant JSON."
       },
       "correctAnswer": "D",
-      "explanation": "Tool use with a JSON schema structurally constrains Claude's output to be schema-compliant JSON. Unlike\nprompt instructions (which the model may not follow perfectly) or post-processing (which handles failures after\nthey occur), tool_use enforces the structure at the API level."
+      "explanation": "Tool use with a JSON schema structurally constrains Claude's output to be schema-compliant JSON. Unlike\nprompt instructions (which the model may not follow perfectly) or post-processing (which handles failures after\nthey occur), tool_use enforces the structure at the API level.",
+      "optionExplanations": {
+        "A": "Retry loops only handle the symptom after failures occur and don't prevent malformed JSON in the first place; the model may repeat the same formatting errors even when told to correct them.",
+        "B": "Regex extraction is a brittle workaround that still relies on the model producing parseable output; it doesn't guarantee schema compliance and breaks if the model structures data differently than expected.",
+        "C": "Prompt instructions alone don't structurally enforce compliance—models can still deviate from formatting rules, especially under pressure or with complex schemas, making this approach less reliable than API-level constraints.",
+        "D": "Tool use with a JSON schema structurally constrains Claude's output to be schema-compliant JSON. Unlike prompt instructions (which the model may not follow perfectly) or post-processing (which handles failures after they occur), tool_use enforces the structure at the API level."
+      }
     },
     {
       "id": 19,
@@ -288,7 +396,13 @@
         "D": "Review all extractions from documents with formatting anomalies such as unusual layouts or mixed content types."
       },
       "correctAnswer": "A",
-      "explanation": "Field-level confidence scores with calibrated thresholds direct reviewer attention to the extractions most likely\nto contain errors. By calibrating against a labeled validation set, you can set thresholds that maximize error\ndetection within the 20% review capacity."
+      "explanation": "Field-level confidence scores with calibrated thresholds direct reviewer attention to the extractions most likely\nto contain errors. By calibrating against a labeled validation set, you can set thresholds that maximize error\ndetection within the 20% review capacity.",
+      "optionExplanations": {
+        "A": "Field-level confidence scores with calibrated thresholds direct reviewer attention to the extractions most likely to contain errors. By calibrating against a labeled validation set, you can set thresholds that maximize error detection within the 20% review capacity.",
+        "B": "Random sampling wastes reviewer capacity on low-risk extractions and high-risk ones equally, missing the opportunity to focus human effort where errors are most likely to occur.",
+        "C": "Empty fields are already caught by schema validation in the previous scenario; this approach ignores semantic errors like misplaced values that pass validation and are the actual problem here.",
+        "D": "Document formatting anomalies don't reliably correlate with semantic errors, and reviewing based on document structure rather than extraction quality metrics means many error-prone extractions slip through undetected."
+      }
     },
     {
       "id": 20,
@@ -302,7 +416,13 @@
         "D": "Analyze accuracy by document type and field to verify high-confidence extractions perform consistently across all segments, not just in aggregate."
       },
       "correctAnswer": "D",
-      "explanation": "Aggregate 97% accuracy can mask poor performance in specific document types or fields. Analyzing accuracy\nby segment ensures high-confidence extractions perform consistently everywhere, preventing hidden failure\nmodes from reaching downstream systems."
+      "explanation": "Aggregate 97% accuracy can mask poor performance in specific document types or fields. Analyzing accuracy\nby segment ensures high-confidence extractions perform consistently everywhere, preventing hidden failure\nmodes from reaching downstream systems.",
+      "optionExplanations": {
+        "A": "A two-week pilot is too short to capture error patterns across diverse document types and downstream system requirements, and waiting for error reports means failures may already impact production data.",
+        "B": "Meeting accuracy requirements is necessary but not sufficient—you must first verify that 97% accuracy is consistent across all segments; aggregate accuracy can hide poor performance in specific areas.",
+        "C": "Finding an optimal threshold improves automation rates but doesn't validate that high-confidence extractions actually perform consistently everywhere; accuracy can vary dramatically by document type or field despite high overall confidence.",
+        "D": "Aggregate 97% accuracy can mask poor performance in specific document types or fields. Analyzing accuracy by segment ensures high-confidence extractions perform consistently everywhere, preventing hidden failure modes from reaching downstream systems."
+      }
     },
     {
       "id": 21,
@@ -316,7 +436,13 @@
         "D": "Resubmit the entire 10,000 document batch using a model tier with a larger context window."
       },
       "correctAnswer": "B",
-      "explanation": "Chunking only the 300 failed documents into smaller pieces addresses the context_length_exceeded error\ndirectly. Processing just the failures (not the full 10,000) is cost-effective, and combining partial extractions\nrecovers the complete data."
+      "explanation": "Chunking only the 300 failed documents into smaller pieces addresses the context_length_exceeded error\ndirectly. Processing just the failures (not the full 10,000) is cost-effective, and combining partial extractions\nrecovers the complete data.",
+      "optionExplanations": {
+        "A": "Increasing max_tokens doesn't solve the root problem—the documents exceed the model's context window, so allowing more output tokens won't make them fit in the input.",
+        "B": "Chunking only the 300 failed documents into smaller pieces addresses the context_length_exceeded error directly. Processing just the failures (not the full 10,000) is cost-effective, and combining partial extractions recovers the complete data.",
+        "C": "Prompt caching reduces per-request cost only when identical system prompts are reused; it doesn't address the context_length_exceeded error and would still fail on documents that are too long.",
+        "D": "Reprocessing all 10,000 documents (9,700 of which already succeeded) wastes significant cost; the problem is specific to the 3% that failed, not a limitation of the current model tier."
+      }
     },
     {
       "id": 22,
@@ -330,7 +456,13 @@
         "D": "Lower the confidence threshold from 85% to 70%, routing a larger volume of extractions to human review."
       },
       "correctAnswer": "A",
-      "explanation": "Stratified random sampling of high-confidence extractions enables ongoing error rate measurement and\ndetection of novel error patterns. This provides a sustainable monitoring mechanism that can track whether\nimprovements actually reduce the error rate over time."
+      "explanation": "Stratified random sampling of high-confidence extractions enables ongoing error rate measurement and\ndetection of novel error patterns. This provides a sustainable monitoring mechanism that can track whether\nimprovements actually reduce the error rate over time.",
+      "optionExplanations": {
+        "A": "Stratified random sampling of high-confidence extractions enables ongoing error rate measurement and detection of novel error patterns. This provides a sustainable monitoring mechanism that can track whether improvements actually reduce the error rate over time.",
+        "B": "Re-extraction attempts don't reliably detect plausible-but-incorrect values, since the model may confidently produce the same error twice; this approach conflates inconsistency with error detection.",
+        "C": "Heuristic rules are too rigid and don't scale—they address only known error sources (tables, appendices) but miss novel patterns like ambiguous phrasing, and they don't enable measurement of overall error rate improvement.",
+        "D": "Lowering the threshold floods the review queue with low-confidence extractions that were already being caught; this doesn't directly address high-confidence errors and becomes unsustainable operationally."
+      }
     },
     {
       "id": 23,
@@ -344,7 +476,13 @@
         "D": "Include detailed JSON formatting instructions and the target schema in your prompt, then parse Claude's text response as JSON."
       },
       "correctAnswer": "A",
-      "explanation": "Defining a tool with the target schema as input parameters and having Claude call it enforces structural\ncompliance natively at the API level. This is more reliable than prompt instructions, pre-filling, or post-parsing,\nas the tool_use mechanism guarantees schema-conformant JSON output."
+      "explanation": "Defining a tool with the target schema as input parameters and having Claude call it enforces structural\ncompliance natively at the API level. This is more reliable than prompt instructions, pre-filling, or post-parsing,\nas the tool_use mechanism guarantees schema-conformant JSON output.",
+      "optionExplanations": {
+        "A": "Defining a tool with the target schema as input parameters and having Claude call it enforces structural compliance natively at the API level. This is more reliable than prompt instructions, pre-filling, or post-parsing, as the tool_use mechanism guarantees schema-conformant JSON output.",
+        "B": "Retry logic on JSON parsing failures doesn't guarantee compliance—the model may produce syntactically valid JSON that violates the schema structure (missing fields, wrong types), and retries waste tokens without enforcing schema constraints.",
+        "C": "Pre-filling with an opening brace is fragile and doesn't enforce field structure, types, or required fields; the model can still produce malformed JSON that passes basic syntax parsing but fails schema validation.",
+        "D": "Parsing Claude's text response as JSON after generation relies on prompt compliance alone, which is less reliable than native API enforcement; the model may omit required fields, use wrong types, or produce non-JSON output despite instructions."
+      }
     },
     {
       "id": 24,
@@ -358,7 +496,13 @@
         "D": "Add constraints: 'Extract 10-20 skills maximum, one skill per entry, only explicitly named skills.'"
       },
       "correctAnswer": "A",
-      "explanation": "Few-shot examples directly address all three consistency issues by demonstrating how to handle compound\nphrases, what counts as an explicit mention, and appropriate granularity. Examples are the most effective way\nto calibrate the model's extraction behavior for ambiguous cases."
+      "explanation": "Few-shot examples directly address all three consistency issues by demonstrating how to handle compound\nphrases, what counts as an explicit mention, and appropriate granularity. Examples are the most effective way\nto calibrate the model's extraction behavior for ambiguous cases.",
+      "optionExplanations": {
+        "A": "Few-shot examples directly address all three consistency issues by demonstrating how to handle compound phrases, what counts as an explicit mention, and appropriate granularity. Examples are the most effective way to calibrate the model's extraction behavior for ambiguous cases.",
+        "B": "Adding metadata fields doesn't resolve the inconsistencies—compound phrase splitting, inference, and entry count variation are behavioral issues rooted in unclear extraction criteria, not missing metadata.",
+        "C": "Post-extraction normalization masks rather than solves the core problem of inconsistent extraction; it adds latency and complexity without teaching the model when to split, what to infer, or how granular to be during extraction.",
+        "D": "Hard constraints (10-20 max, one per entry, explicit-only) are too rigid and don't address the implicit-skill problem; they also don't show the model *how* to handle edge cases like compound phrases, leaving interpretation inconsistent."
+      }
     },
     {
       "id": 25,
@@ -372,7 +516,13 @@
         "D": "Route standard reports to the Batch API for 50% cost savings, and route urgent exception reports to the real-time Messages API."
       },
       "correctAnswer": "D",
-      "explanation": "Routing standard reports to the Batch API saves 50% on cost (they don't need immediate processing), while\nrouting urgent exception reports to the real-time Messages API ensures the 30-minute SLA is met. This\noptimally balances cost and latency requirements."
+      "explanation": "Routing standard reports to the Batch API saves 50% on cost (they don't need immediate processing), while\nrouting urgent exception reports to the real-time Messages API ensures the 30-minute SLA is met. This\noptimally balances cost and latency requirements.",
+      "optionExplanations": {
+        "A": "Hourly batch processing cannot meet the 30-minute SLA for urgent exception reports, since batches may be submitted up to 59 minutes after receipt and processed later.",
+        "B": "The Batch API is not designed for sub-hour latency; results may take hours to arrive, making it impossible to trigger alerts within 30 minutes of receipt regardless of post-processing speed.",
+        "C": "Using the real-time API for all documents wastes budget on expensive API calls for standard monthly reports that have no latency requirements, eliminating the 50% cost savings opportunity.",
+        "D": "Routing standard reports to the Batch API saves 50% on cost (they don't need immediate processing), while routing urgent exception reports to the real-time Messages API ensures the 30-minute SLA is met. This optimally balances cost and latency requirements."
+      }
     },
     {
       "id": 26,
@@ -386,7 +536,13 @@
         "D": "Continuously expand the enum to include newly observed property types and add monitoring for additional edge cases."
       },
       "correctAnswer": "A",
-      "explanation": "Adding 'other' with a detail field handles unknown types without constant schema changes. The enum remains\nstructured for known types (enabling downstream filtering), while the detail field captures novel types that\nappear regularly."
+      "explanation": "Adding 'other' with a detail field handles unknown types without constant schema changes. The enum remains\nstructured for known types (enabling downstream filtering), while the detail field captures novel types that\nappear regularly.",
+      "optionExplanations": {
+        "A": "Adding 'other' with a detail field handles unknown types without constant schema changes. The enum remains structured for known types (enabling downstream filtering), while the detail field captures novel types that appear regularly.",
+        "B": "Removing the enum entirely sacrifices the ability to categorize known property types into a controlled set, making downstream filtering and analysis more difficult without providing a sustainable solution for the continuous emergence of new types.",
+        "C": "Prompt-based mapping cannot reliably handle the open-ended nature of new property types; the model will still struggle when encountering types it hasn't seen in examples, and new types will keep appearing.",
+        "D": "Manually expanding the enum each time a new property type appears is unsustainable and will lead to continuous schema changes and redeployments as the diversity of property types continues to grow."
+      }
     },
     {
       "id": 27,
@@ -400,7 +556,13 @@
         "D": "Add few-shot examples showing 2-3 complete input-output pairs with standardized material description formats."
       },
       "correctAnswer": "D",
-      "explanation": "Few-shot examples with standardized input-output pairs directly address the inconsistency by showing the\nmodel exactly what format to use for material descriptions. This calibrates extraction behavior more effectively\nthan schema changes or temperature settings."
+      "explanation": "Few-shot examples with standardized input-output pairs directly address the inconsistency by showing the\nmodel exactly what format to use for material descriptions. This calibrates extraction behavior more effectively\nthan schema changes or temperature settings.",
+      "optionExplanations": {
+        "A": "Model capability is not the issue here since the model successfully extracts materials when present; the problem is inconsistent formatting of the same information, which indicates a need for format guidance rather than a more powerful model.",
+        "B": "Making the field required doesn't address the format inconsistency problem and may force the model to hallucinate material information when truly absent, introducing false positives into your data.",
+        "C": "Temperature affects randomness in generation, but the core issue is the model lacks clear guidance on the standardized format to use; even with temperature=0, it will still produce inconsistently formatted materials without format examples.",
+        "D": "Few-shot examples with standardized input-output pairs directly address the inconsistency by showing the model exactly what format to use for material descriptions. This calibrates extraction behavior more effectively than schema changes or temperature settings."
+      }
     },
     {
       "id": 28,
@@ -414,7 +576,13 @@
         "D": "Retry the extraction up to 3 times when validation fails, accepting the first result that passes validation."
       },
       "correctAnswer": "A",
-      "explanation": "A follow-up request with the document, the extraction, and the specific validation errors gives the model\ntargeted feedback to self-correct. This is more effective than blind retries (D) because the model sees exactly\nwhat went wrong and can fix it."
+      "explanation": "A follow-up request with the document, the extraction, and the specific validation errors gives the model\ntargeted feedback to self-correct. This is more effective than blind retries (D) because the model sees exactly\nwhat went wrong and can fix it.",
+      "optionExplanations": {
+        "A": "A follow-up request with the document, the extraction, and the specific validation errors gives the model targeted feedback to self-correct. This is more effective than blind retries (D) because the model sees exactly what went wrong and can fix it.",
+        "B": "Automatically 'correcting' semantic errors like recalculating totals masks the underlying extraction problem and introduces silent failures where the model's original extraction was wrong but you don't catch it, reducing transparency and data integrity.",
+        "C": "Schema constraints control JSON syntax, not semantic validity; stricter descriptions won't prevent the model from extracting a vendor ID in the wrong format or calculating line items that don't sum to the total.",
+        "D": "Blind retries without feedback rarely succeed because the model repeats the same mistakes; without knowing what validation failed, it has no information to generate a different (correct) extraction on the next attempt."
+      }
     },
     {
       "id": 29,
@@ -428,7 +596,13 @@
         "D": "Set 'tool_choice' to 'auto' and reorder the tool definitions so 'extract_metadata' appears first in the tools array, since Claude prioritizes earlier-listed tools."
       },
       "correctAnswer": "B",
-      "explanation": "Setting tool_choice to force 'extract_metadata' on the first turn guarantees metadata extraction happens first.\nEnrichment requests are then processed in subsequent turns after the DOI and other metadata are available,\nestablishing correct sequencing."
+      "explanation": "Setting tool_choice to force 'extract_metadata' on the first turn guarantees metadata extraction happens first.\nEnrichment requests are then processed in subsequent turns after the DOI and other metadata are available,\nestablishing correct sequencing.",
+      "optionExplanations": {
+        "A": "Using 'tool_choice': 'any' only guarantees a tool is called, not which tool—Claude could still call 'lookup_citations' first and fail without the DOI.",
+        "B": "Setting tool_choice to force 'extract_metadata' on the first turn guarantees metadata extraction happens first. Enrichment requests are then processed in subsequent turns after the DOI and other metadata are available, establishing correct sequencing.",
+        "C": "Forcing 'extract_metadata' on every API call creates unnecessary overhead and prevents the agent from performing enrichment tasks after metadata is obtained.",
+        "D": "Tool definition order does not influence Claude's selection when 'tool_choice' is 'auto'—Claude chooses based on request semantics, not list position."
+      }
     },
     {
       "id": 30,
@@ -442,7 +616,13 @@
         "D": "Make all schema fields required (non-nullable) with strict validation rules to ensure the model only outputs verifiable data."
       },
       "correctAnswer": "B",
-      "explanation": "Explicit prompt instructions to return null when information isn't directly stated in the source address the\nhallucination problem at its root. This teaches the model to distinguish between 'information present in source'\nand 'plausible guess' — a distinction it can make reliably with clear instructions.\nScenario: Developer Productivity Tools\nYou are building developer productivity tools using the Claude Agent SDK. The agent helps engineers explore\nunfamiliar codebases, understand legacy systems, generate boilerplate code, and automate repetitive tasks. It uses the\nbuilt-in tools (Read, Write, Bash, Grep, Glob) and integrates with Model Context Protocol (MCP) servers."
+      "explanation": "Explicit prompt instructions to return null when information isn't directly stated in the source address the\nhallucination problem at its root. This teaches the model to distinguish between 'information present in source'\nand 'plausible guess' — a distinction it can make reliably with clear instructions.\nScenario: Developer Productivity Tools\nYou are building developer productivity tools using the Claude Agent SDK. The agent helps engineers explore\nunfamiliar codebases, understand legacy systems, generate boilerplate code, and automate repetitive tasks. It uses the\nbuilt-in tools (Read, Write, Bash, Grep, Glob) and integrates with Model Context Protocol (MCP) servers.",
+      "optionExplanations": {
+        "A": "A second LLM verification call is expensive and doesn't address the root cause—the model still generates false values in the first extraction.",
+        "B": "Explicit prompt instructions to return null when information isn't directly stated in the source address the hallucination problem at its root. This teaches the model to distinguish between 'information present in source' and 'plausible guess' — a distinction it can make reliably with clear instructions. Scenario: Developer Productivity Tools You are building developer productivity tools using the Claude Agent SDK. The agent helps engineers explore unfamiliar codebases, understand legacy systems, generate boilerplate code, and automate repetitive tasks. It uses the built-in tools (Read, Write, Bash, Grep, Glob) and integrates with Model Context Protocol (MCP) servers.",
+        "C": "Model capability upgrades don't specifically solve the instruction-following problem; the issue is that the model isn't being told to reject unverified information, not that it lacks reasoning ability.",
+        "D": "Making fields required forces the model to output something even when data isn't present, which guarantees hallucinations rather than preventing them."
+      }
     },
     {
       "id": 31,
@@ -456,7 +636,13 @@
         "D": "Enhance the MCP tool descriptions to explain when each tool is preferable to text manipulation and clarify expected inputs and outputs."
       },
       "correctAnswer": "D",
-      "explanation": "Better tool descriptions tell the model when MCP tools are preferable over built-in text manipulation. The\nmodel defaults to familiar tools when it can't assess the advantage of specialized ones — richer descriptions\nwith clear use cases and I/O contracts drive adoption."
+      "explanation": "Better tool descriptions tell the model when MCP tools are preferable over built-in text manipulation. The\nmodel defaults to familiar tools when it can't assess the advantage of specialized ones — richer descriptions\nwith clear use cases and I/O contracts drive adoption.",
+      "optionExplanations": {
+        "A": "This accepts poor tool adoption as inevitable, missing an opportunity to guide the model toward specialized tools that are actually more correct for refactoring than basic text commands.",
+        "B": "Removing the Write tool is overly restrictive and doesn't address the real issue—the agent doesn't understand when the MCP tools are preferable, so forced routing could cause failures on legitimate use cases.",
+        "C": "A request classifier adds complexity and prevents the agent from exercising judgment; the model should learn to prefer better tools through information, not through bypassing its decision-making.",
+        "D": "Better tool descriptions tell the model when MCP tools are preferable over built-in text manipulation. The model defaults to familiar tools when it can't assess the advantage of specialized ones — richer descriptions with clear use cases and I/O contracts drive adoption."
+      }
     },
     {
       "id": 32,
@@ -470,7 +656,13 @@
         "D": "The agent queries each server sequentially to determine which handles each tool, routing calls based on tool name prefixes."
       },
       "correctAnswer": "B",
-      "explanation": "All configured MCP server tools are discovered at connection time and available simultaneously. The agent\ncan use git tools and Jira tools in the same turn without any server-switching or routing logic."
+      "explanation": "All configured MCP server tools are discovered at connection time and available simultaneously. The agent\ncan use git tools and Jira tools in the same turn without any server-switching or routing logic.",
+      "optionExplanations": {
+        "A": "This incorrectly suggests manual server selection is required; the agent doesn't need to be told which server to use for each turn.",
+        "B": "All configured MCP server tools are discovered at connection time and available simultaneously. The agent can use git tools and Jira tools in the same turn without any server-switching or routing logic.",
+        "C": "The agent doesn't automatically select and load only one server's tools—all tools remain available simultaneously, allowing the agent to call git and Jira tools in the same turn.",
+        "D": "The agent doesn't query servers sequentially or route based on tool name prefixes; all tools are accessible without special routing logic."
+      }
     },
     {
       "id": 33,
@@ -484,7 +676,13 @@
         "D": "Use the Read tool to sequentially load all 15 files, building complete understanding across the full caching implementation."
       },
       "correctAnswer": "C",
-      "explanation": "Starting from the base cache class interface provides the architectural understanding needed, then tracing\nspecific invalidation implementations follows a top-down approach that builds understanding efficiently without\nloading all 8,000 lines into context."
+      "explanation": "Starting from the base cache class interface provides the architectural understanding needed, then tracing\nspecific invalidation implementations follows a top-down approach that builds understanding efficiently without\nloading all 8,000 lines into context.",
+      "optionExplanations": {
+        "A": "Reading largest files first ignores the architectural structure of the caching system, risking deep dives into implementation details before understanding the foundational interfaces and design patterns.",
+        "B": "Searching for specific keywords and reading only isolated line ranges misses the architectural relationships between cache classes, decorators, and middleware needed to understand how invalidation fits into the larger system.",
+        "C": "Starting from the base cache class interface provides the architectural understanding needed, then tracing specific invalidation implementations follows a top-down approach that builds understanding efficiently without loading all 8,000 lines into context.",
+        "D": "Loading all 15 files (~8,000 lines) into context exhausts the available space before the agent can even synthesize understanding, leaving no room for the actual task of adding the new invalidation trigger."
+      }
     },
     {
       "id": 34,
@@ -498,7 +696,13 @@
         "D": "Switch to a higher-capacity model tier to provide more context window space for accumulated exploration data."
       },
       "correctAnswer": "A",
-      "explanation": "A scratchpad file persists key findings outside the context window, surviving long sessions where context\nwould otherwise degrade. The agent can reference the file for consistent answers without relying on the\nconversation history remaining in the context window."
+      "explanation": "A scratchpad file persists key findings outside the context window, surviving long sessions where context\nwould otherwise degrade. The agent can reference the file for consistent answers without relying on the\nconversation history remaining in the context window.",
+      "optionExplanations": {
+        "A": "A scratchpad file persists key findings outside the context window, surviving long sessions where context would otherwise degrade. The agent can reference the file for consistent answers without relying on the conversation history remaining in the context window.",
+        "B": "Pre-summarizing all files before exploration limits the agent's ability to focus on relevant areas as questions evolve—it forces compression of content that may or may not be needed, wasting effort on irrelevant summaries.",
+        "C": "Clearing context every 15 minutes actively destroys accumulated knowledge and forces the agent to re-explore already-discussed modules, creating the exact repetition problem engineers are experiencing rather than solving it.",
+        "D": "A larger context window only delays the problem without solving it; inconsistency stems from context degradation over time, not insufficient space, and more space doesn't prevent forgotten information from earlier in long sessions."
+      }
     },
     {
       "id": 35,
@@ -512,7 +716,13 @@
         "D": "Add an orchestrator that routes questions to a single server based on keywords."
       },
       "correctAnswer": "C",
-      "explanation": "MCP resources expose content catalogs (issue summaries, documentation hierarchy, database schemas),\ngiving the agent visibility into what each server contains without blind exploratory calls. This reduces tool calls\nand context usage by enabling informed, targeted queries."
+      "explanation": "MCP resources expose content catalogs (issue summaries, documentation hierarchy, database schemas),\ngiving the agent visibility into what each server contains without blind exploratory calls. This reduces tool calls\nand context usage by enabling informed, targeted queries.",
+      "optionExplanations": {
+        "A": "Consolidating three independent servers into one creates a tightly coupled system that loses the modularity and separation of concerns that makes MCP valuable for managing distinct systems with different purposes and update cycles.",
+        "B": "A prepare_investigation tool still requires the agent to make sequential requests to each server without knowing what's available beforehand, perpetuating the blind exploratory calls that consume context and tool quota.",
+        "C": "MCP resources expose content catalogs (issue summaries, documentation hierarchy, database schemas), giving the agent visibility into what each server contains without blind exploratory calls. This reduces tool calls and context usage by enabling informed, targeted queries.",
+        "D": "Routing based on keywords doesn't address the core issue—the agent still lacks visibility into content across systems and will make multiple exploratory calls within each routed server to find relevant information."
+      }
     },
     {
       "id": 36,
@@ -526,7 +736,13 @@
         "D": "Use Edit's replace_all parameter to target a common pattern and embed the new function in the replacement text."
       },
       "correctAnswer": "A",
-      "explanation": "Read the full file, insert at the right location, and Write it back. This is the reliable fallback when Edit can't\nmatch unique text — it gives the agent full control over placement in files with repetitive patterns."
+      "explanation": "Read the full file, insert at the right location, and Write it back. This is the reliable fallback when Edit can't\nmatch unique text — it gives the agent full control over placement in files with repetitive patterns.",
+      "optionExplanations": {
+        "A": "Read the full file, insert at the right location, and Write it back. This is the reliable fallback when Edit can't match unique text — it gives the agent full control over placement in files with repetitive patterns.",
+        "B": "Capturing 30+ lines of context only works if that exact sequence exists nowhere else in the file; with repetitive patterns acknowledged in the stem, even very long strings risk accidental matches or subtle differences that cause Edit to fail again.",
+        "C": "Appending to the file's end solves the insertion problem mechanically but violates code organization, leaving the helper function separated from the related functions it should be grouped with and making future maintenance harder.",
+        "D": "Using replace_all with a common pattern risks replacing unintended instances elsewhere in the file, potentially corrupting other functions or structure, and embeds the new code in a way that couples it to that pattern rather than placing it logically."
+      }
     },
     {
       "id": 37,
@@ -540,7 +756,13 @@
         "D": "Launch a fresh subagent with a summary of prior findings."
       },
       "correctAnswer": "A",
-      "explanation": "Resuming from the prior transcript preserves the full 30-minute exploration context (47 files, data flows).\nInforming the agent about the renamed functions updates its stale references, preventing errors when it\n\nencounters the changed code."
+      "explanation": "Resuming from the prior transcript preserves the full 30-minute exploration context (47 files, data flows).\nInforming the agent about the renamed functions updates its stale references, preventing errors when it\n\nencounters the changed code.",
+      "optionExplanations": {
+        "A": "Resuming from the prior transcript preserves the full 30-minute exploration context (47 files, data flows). Informing the agent about the renamed functions updates its stale references, preventing errors when it encounters the changed code.",
+        "B": "Including the prior transcript in a fresh subagent's initial prompt loses the ability to leverage the subagent's internal state and continuity from the 30-minute exploration session.",
+        "C": "Omitting the renamed functions leaves the subagent with stale code references that will cause confusion or errors when it encounters the changed utility function names.",
+        "D": "Using only a summary discards the detailed context of all 47 files and documented data flows, reducing the agent's ability to make informed decisions during continuation."
+      }
     },
     {
       "id": 38,
@@ -554,7 +776,13 @@
         "D": "Bash, to execute 'find. -type d -name \"*auth*\"' and explore matching directories."
       },
       "correctAnswer": "A",
-      "explanation": "Grep searches file contents for a specific pattern across all files. Since the task is to find files that import\n'@company/auth', Grep can search for the import statement text across the entire monorepo efficiently."
+      "explanation": "Grep searches file contents for a specific pattern across all files. Since the task is to find files that import\n'@company/auth', Grep can search for the import statement text across the entire monorepo efficiently.",
+      "optionExplanations": {
+        "A": "Grep searches file contents for a specific pattern across all files. Since the task is to find files that import '@company/auth', Grep can search for the import statement text across the entire monorepo efficiently.",
+        "B": "Glob matches filenames and directory paths containing 'auth', but the task requires finding files based on their *contents* (the import statement), not their names.",
+        "C": "Reading package.json files reveals dependencies declared in the project, but does not identify where those dependencies are actually *imported and used* throughout the codebase.",
+        "D": "Using Bash to find directories named '*auth*' locates filesystem locations, not the import statements within files that actually reference the '@company/auth' package."
+      }
     },
     {
       "id": 39,
@@ -568,7 +796,13 @@
         "D": "Routing — classify each PR by type (feature, bugfix, refactor) first, then route to different review prompts optimized for that category."
       },
       "correctAnswer": "B",
-      "explanation": "The review follows a fixed, predictable three-step workflow (style, security, documentation) for every PR.\nPrompt chaining maps naturally to this sequential pattern — each step gets focused attention, and outputs are\ncombined in a final synthesis step."
+      "explanation": "The review follows a fixed, predictable three-step workflow (style, security, documentation) for every PR.\nPrompt chaining maps naturally to this sequential pattern — each step gets focused attention, and outputs are\ncombined in a final synthesis step.",
+      "optionExplanations": {
+        "A": "Orchestrator-workers adds unnecessary complexity by having a central LLM decide which checks to run; the workflow is already fixed and deterministic, so dynamic dispatch is wasteful.",
+        "B": "The review follows a fixed, predictable three-step workflow (style, security, documentation) for every PR. Prompt chaining maps naturally to this sequential pattern — each step gets focused attention, and outputs are combined in a final synthesis step.",
+        "C": "A single comprehensive prompt forces the model to juggle three unrelated analysis tasks simultaneously, reducing focus and making it harder to validate that each aspect receives adequate attention.",
+        "D": "Routing by PR type (feature, bugfix, refactor) introduces classification overhead that is irrelevant to the requirement; all three review aspects (style, security, documentation) apply uniformly regardless of PR category."
+      }
     },
     {
       "id": 40,
@@ -582,7 +816,13 @@
         "D": "Use Grep to search for the function's original name across the codebase."
       },
       "correctAnswer": "B",
-      "explanation": "Reading wrappers to discover all aliased names (calculateTax, computeOrderTax, etc.), then Grep-ing for\neach across the codebase ensures complete coverage. Simply searching for the original name (D) would miss\nall the aliased callers."
+      "explanation": "Reading wrappers to discover all aliased names (calculateTax, computeOrderTax, etc.), then Grep-ing for\neach across the codebase ensures complete coverage. Simply searching for the original name (D) would miss\nall the aliased callers.",
+      "optionExplanations": {
+        "A": "Documentation describes *intended* usage patterns, not actual callers in the codebase; many real usages may be undocumented or differ from documented examples.",
+        "B": "Reading wrappers to discover all aliased names (calculateTax, computeOrderTax, etc.), then Grep-ing for each across the codebase ensures complete coverage. Simply searching for the original name (D) would miss all the aliased callers.",
+        "C": "Reading all files that import from the library or wrappers is inefficient and incomplete—many files may import the module without using this specific function, and some callers may be indirect.",
+        "D": "Searching only for the original name 'calculateTax' misses all callers that use the function through its renamed aliases (like 'computeOrderTax'), resulting in incomplete findings."
+      }
     },
     {
       "id": 41,
@@ -596,7 +836,13 @@
         "D": "Export Jira tickets to markdown files in the repository that the agent accesses using the Read tool."
       },
       "correctAnswer": "A",
-      "explanation": "An existing Jira MCP server provides standard ticket access through discoverable tools with no custom\ndevelopment needed. The team's needs (descriptions, acceptance criteria, comments) are standard Jira data\nthat existing MCP servers already expose."
+      "explanation": "An existing Jira MCP server provides standard ticket access through discoverable tools with no custom\ndevelopment needed. The team's needs (descriptions, acceptance criteria, comments) are standard Jira data\nthat existing MCP servers already expose.",
+      "optionExplanations": {
+        "A": "An existing Jira MCP server provides standard ticket access through discoverable tools with no custom development needed. The team's needs (descriptions, acceptance criteria, comments) are standard Jira data that existing MCP servers already expose.",
+        "B": "Building a custom MCP server duplicates effort when an existing Jira MCP server already handles standard ticket data like descriptions, acceptance criteria, and comments that this team needs.",
+        "C": "Using Bash with curl for each Jira lookup is fragile, non-discoverable, and requires manual authentication/parsing work—it bypasses the structured tool interfaces that MCP is designed to provide.",
+        "D": "Exporting tickets to markdown files creates stale copies that diverge from live Jira data, requiring manual updates and defeating the purpose of direct real-time access during code reviews."
+      }
     },
     {
       "id": 42,
@@ -610,7 +856,13 @@
         "D": "Read any CLAUDE.md and README files first, then ask the engineer to specify which 10-15 files are most important for understanding the auth system."
       },
       "correctAnswer": "B",
-      "explanation": "Grep for authentication entry points, then read those files and follow imports incrementally. This targeted,\nincremental approach builds understanding efficiently without loading all 800+ files, working within context\n\nconstraints while mapping the full auth flow."
+      "explanation": "Grep for authentication entry points, then read those files and follow imports incrementally. This targeted,\nincremental approach builds understanding efficiently without loading all 800+ files, working within context\n\nconstraints while mapping the full auth flow.",
+      "optionExplanations": {
+        "A": "Subagents lack access to Claude's built-in tools (Grep, Read) and would require custom implementation; this also doesn't solve the core challenge of mapping auth flow within context limits.",
+        "B": "Grep for authentication entry points, then read those files and follow imports incrementally. This targeted, incremental approach builds understanding efficiently without loading all 800+ files, working within context constraints while mapping the full auth flow.",
+        "C": "Reading all files matching auth-related keywords will load far too many files at once, exhausting context limits and burying the entry points needed to trace the actual flow incrementally.",
+        "D": "Asking the engineer to manually specify which files matter defeats the purpose of agent-driven exploration and wastes their time; the agent should discover entry points autonomously using available tools."
+      }
     },
     {
       "id": 43,
@@ -624,7 +876,13 @@
         "D": "Spawn a sub-agent to explore physics independently, then manually synthesize its findings with the rendering knowledge accumulated in the main conversation."
       },
       "correctAnswer": "B",
-      "explanation": "Summarizing rendering findings and spawning a sub-agent with that summary gives the physics exploration\nfresh context space while preserving key rendering knowledge. The current context is degrading (generic\nreferences instead of specific classes), so a fresh sub-agent with a curated summary is optimal."
+      "explanation": "Summarizing rendering findings and spawning a sub-agent with that summary gives the physics exploration\nfresh context space while preserving key rendering knowledge. The current context is degrading (generic\nreferences instead of specific classes), so a fresh sub-agent with a curated summary is optimal.",
+      "optionExplanations": {
+        "A": "The current context is already degrading (generic patterns replacing specific class names), so continuing risks deeper loss of specific knowledge; targeted prompts alone won't recover the precision that's already slipping.",
+        "B": "Summarizing rendering findings and spawning a sub-agent with that summary gives the physics exploration fresh context space while preserving key rendering knowledge. The current context is degrading (generic references instead of specific classes), so a fresh sub-agent with a curated summary is optimal.",
+        "C": "Clearing context entirely discards the 25 minutes of rendering knowledge already built, forcing redundant re-exploration instead of preserving it for cross-subsystem understanding.",
+        "D": "Spawning a sub-agent without a curated summary means physics exploration happens in isolation without the rendering context needed to understand collision debug overlay integration."
+      }
     },
     {
       "id": 44,
@@ -638,7 +896,13 @@
         "D": "Use Grep to find all files that import the project's error handling module, then Read those files to locate custom error definitions."
       },
       "correctAnswer": "B",
-      "explanation": "Grep the distinctive error string 'SYNC_CONFLICT' directly — this is the fastest path to the exact file\ngenerating it. The error message is unique enough that a content search will pinpoint the source immediately."
+      "explanation": "Grep the distinctive error string 'SYNC_CONFLICT' directly — this is the fastest path to the exact file\ngenerating it. The error message is unique enough that a content search will pinpoint the source immediately.",
+      "optionExplanations": {
+        "A": "Searching common error handling directories is indirect and may miss where the error is actually generated; error definitions aren't always in dedicated error folders.",
+        "B": "Grep the distinctive error string 'SYNC_CONFLICT' directly — this is the fastest path to the exact file generating it. The error message is unique enough that a content search will pinpoint the source immediately.",
+        "C": "Reading README and architecture files first adds overhead when the error string itself is a direct search key; this approach delays finding the source by requiring architectural understanding first.",
+        "D": "Searching for imports of an error handling module is indirect—the error message itself is more distinctive and will locate the source faster than tracing module dependencies."
+      }
     },
     {
       "id": 45,
@@ -652,7 +916,13 @@
         "D": "Use Bash to run 'ls -R | grep eval' to recursively list files containing eval."
       },
       "correctAnswer": "B",
-      "explanation": "Grep searches file contents for a pattern across all files. It's the right tool for finding all occurrences of 'eval(' in\nthe codebase — it searches inside files, not just file names.\nScenario: CI/CD Pipeline Integration\nYou are integrating Claude Code into your Continuous Integration/Continuous Deployment (CI/CD) pipeline. The\nsystem runs automated code reviews, generates test cases, and provides feedback on pull requests. You need to\ndesign prompts that provide actionable feedback and minimize false positives."
+      "explanation": "Grep searches file contents for a pattern across all files. It's the right tool for finding all occurrences of 'eval(' in\nthe codebase — it searches inside files, not just file names.\nScenario: CI/CD Pipeline Integration\nYou are integrating Claude Code into your Continuous Integration/Continuous Deployment (CI/CD) pipeline. The\nsystem runs automated code reviews, generates test cases, and provides feedback on pull requests. You need to\ndesign prompts that provide actionable feedback and minimize false positives.",
+      "optionExplanations": {
+        "A": "Manual tracing through imports is inefficient and error-prone for a large codebase; it won't reliably find all occurrences of eval() across hundreds or thousands of files.",
+        "B": "Grep searches file contents for a pattern across all files. It's the right tool for finding all occurrences of 'eval(' in the codebase — it searches inside files, not just file names. Scenario: CI/CD Pipeline Integration You are integrating Claude Code into your Continuous Integration/Continuous Deployment (CI/CD) pipeline. The system runs automated code reviews, generates test cases, and provides feedback on pull requests. You need to design prompts that provide actionable feedback and minimize false positives.",
+        "C": "Glob finds files by name pattern, but 'eval' in a filename doesn't indicate where eval() is actually called in code—you'd miss occurrences in files with unrelated names.",
+        "D": "This command lists files and directories with 'eval' in their names, not the contents of files; it won't find eval() function calls inside files with other names."
+      }
     },
     {
       "id": 46,
@@ -666,7 +936,13 @@
         "D": "Stop piping the diff via stdin and instead embed the diff contents inside the prompt string, so Claude Code treats the invocation as an agentic session rather than a stream-processing one."
       },
       "correctAnswer": "B",
-      "explanation": "--append-system-prompt adds your review instructions to Claude Code's default prompt instead of overwriting\nit. The default prompt includes built-in guidance for using file-reading and code navigation tools, which\n--system-prompt was replacing."
+      "explanation": "--append-system-prompt adds your review instructions to Claude Code's default prompt instead of overwriting\nit. The default prompt includes built-in guidance for using file-reading and code navigation tools, which\n--system-prompt was replacing.",
+      "optionExplanations": {
+        "A": "The '-p' flag (non-interactive mode) doesn't disable tools because of missing permissions; the issue is that --system-prompt overwrites the default guidance that teaches Claude to use tools in the first place.",
+        "B": "--append-system-prompt adds your review instructions to Claude Code's default prompt instead of overwriting it. The default prompt includes built-in guidance for using file-reading and code navigation tools, which --system-prompt was replacing.",
+        "C": "A CLAUDE.md file is a configuration pattern for interactive sessions, not for non-interactive '-p' mode, and doesn't solve the core problem that --system-prompt replaces the default tool-use instructions.",
+        "D": "Changing from piped stdin to embedded diff doesn't address the root cause—Claude still lacks the guidance (overwritten by --system-prompt) on when and how to use file-reading tools to understand broader context."
+      }
     },
     {
       "id": 47,
@@ -680,7 +956,13 @@
         "D": "Add instructions to your system prompt to 'be conservative,' 'only flag definite issues,' and 'consider that some patterns may be intentional.'"
       },
       "correctAnswer": "C",
-      "explanation": "Few-shot examples with annotated code snippets that distinguish acceptable patterns from genuine issues\nteach the model to generalize the distinction to novel patterns. Examples demonstrate the reasoning process,\nnot just the conclusion."
+      "explanation": "Few-shot examples with annotated code snippets that distinguish acceptable patterns from genuine issues\nteach the model to generalize the distinction to novel patterns. Examples demonstrate the reasoning process,\nnot just the conclusion.",
+      "optionExplanations": {
+        "A": "Keyword filtering is a brittle post-processing hack that removes findings based on surface-level terminology, not reasoning; it won't help the model generalize judgment to novel patterns it encounters.",
+        "B": "A comprehensive specification of patterns to avoid is too exhaustive and rigid; it documents rules rather than teaching the model the underlying reasoning needed to generalize to code patterns it hasn't explicitly seen.",
+        "C": "Few-shot examples with annotated code snippets that distinguish acceptable patterns from genuine issues teach the model to generalize the distinction to novel patterns. Examples demonstrate the reasoning process, not just the conclusion.",
+        "D": "Vague instructions like 'be conservative' and 'consider intentions' don't teach the model how to distinguish acceptable from problematic patterns; the model has no concrete examples to ground its generalization."
+      }
     },
     {
       "id": 48,
@@ -694,7 +976,13 @@
         "D": "Whether reducing per-review latency from 30-60 seconds to near-instant matters for your workflow."
       },
       "correctAnswer": "B",
-      "explanation": "The reviews are non-blocking (developers merge without waiting), so the key question is whether feedback\narriving up to 24 hours later is still actionable. If developers address findings in follow-up commits anyway, the\nbatch delay doesn't change the workflow."
+      "explanation": "The reviews are non-blocking (developers merge without waiting), so the key question is whether feedback\narriving up to 24 hours later is still actionable. If developers address findings in follow-up commits anyway, the\nbatch delay doesn't change the workflow.",
+      "optionExplanations": {
+        "A": "Single-request reviews vs. multi-turn refinement doesn't determine batch appropriateness; batch processing supports both formats equally well.",
+        "B": "The reviews are non-blocking (developers merge without waiting), so the key question is whether feedback arriving up to 24 hours later is still actionable. If developers address findings in follow-up commits anyway, the batch delay doesn't change the workflow.",
+        "C": "Result ordering is a technical implementation detail easily handled by associating batch results with PR IDs; it doesn't determine whether batch processing fits the workflow requirements.",
+        "D": "Reviews are already non-blocking (developers merge without waiting), so latency from 30-60 seconds to hours is irrelevant to the workflow—speed of feedback is not a constraint in this use case."
+      }
     },
     {
       "id": 49,
@@ -708,7 +996,13 @@
         "D": "Add retry logic that detects truncated JSON and re-sends the request with instructions to report only critical and high severity findings."
       },
       "correctAnswer": "B",
-      "explanation": "Splitting into multiple calls per file subset avoids truncation entirely. Each call analyzes fewer files, stays within\nmax_tokens, and the findings arrays are merged afterward. This scales reliably regardless of PR size."
+      "explanation": "Splitting into multiple calls per file subset avoids truncation entirely. Each call analyzes fewer files, stays within\nmax_tokens, and the findings arrays are merged afterward. This scales reliably regardless of PR size.",
+      "optionExplanations": {
+        "A": "Switching to markdown format doesn't solve the underlying truncation problem—a markdown list can also be cut off mid-response if the token limit is hit, leaving you with unparseable output.",
+        "B": "Splitting into multiple calls per file subset avoids truncation entirely. Each call analyzes fewer files, stays within max_tokens, and the findings arrays are merged afterward. This scales reliably regardless of PR size.",
+        "C": "While increasing max_tokens helps, it doesn't reliably scale for all PR sizes; a future large PR could still exceed the new limit, and artificially constraining descriptions to 50 words may lose important context needed for accurate findings.",
+        "D": "Retry logic that detects truncation and filters by severity level still solves the symptom rather than the root cause—the API call will eventually truncate again as PR size grows, and filtering by severity contradicts the goal of capturing all findings."
+      }
     },
     {
       "id": 50,
@@ -722,7 +1016,13 @@
         "D": "Instruct the model to report all findings with a confidence level and severity tag, deferring filtering to a downstream step."
       },
       "correctAnswer": "D",
-      "explanation": "Instructing the model to report all findings with confidence and severity tags removes the suppression (the\n'only flag critical issues' instruction) while preserving structured output. Downstream filtering can then decide\nwhat to surface based on the tags."
+      "explanation": "Instructing the model to report all findings with confidence and severity tags removes the suppression (the\n'only flag critical issues' instruction) while preserving structured output. Downstream filtering can then decide\nwhat to surface based on the tags.",
+      "optionExplanations": {
+        "A": "Extended thinking and step-by-step reasoning improve analysis depth but don't directly address the core issue: the prompt explicitly instructs the model to suppress non-critical findings, so more reasoning won't counteract that suppression instruction.",
+        "B": "A second pass using the same suppressive prompt will reproduce the same filtering behavior, so missed findings will likely remain missed on the second attempt.",
+        "C": "Removing all severity guidance leaves the model with no structured criteria, risking inconsistent judgment across findings and potentially losing the ability to triage by importance for downstream use.",
+        "D": "Instructing the model to report all findings with confidence and severity tags removes the suppression (the 'only flag critical issues' instruction) while preserving structured output. Downstream filtering can then decide what to surface based on the tags."
+      }
     },
     {
       "id": 51,
@@ -736,7 +1036,13 @@
         "D": "Switch the summarization calls from the Sonnet-tier model to a Haiku-tier model to take advantage of Haiku's lower per-token rates."
       },
       "correctAnswer": "A",
-      "explanation": "The Message Batches API provides a 50% discount on all input and output tokens. With 12 hours of\nacceptable latency, the batch processing window is comfortably met, and the same model and prompts are\nused — satisfying all constraints."
+      "explanation": "The Message Batches API provides a 50% discount on all input and output tokens. With 12 hours of\nacceptable latency, the batch processing window is comfortably met, and the same model and prompts are\nused — satisfying all constraints.",
+      "optionExplanations": {
+        "A": "The Message Batches API provides a 50% discount on all input and output tokens. With 12 hours of acceptable latency, the batch processing window is comfortably met, and the same model and prompts are used — satisfying all constraints.",
+        "B": "Issuing requests in parallel does not lower per-token pricing; the API charges the same rate regardless of concurrency. Parallelism improves throughput but not cost per token.",
+        "C": "Concatenating all 200 commits into a single request doesn't necessarily reduce total token cost—you still pay for all input and output tokens; the token count remains the same whether split across 200 calls or combined into one.",
+        "D": "Switching to Haiku violates the constraint to 'keep the same model'; additionally, Haiku may degrade output quality for complex summarization tasks, which contradicts maintaining the same quality level."
+      }
     },
     {
       "id": 52,
@@ -750,7 +1056,13 @@
         "D": "Implement a secondary classification model that filters Claude's findings based on predicted developer acceptance."
       },
       "correctAnswer": "A",
-      "explanation": "Explicit criteria for what to report vs skip directly filters out the minor style noise. Clear rules (report bugs and\nsecurity issues; skip minor style and local conventions) give the model precise guidance, reducing noise\nwithout losing genuine issues."
+      "explanation": "Explicit criteria for what to report vs skip directly filters out the minor style noise. Clear rules (report bugs and\nsecurity issues; skip minor style and local conventions) give the model precise guidance, reducing noise\nwithout losing genuine issues.",
+      "optionExplanations": {
+        "A": "Explicit criteria for what to report vs skip directly filters out the minor style noise. Clear rules (report bugs and security issues; skip minor style and local conventions) give the model precise guidance, reducing noise without losing genuine issues.",
+        "B": "A confidence threshold (e.g., 'only include findings rated 8+') doesn't distinguish between accurate findings that are unimportant and genuine issues; it filters by model certainty rather than actionability, so minor but confident findings will still be flagged.",
+        "C": "Asking Claude to only report findings it's 'highly confident' about addresses certainty, not relevance; the model may be very confident that a minor style inconsistency exists without recognizing it's acceptable in your codebase.",
+        "D": "A secondary classification model adds infrastructure complexity before exploring prompt-based solutions, contradicting the explicit instruction to avoid infrastructure changes as a first step."
+      }
     },
     {
       "id": 53,
@@ -764,7 +1076,13 @@
         "D": "Add detailed explanations to the project's CLAUDE.md describing which patterns are intentional, that linting is handled separately by CI, and that the src/gen/ directory contains auto-generated template code."
       },
       "correctAnswer": "A",
-      "explanation": "REVIEW.md at the repository root is the standard configuration file for Claude's managed code review. It\nsupports skip rules for linter-duplicate checks and generated files, plus verification requirements for specific\nfinding categories."
+      "explanation": "REVIEW.md at the repository root is the standard configuration file for Claude's managed code review. It\nsupports skip rules for linter-duplicate checks and generated files, plus verification requirements for specific\nfinding categories.",
+      "optionExplanations": {
+        "A": "REVIEW.md at the repository root is the standard configuration file for Claude's managed code review. It supports skip rules for linter-duplicate checks and generated files, plus verification requirements for specific finding categories.",
+        "B": "GitHub Actions workflow files are not the standard configuration mechanism for Claude's managed code review; they control CI pipeline execution, not review behavior itself.",
+        "C": "Splitting into multiple workflows adds operational complexity without leveraging Claude's native configuration system, and doesn't directly address the core issue of suppressing specific finding types.",
+        "D": "While CLAUDE.md can document intentions, it lacks the formal skip rules and verification requirements that REVIEW.md provides to actually suppress and filter findings automatically."
+      }
     },
     {
       "id": 54,
@@ -778,7 +1096,13 @@
         "D": "Replace the default prompt entirely using --system-prompt-file./CLAUDE.md, which bypasses default prompt assembly and loads only your project rules."
       },
       "correctAnswer": "C",
-      "explanation": "--bare skips auto-discovery of hooks, MCP servers, plugins, skills, and nested CLAUDE.md files (eliminating\nthe 18-second delay). --append-system-prompt-file explicitly loads just the root CLAUDE.md with your team's\ncoding standards."
+      "explanation": "--bare skips auto-discovery of hooks, MCP servers, plugins, skills, and nested CLAUDE.md files (eliminating\nthe 18-second delay). --append-system-prompt-file explicitly loads just the root CLAUDE.md with your team's\ncoding standards.",
+      "optionExplanations": {
+        "A": "Embedding all review criteria directly in the prompt argument is brittle and doesn't scale; it defeats the purpose of using CLAUDE.md and forces standards to be specified per invocation rather than versioned with the repo.",
+        "B": "This flag addresses prompt variability and caching, not the root cause of the 18-second delay, which stems from auto-discovery of hooks, MCP servers, plugins, and nested files.",
+        "C": "--bare skips auto-discovery of hooks, MCP servers, plugins, skills, and nested CLAUDE.md files (eliminating the 18-second delay). --append-system-prompt-file explicitly loads just the root CLAUDE.md with your team's coding standards.",
+        "D": "Using --system-prompt-file replaces the entire default prompt, which strips away Claude's built-in review capabilities needed for comprehensive code analysis beyond just your project rules."
+      }
     },
     {
       "id": 55,
@@ -792,7 +1116,13 @@
         "D": "Provide the full repository as context instead of just the changed files and surrounding code, giving the model deeper visibility into business logic patterns."
       },
       "correctAnswer": "B",
-      "explanation": "Splitting into separate focused prompts with dedicated examples eliminates the attention trade-off. Each\nprompt gets full focus on its domain, with its own tailored examples, and findings are consolidated afterward."
+      "explanation": "Splitting into separate focused prompts with dedicated examples eliminates the attention trade-off. Each\nprompt gets full focus on its domain, with its own tailored examples, and findings are consolidated afterward.",
+      "optionExplanations": {
+        "A": "A checklist of edge cases still loads attention into a single prompt, perpetuating the original trade-off between API design and logic recall without actually separating the concerns.",
+        "B": "Splitting into separate focused prompts with dedicated examples eliminates the attention trade-off. Each prompt gets full focus on its domain, with its own tailored examples, and findings are consolidated afterward.",
+        "C": "Model capability alone cannot resolve attention trade-offs within a single prompt when two distinct domains compete for reasoning focus; a more capable model still must prioritize.",
+        "D": "Providing the entire repository as context introduces noise and expands the search space, making it harder to focus on the specific changed code; it doesn't address the prompt design issue causing the recall gap."
+      }
     },
     {
       "id": 56,
@@ -806,7 +1136,13 @@
         "D": "The CI environment has access to the full codebase context while the local session only sees the current file."
       },
       "correctAnswer": "B",
-      "explanation": "The same session retains Claude's prior reasoning about the refactoring. Claude is less likely to question\ndecisions it just made — a form of confirmation bias from the conversation history. A fresh CI session has no\nsuch prior commitment."
+      "explanation": "The same session retains Claude's prior reasoning about the refactoring. Claude is less likely to question\ndecisions it just made — a form of confirmation bias from the conversation history. A fresh CI session has no\nsuch prior commitment.",
+      "optionExplanations": {
+        "A": "The issue is not prompt specificity but rather Claude's tendency to avoid questioning its own prior work within the same conversation, which affects any prompt in that session.",
+        "B": "The same session retains Claude's prior reasoning about the refactoring. Claude is less likely to question decisions it just made — a form of confirmation bias from the conversation history. A fresh CI session has no such prior commitment.",
+        "C": "While long context can reduce available space for analysis, the real problem is confirmation bias from prior reasoning in the session, not context window fill.",
+        "D": "The developer's local session included the full file context for the refactoring they just completed, so visibility to other files is not the limiting factor in catching bugs introduced in that function."
+      }
     },
     {
       "id": 57,
@@ -820,7 +1156,13 @@
         "D": "Set '--permission-mode dontAsk' to auto-deny any tool permission requests not in the explicitly allowed set."
       },
       "correctAnswer": "A",
-      "explanation": "--max-turns and --max-budget-usd are Claude Code flags that directly enforce both an iteration cap and a\ndollar spend cap within Claude Code itself, exactly as the question requires."
+      "explanation": "--max-turns and --max-budget-usd are Claude Code flags that directly enforce both an iteration cap and a\ndollar spend cap within Claude Code itself, exactly as the question requires.",
+      "optionExplanations": {
+        "A": "--max-turns and --max-budget-usd are Claude Code flags that directly enforce both an iteration cap and a dollar spend cap within Claude Code itself, exactly as the question requires.",
+        "B": "GitHub Actions timeout-minutes and Anthropic Console dashboards enforce limits at the job runner level, not within Claude Code itself as required by the question.",
+        "C": "Switching to a cheaper model reduces token cost per iteration but doesn't enforce hard caps on iteration count or total budget that Claude Code enforces.",
+        "D": "Permission mode controls which tools Claude Code can call, but doesn't cap iterations or spending — a tool-restricted agent can still loop indefinitely within budget constraints."
+      }
     },
     {
       "id": 58,
@@ -834,7 +1176,13 @@
         "D": "Build post-processing keyword filters that suppress findings containing terms like 'force unwrap,' 'large class,' or 'deprecated import' before results reach developers."
       },
       "correctAnswer": "A",
-      "explanation": "CLAUDE.md documents accepted patterns and loads automatically during every review as persistent context.\nThis prevents the model from flagging intentional conventions in the first place, rather than filtering them after\ngeneration."
+      "explanation": "CLAUDE.md documents accepted patterns and loads automatically during every review as persistent context.\nThis prevents the model from flagging intentional conventions in the first place, rather than filtering them after\ngeneration.",
+      "optionExplanations": {
+        "A": "CLAUDE.md documents accepted patterns and loads automatically during every review as persistent context. This prevents the model from flagging intentional conventions in the first place, rather than filtering them after generation.",
+        "B": "Suppress-comments and line exclusion are post-hoc filtering that require developers to manually annotate code; they don't supply conventions as persistent context to prevent findings upfront.",
+        "C": "Removing surrounding file context actually worsens the problem by giving the model less information to understand intentional architectural patterns; it won't prevent false positives on force-unwrapping or large classes.",
+        "D": "Keyword-based post-processing filters results after generation rather than preventing the model from flagging these patterns in the first place during analysis."
+      }
     },
     {
       "id": 59,
@@ -848,7 +1196,13 @@
         "D": "Run parallel review passes per changed file with direct dependents included in each pass, then aggregate and deduplicate findings using a final summarization call."
       },
       "correctAnswer": "A",
-      "explanation": "An agentic review with tools (Read, Grep, Glob) lets the model follow references into unchanged files to verify\ncross-file impact. When it sees a renamed parameter, it can search for callers and check their argument order\n— something a static prompt with only changed files cannot do."
+      "explanation": "An agentic review with tools (Read, Grep, Glob) lets the model follow references into unchanged files to verify\ncross-file impact. When it sees a renamed parameter, it can search for callers and check their argument order\n— something a static prompt with only changed files cannot do.",
+      "optionExplanations": {
+        "A": "An agentic review with tools (Read, Grep, Glob) lets the model follow references into unchanged files to verify cross-file impact. When it sees a renamed parameter, it can search for callers and check their argument order — something a static prompt with only changed files cannot do.",
+        "B": "A static dependency graph expansion still requires precomputing which files to include; it cannot dynamically follow semantic references the way an agentic search can, and misses unexpected cross-file interactions.",
+        "C": "Chain-of-thought reasoning about callers is limited to references the model can infer from the diff text alone; without tool access it cannot search the codebase to verify whether those inferred callers actually exist or what their current implementation expects.",
+        "D": "Running parallel passes with direct dependents still requires knowing upfront which files are dependents; this static analysis approach cannot follow dynamic reference chains the way agentic search can."
+      }
     },
     {
       "id": 60,
@@ -862,7 +1216,13 @@
         "D": "Implement a two-phase generation where a second Claude call scores each test against quality criteria, filtering out low-scoring tests before presenting results to developers."
       },
       "correctAnswer": "C",
-      "explanation": "CLAUDE.md with testing standards, fixture documentation, and examples prevents low-value generation at\nthe source. The model learns what constitutes a valuable test before generating, rather than filtering bad tests\nafter the fact."
+      "explanation": "CLAUDE.md with testing standards, fixture documentation, and examples prevents low-value generation at\nthe source. The model learns what constitutes a valuable test before generating, rather than filtering bad tests\nafter the fact.",
+      "optionExplanations": {
+        "A": "Disabling generation in low-quality areas avoids the problem for those directories but doesn't improve test quality in areas where generation is enabled, and loses potential value from any improved tests.",
+        "B": "Coverage-based filtering only catches tests that don't increase line coverage; it misses trivial assertions that do hit new lines, duplicate coverage, and tests violating fixture conventions — all common low-value patterns.",
+        "C": "CLAUDE.md with testing standards, fixture documentation, and examples prevents low-value generation at the source. The model learns what constitutes a valuable test before generating, rather than filtering bad tests after the fact.",
+        "D": "A second Claude call scoring tests and filtering low-scoring ones is a post-generation step that still produces all the low-value tests before filtering, requiring extra cost and latency rather than preventing poor generation upfront."
+      }
     }
   ]
 }

@@ -231,6 +231,7 @@ public class UserService
             IsCorrect = q.IsCorrect,
             Explanation = q.Explanation,
             Answered = q.Answered,
+            OptionExplanations = q.OptionExplanations,
         };
 
     private static QuestionReviewItem ToQuestionReviewItem(ResultQuestionEntity q) =>
@@ -248,5 +249,7 @@ public class UserService
             ExplanationHelper.ResolveWrongAnswerExplanation(
                 q.Explanation,
                 q.CorrectAnswer,
-                q.SelectedAnswer));
+                q.SelectedAnswer,
+                q.OptionExplanations),
+            q.OptionExplanations);
 }

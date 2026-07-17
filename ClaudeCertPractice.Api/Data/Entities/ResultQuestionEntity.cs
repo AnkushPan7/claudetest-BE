@@ -15,4 +15,5 @@ public class ResultQuestionEntity
     public bool IsCorrect { get; set; }
     public string Explanation { get; set; } = "";
     public bool Answered { get; set; }
+    public Dictionary<string, string>? OptionExplanations { get; set; }
 }

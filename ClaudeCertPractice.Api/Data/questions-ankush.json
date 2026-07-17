@@ -41,7 +41,13 @@
         "D": "Prepended to each user message"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: The system prompt is specifically designed for persistent behavioral instructions that apply to every\ninteraction. Environmental variables have no effect on model behavior."
+      "explanation": "Why B: The system prompt is specifically designed for persistent behavioral instructions that apply to every\ninteraction. Environmental variables have no effect on model behavior.",
+      "optionExplanations": {
+        "A": "Instructions in the first assistant message only affect that single response; they don't persist reliably across subsequent user turns unless explicitly re-stated each time.",
+        "B": "The system prompt is specifically designed for persistent behavioral instructions that apply to every interaction. Environmental variables have no effect on model behavior.",
+        "C": "Environmental variables are application-level configuration that never reach the Claude API and have no effect on the model's behavior or instructions.",
+        "D": "Prepending guidelines to each user message is inefficient and error-prone; if even one message omits them, the guidelines fail to persist, defeating the requirement for reliable consistency."
+      }
     },
     {
       "id": 2,
@@ -55,7 +61,13 @@
         "D": "Surface the contradiction and ask the user to clarify which matters more—capital preservation or growth potential—before recommending"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: When preferences directly contradict each other, the correct approach is to surface the conflict and ask\nfor clarification rather than silently picking one or splitting the difference."
+      "explanation": "Why D: When preferences directly contradict each other, the correct approach is to surface the conflict and ask\nfor clarification rather than silently picking one or splitting the difference.",
+      "optionExplanations": {
+        "A": "Choosing the most recent preference ignores the earlier stated constraint of low risk tolerance and risks recommending unsuitable investments without understanding which priority the user actually prioritizes.",
+        "B": "Providing two separate recommendations without clarification forces the user to decide between them later, wasting time and creating confusion rather than proactively resolving the conflict upfront.",
+        "C": "A balanced portfolio silently assumes a middle ground without verifying whether the user values safety or growth more, potentially satisfying neither priority and masking the underlying inconsistency.",
+        "D": "When preferences directly contradict each other, the correct approach is to surface the conflict and ask for clarification rather than silently picking one or splitting the difference."
+      }
     },
     {
       "id": 3,
@@ -69,7 +81,13 @@
         "D": "The model's context window has been exceeded by the conversation length"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Claude has no inherent memory. The application must include all prior conversation turns in the\nmessages array with each API request."
+      "explanation": "Why B: Claude has no inherent memory. The application must include all prior conversation turns in the\nmessages array with each API request.",
+      "optionExplanations": {
+        "A": "Claude does not require a vector database connection to maintain conversation memory; the API uses the messages array passed in each request, not external vector storage.",
+        "B": "Claude has no inherent memory. The application must include all prior conversation turns in the messages array with each API request.",
+        "C": "The Claude API has no session_id parameter; conversations are maintained purely through the messages array that your application constructs and sends with each request.",
+        "D": "While context windows are finite, exceeding them would cause the model to lose *older* messages, not recent ones—Claude would still remember the genre preference stated two messages ago within typical conversation lengths."
+      }
     },
     {
       "id": 4,
@@ -83,7 +101,13 @@
         "D": "Regenerate summaries of existing conversations using the new prompt"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Versioning prompts per conversation preserves consistency for existing users while allowing\nimprovements for new ones. Regenerating histories (D) risks altering the meaning of past exchanges."
+      "explanation": "Why B: Versioning prompts per conversation preserves consistency for existing users while allowing\nimprovements for new ones. Regenerating histories (D) risks altering the meaning of past exchanges.",
+      "optionExplanations": {
+        "A": "Instructions to maintain consistency with prior statements cannot retroactively align the assistant's understanding of old context; the new prompt will interpret historical messages differently, creating contradictions regardless of explicit directives.",
+        "B": "Versioning prompts per conversation preserves consistency for existing users while allowing improvements for new ones. Regenerating histories (D) risks altering the meaning of past exchanges.",
+        "C": "A transition message in a resumed session doesn't resolve the underlying problem—Claude still uses the new prompt and will produce contradictory or shifted responses based on changed instructions, confusing the user.",
+        "D": "Regenerating and replacing summaries of existing conversations risks altering their semantic meaning and creates a false historical record, rather than preserving the integrity of what was actually discussed under the old prompt."
+      }
     },
     {
       "id": 5,
@@ -97,7 +121,13 @@
         "D": "Add an explicit instruction for the model to ask a clarifying question about experience level when unclear"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: A general principle allows the model to apply judgment to implicit cues (like technical terminology). More\nconditionals (C) fail on cases not explicitly covered."
+      "explanation": "Why B: A general principle allows the model to apply judgment to implicit cues (like technical terminology). More\nconditionals (C) fail on cases not explicitly covered.",
+      "optionExplanations": {
+        "A": "An intake form requires explicit user action before the conversation starts, but doesn't help the model apply judgment to implicit cues (like technical terminology) that naturally emerge during conversation.",
+        "B": "A general principle allows the model to apply judgment to implicit cues (like technical terminology). More conditionals (C) fail on cases not explicitly covered.",
+        "C": "Adding more conditionals still relies on the model matching user input to predefined categories, which fails when users provide implicit signals that don't fit those specific branches.",
+        "D": "Asking a clarifying question shifts the burden to the user and creates friction; it doesn't solve the core problem of the model learning to infer expertise from contextual clues."
+      }
     },
     {
       "id": 6,
@@ -111,7 +141,13 @@
         "D": "Add structured XML tags to mark significant discussion conclusions throughout the conversation history"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Progressive summarization explicitly preserves key conclusions (the valuable signal) while freeing up\ncontext space. Simple truncation (A) loses the conclusions."
+      "explanation": "Why C: Progressive summarization explicitly preserves key conclusions (the valuable signal) while freeing up\ncontext space. Simple truncation (A) loses the conclusions.",
+      "optionExplanations": {
+        "A": "Truncating to recent tokens indiscriminately discards older conclusions along with supporting detail, defeating the purpose of making discussions build on previous conclusions.",
+        "B": "Semantic embedding retrieves relevant passages but doesn't actively preserve or highlight the key conclusions themselves—it still requires the model to extract and recall conclusions from retrieved text.",
+        "C": "Progressive summarization explicitly preserves key conclusions (the valuable signal) while freeing up context space. Simple truncation (A) loses the conclusions.",
+        "D": "XML tags mark conclusions for human readers but don't ensure the model prioritizes or explicitly retains those conclusions in context as the conversation grows and context fills up."
+      }
     },
     {
       "id": 7,
@@ -125,7 +161,13 @@
         "D": "Modify the system prompt to instruct the assistant to make reasonable assumptions from available context, state those assumptions explicitly, and offer to adjust if the interpretation is wrong"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Making transparent assumptions and inviting correction reduces friction dramatically while still producing\nuseful responses. Over-engineering (B) adds latency and complexity."
+      "explanation": "Why D: Making transparent assumptions and inviting correction reduces friction dramatically while still producing\nuseful responses. Over-engineering (B) adds latency and complexity.",
+      "optionExplanations": {
+        "A": "A lookup table of predefined defaults is brittle and can't adapt to novel or nuanced requests that fall outside the table, leaving ambiguity unresolved.",
+        "B": "Using a smaller model to classify ambiguity adds latency and a preprocessing step without actually reducing the number of clarifying questions the main assistant asks.",
+        "C": "Limiting to one question per turn still requires multiple turns of back-and-forth to resolve ambiguity, extending the friction and abandonment risk across the entire interaction.",
+        "D": "Making transparent assumptions and inviting correction reduces friction dramatically while still producing useful responses. Over-engineering (B) adds latency and complexity."
+      }
     },
     {
       "id": 8,
@@ -139,7 +181,13 @@
         "D": "Store all history in a vector database and retrieve semantically similar passages"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This directly addresses the two-category problem. The story bible stays in context permanently; only\nephemeral brainstorming is compressed."
+      "explanation": "Why C: This directly addresses the two-category problem. The story bible stays in context permanently; only\nephemeral brainstorming is compressed.",
+      "optionExplanations": {
+        "A": "A sliding window keeps recent brainstorming but drops older character traits and world-building details that should remain consistent, causing the same forgetting problem.",
+        "B": "Summarizing the entire conversation treats story-critical details (character traits, world rules) the same as ephemeral brainstorming, risking loss of nuance in persistent elements during compression.",
+        "C": "This directly addresses the two-category problem. The story bible stays in context permanently; only ephemeral brainstorming is compressed.",
+        "D": "Vector retrieval works for finding related content but doesn't guarantee the model will consistently reference or prioritize persistent elements; it still relies on semantic relevance rather than structural separation."
+      }
     },
     {
       "id": 9,
@@ -153,7 +201,13 @@
         "D": "Keep source text from methodology and results sections permanently in context"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: A structured fact database directly solves the precision problem—exact numbers are stored and\nretrieved, bypassing the lossy summarization step."
+      "explanation": "Why B: A structured fact database directly solves the precision problem—exact numbers are stored and\nretrieved, bypassing the lossy summarization step.",
+      "optionExplanations": {
+        "A": "Re-injecting paper sections at query time still relies on summarization quality upstream; it doesn't structurally prevent precision loss the way a dedicated fact database does.",
+        "B": "A structured fact database directly solves the precision problem—exact numbers are stored and retrieved, bypassing the lossy summarization step.",
+        "C": "Generating higher-fidelity summaries doesn't solve the core problem—summaries are inherently lossy for exact numerical values, and this approach wastes tokens on regenerating content.",
+        "D": "Keeping entire methodology and results sections permanently in context is inefficient and quickly exhausts token budget, especially across multiple papers, without the organized retrieval precision of a structured database."
+      }
     },
     {
       "id": 10,
@@ -167,7 +221,13 @@
         "D": "Implement conversation pruning to remove turns containing outdated preferences"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: A managed state object explicitly tracks the current value. This is more reliable than hoping the model\nnotices updates in a long conversation (B) or pruning history (D)."
+      "explanation": "Why C: A managed state object explicitly tracks the current value. This is more reliable than hoping the model\nnotices updates in a long conversation (B) or pruning history (D).",
+      "optionExplanations": {
+        "A": "Few-shot examples teach the model what it *should* do, but don't guarantee it will reliably notice and apply updates in a real 35%-full context where updates may be buried.",
+        "B": "System prompt instructions rely on the model parsing conversation history correctly under tight context constraints; at 35% context, recent changes may be truncated or overshadowed by earlier content.",
+        "C": "A managed state object explicitly tracks the current value. This is more reliable than hoping the model notices updates in a long conversation (B) or pruning history (D).",
+        "D": "Pruning outdated preferences removes historical context but doesn't create a reliable source of truth for current state; the model can still misremember or conflate earlier and later preferences if they appear similar."
+      }
     },
     {
       "id": 11,
@@ -181,7 +241,13 @@
         "D": "Configure the assistant to proceed with reasonable defaults without explicitly stating these assumptions"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: This threads the needle perfectly—reduce questions while remaining transparent and correctable.\nReserving questions for irreversible actions is the right risk-calibrated approach."
+      "explanation": "Why B: This threads the needle perfectly—reduce questions while remaining transparent and correctable.\nReserving questions for irreversible actions is the right risk-calibrated approach.",
+      "optionExplanations": {
+        "A": "Consolidating questions into one compound question still poses multiple barriers at once, which can overwhelm users and doesn't address the core tension between information gathering and user friction.",
+        "B": "This threads the needle perfectly—reduce questions while remaining transparent and correctable. Reserving questions for irreversible actions is the right risk-calibrated approach.",
+        "C": "A structured intake form collected upfront guarantees abandonment for exploratory users who want to iterate rather than commit to detailed parameters before seeing recommendations.",
+        "D": "Proceeding silently with defaults without stating assumptions removes transparency; users won't know what drove recommendations and can't easily correct misaligned assumptions."
+      }
     },
     {
       "id": 12,
@@ -195,7 +261,13 @@
         "D": "Play popular focus tracks immediately and let the user redirect if needed"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The fundamental ambiguity is between immediate playback and setup—one targeted question resolves\nthis cleanly without launching into a lengthy preference flow."
+      "explanation": "Why C: The fundamental ambiguity is between immediate playback and setup—one targeted question resolves\nthis cleanly without launching into a lengthy preference flow.",
+      "optionExplanations": {
+        "A": "Creating a playlist and notifying the user assumes a setup/later action when the user might want immediate playback, forcing unnecessary friction if they just want to listen now.",
+        "B": "Starting a full preference configuration flow assumes the user wants to set up a reusable preference model when they may simply want to play music immediately without any setup.",
+        "C": "The fundamental ambiguity is between immediate playback and setup—one targeted question resolves this cleanly without launching into a lengthy preference flow.",
+        "D": "Playing immediately without clarification assumes instant playback intent and skips the user's actual desire, which may be to configure or set up preferences for later use."
+      }
     },
     {
       "id": 13,
@@ -209,7 +281,13 @@
         "D": "Summarize the entire conversation history into a concise summary"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: The allergies and user-defined terms must never be lost—they're safety-critical. This approach treats\ndifferent content types differently, which is the right architecture."
+      "explanation": "Why B: The allergies and user-defined terms must never be lost—they're safety-critical. This approach treats\ndifferent content types differently, which is the right architecture.",
+      "optionExplanations": {
+        "A": "A sliding window discards old tokens indiscriminately, risking loss of the shellfish allergy information that must be preserved across the entire conversation for safety.",
+        "B": "The allergies and user-defined terms must never be lost—they're safety-critical. This approach treats different content types differently, which is the right architecture.",
+        "C": "Semantic search cannot reliably retrieve safety-critical structured data like allergies; it may return contextually similar but factually different information, creating dangerous gaps.",
+        "D": "Summarizing the entire conversation loses the exact recipe measurements and user-defined terms that require precision; summaries introduce approximation where accuracy is essential."
+      }
     },
     {
       "id": 14,
@@ -223,7 +301,13 @@
         "D": "Database operations for retrieving and storing conversation history slow dow"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Claude is stateless. Every request re-sends the full conversation history. As turns accumulate, input\ntokens grow linearly, directly increasing both cost and latency."
+      "explanation": "Why B: Claude is stateless. Every request re-sends the full conversation history. As turns accumulate, input\ntokens grow linearly, directly increasing both cost and latency.",
+      "optionExplanations": {
+        "A": "Model response length is independent of context accumulation; longer outputs are driven by user requests or task complexity, not by how much history is retained.",
+        "B": "Claude is stateless. Every request re-sends the full conversation history. As turns accumulate, input tokens grow linearly, directly increasing both cost and latency.",
+        "C": "Claude does not build or maintain internal user profiles across stateless API requests; each call is processed independently without persistent modeling.",
+        "D": "Database operations may slow the application layer, but they are not the PRIMARY driver of API latency and costs—token count is the direct, measurable factor."
+      }
     },
     {
       "id": 15,
@@ -237,7 +321,13 @@
         "D": "Add system prompt instructions specifying phrases to avoid, such as \"Never begin responses with 'Certainly' or similar affirmations\""
       },
       "correctAnswer": "D",
-      "explanation": "Why D: System prompt instructions address the root cause. Post-processing (B) is brittle and adds latency;\nlowering temperature (C) doesn't control phrasing choices."
+      "explanation": "Why D: System prompt instructions address the root cause. Post-processing (B) is brittle and adds latency;\nlowering temperature (C) doesn't control phrasing choices.",
+      "optionExplanations": {
+        "A": "Appending a partial assistant message doesn't prevent repetitive phrasing; the model will continue from that prompt using the same learned patterns that caused repetition in the first place.",
+        "B": "Post-processing strips phrases after generation, adding computational overhead and latency without teaching the model to avoid those choices in future turns.",
+        "C": "Lower temperature reduces randomness but does not target specific phrase patterns; it may make responses more generic or predictable in other undesirable ways.",
+        "D": "System prompt instructions address the root cause. Post-processing (B) is brittle and adds latency; lowering temperature (C) doesn't control phrasing choices."
+      }
     },
     {
       "id": 16,
@@ -251,7 +341,13 @@
         "D": "Set tool_choice to \"auto\" and reorder tool definitions"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Option C forces extract_metadata on EVERY call, meaning enrichment tools can never run. Option B\ncorrectly sequences: force extraction in turn 1, then allow enrichment in subsequent turns."
+      "explanation": "Why B: Option C forces extract_metadata on EVERY call, meaning enrichment tools can never run. Option B\ncorrectly sequences: force extraction in turn 1, then allow enrichment in subsequent turns.",
+      "optionExplanations": {
+        "A": "\"tool_choice\": \"any\" combined with system instructions is unreliable; the model may still choose lookup_citations first if it perceives citation lookup as a valid next step.",
+        "B": "Option",
+        "C": "C forces extract_metadata on EVERY call, meaning enrichment tools can never run. Option B correctly sequences: force extraction in turn 1, then allow enrichment in subsequent turns.",
+        "D": "Reordering tool definitions and setting \"auto\" does not enforce sequencing; the model can still invoke tools in any order it deems logical, regardless of definition order."
+      }
     },
     {
       "id": 17,
@@ -265,7 +361,13 @@
         "D": "Change property_type from an enum to a free-form string and implement normalization in post-processing"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This maintains the structure and queryability of an enum while gracefully accommodating any future\nedge case through the detail field."
+      "explanation": "Why C: This maintains the structure and queryability of an enum while gracefully accommodating any future\nedge case through the detail field.",
+      "optionExplanations": {
+        "A": "Continuously expanding the enum creates maintenance burden and doesn't solve the root problem—new types will keep appearing indefinitely.",
+        "B": "Few-shot examples can't reliably handle truly novel property types that weren't in the training set; they only help with variations of known types.",
+        "C": "This maintains the structure and queryability of an enum while gracefully accommodating any future edge case through the detail field.",
+        "D": "Converting to free-form string eliminates the structure needed for reliable querying and filtering, defeating the purpose of having a standardized property_type field."
+      }
     },
     {
       "id": 18,
@@ -279,7 +381,13 @@
         "D": "Submit all documents to the real-time Messages API"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: The correct architecture matches the tool to the requirement. Batch = cost savings for non-urgent.\nReal-time = required for the 30-min SLA."
+      "explanation": "Why B: The correct architecture matches the tool to the requirement. Batch = cost savings for non-urgent.\nReal-time = required for the 30-min SLA.",
+      "optionExplanations": {
+        "A": "Using Batch API for all documents ignores the 30-minute latency requirement for urgent exception reports, causing SLA violations.",
+        "B": "The correct architecture matches the tool to the requirement. Batch = cost savings for non-urgent. Real-time = required for the 30-min SLA.",
+        "C": "Hourly batches create unnecessary delays (up to 1 hour wait per batch) and don't differentiate between cost-sensitive and latency-sensitive workloads.",
+        "D": "Submitting everything to the real-time Messages API wastes cost savings available through batch processing and is unnecessary for standard reports that don't have tight latency constraints."
+      }
     },
     {
       "id": 19,
@@ -293,7 +401,13 @@
         "D": "Submit batches every 4 hours containing documents from that window"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Max wait in queue = 4 hrs. Max processing = 24 hrs. Total = 28 hrs, leaving a 2-hour buffer within the\n30-hour SLA while still getting the 50% batch discount."
+      "explanation": "Why D: Max wait in queue = 4 hrs. Max processing = 24 hrs. Total = 28 hrs, leaving a 2-hour buffer within the\n30-hour SLA while still getting the 50% batch discount.",
+      "optionExplanations": {
+        "A": "A single end-of-day batch could mean up to 24 hours in queue plus 24 hours processing, totaling 48 hours—well beyond the 30-hour SLA.",
+        "B": "While the math appears to fit (6 + 24 = 30), there's zero buffer for processing delays or queue variations, creating unacceptable reliability risk for a 99.9% SLA.",
+        "C": "Using the real-time API loses the 50% cost savings that batch processing provides, contradicting the goal to meet reliability requirements cost-effectively.",
+        "D": "Max wait in queue = 4 hrs. Max processing = 24 hrs. Total = 28 hrs, leaving a 2-hour buffer within the 30-hour SLA while still getting the 50% batch discount."
+      }
     },
     {
       "id": 20,
@@ -307,7 +421,13 @@
         "D": "Add constraints: \"Extract 10-20 skills maximum, one skill per entry, only explicitly named skills\""
       },
       "correctAnswer": "B",
-      "explanation": "Why B: All three issues are judgment calls (what counts as one skill, what counts as explicit, what granularity is\nappropriate). Few-shot examples demonstrate the exact behavior rather than imposing potentially incorrect rules."
+      "explanation": "Why B: All three issues are judgment calls (what counts as one skill, what counts as explicit, what granularity is\nappropriate). Few-shot examples demonstrate the exact behavior rather than imposing potentially incorrect rules.",
+      "optionExplanations": {
+        "A": "Adding confidence and source_quote fields doesn't address the core judgment issues: the model still won't know where to split compound phrases or what counts as explicit mention.",
+        "B": "All three issues are judgment calls (what counts as one skill, what counts as explicit, what granularity is appropriate). Few-shot examples demonstrate the exact behavior rather than imposing potentially incorrect rules.",
+        "C": "Post-extraction normalization happens too late; it can't fix implied skills that were already extracted or correct compound phrases that were split incorrectly during extraction.",
+        "D": "Hard constraints (10-20 count, one skill per entry) are arbitrary rules that won't generalize; some documents genuinely have fewer skills and some have more, and implied skills are a judgment call that rules can't solve."
+      }
     },
     {
       "id": 21,
@@ -321,7 +441,13 @@
         "D": "Very long documents exceed the model's effective attention spa"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: 2,500 (tool def) + ~2,000 (system prompt) + 175,000-190,000 (document) ≈ 180-195K, approaching the\n200K limit. Content near the end of long documents gets cut off or degraded."
+      "explanation": "Why C: 2,500 (tool def) + ~2,000 (system prompt) + 175,000-190,000 (document) ≈ 180-195K, approaching the\n200K limit. Content near the end of long documents gets cut off or degraded.",
+      "optionExplanations": {
+        "A": "While attention distribution is a real phenomenon in transformers, it doesn't explain the specific token-counting problem here—the issue is that tool definitions and documents literally consume input tokens, leaving insufficient room for processing, not a matter of attention allocation.",
+        "B": "Schema complexity is unrelated to the accuracy degradation pattern shown; the problem occurs with the same schema across different document lengths, and tool definitions (2,500 tokens) are fixed regardless of field count.",
+        "C": "2,500 (tool def) + ~2,000 (system prompt) + 175,000-190,000 (document) ≈ 180-195K, approaching the 200K limit. Content near the end of long documents gets cut off or degraded.",
+        "D": "This is too vague and doesn't account for the fact that a 200K context window should theoretically handle 175-190K documents—the real issue is other inputs (tool definitions + system prompts) competing for that same window space."
+      }
     },
     {
       "id": 22,
@@ -335,7 +461,13 @@
         "D": "Make all schema fields required (non-nullable)"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This directly addresses the root cause—the model needs explicit permission and instruction to return null\nrather than hallucinate plausible values."
+      "explanation": "Why C: This directly addresses the root cause—the model needs explicit permission and instruction to return null\nrather than hallucinate plausible values.",
+      "optionExplanations": {
+        "A": "Using a second LLM call to verify adds latency and cost without solving the root cause; the model will still hallucinate the value in the first extraction, requiring human review of nearly every record rather than preventing hallucination upfront.",
+        "B": "Upgrading models is expensive and speculative; a more capable model might still hallucinate without explicit instruction, since the problem is lack of guidance rather than model incapability.",
+        "C": "This directly addresses the root cause—the model needs explicit permission and instruction to return null rather than hallucinate plausible values.",
+        "D": "Making fields required forces the model to output something even when no information exists, which would worsen hallucination rather than reduce it—the model needs permission to return null, not a mandate to always provide a value."
+      }
     },
     {
       "id": 23,
@@ -349,7 +481,13 @@
         "D": "Extract line items and totals independently, then use a separate validation model"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: This captures both values and surfaces discrepancies for human judgment. Auto-adjusting proportionally\n(C) silently corrupts data—the discrepancy might be a real OCR error or a real model error that needs human\nreview."
+      "explanation": "Why A: This captures both values and surfaces discrepancies for human judgment. Auto-adjusting proportionally\n(C) silently corrupts data—the discrepancy might be a real OCR error or a real model error that needs human\nreview.",
+      "optionExplanations": {
+        "A": "This captures both values and surfaces discrepancies for human judgment. Auto-adjusting proportionally (C) silently corrupts data—the discrepancy might be a real OCR error or a real model error that needs human review.",
+        "B": "Few-shot examples improve consistency but don't guarantee correct arithmetic—a model trained on examples of *correct* sums still makes calculation errors, and examples don't address the root uncertainty about whether the discrepancy reflects a real data issue.",
+        "C": "Automatically adjusting values proportionally silently corrupts the original data; if line items sum to 450 but stated total is 500, that 50-unit discrepancy might indicate a real OCR error or billing issue requiring human investigation, not automatic correction.",
+        "D": "Using a separate validation model adds complexity and latency without addressing the core problem—the extracted values themselves may be accurate but mismatched due to source document errors, which only human review can properly resolve."
+      }
     },
     {
       "id": 24,
@@ -363,7 +501,13 @@
         "D": "Resubmit the entire 10,000 document batch using a model tier with a larger context window"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: context_length_exceeded means the INPUT is too long—max_tokens (C) controls output length, not\ninput. Chunking the documents that are too large is the correct fix, and reprocessing only the 300 failures is the\nmost cost-efficient approach."
+      "explanation": "Why B: context_length_exceeded means the INPUT is too long—max_tokens (C) controls output length, not\ninput. Chunking the documents that are too large is the correct fix, and reprocessing only the 300 failures is the\nmost cost-efficient approach.",
+      "optionExplanations": {
+        "A": "Prompt caching reduces cost for repeated identical inputs, but these 300 failures likely have varied content; caching won't help if each document is unique, and reprocessing the entire batch wastes resources on the 9,700 documents that already succeeded.",
+        "B": "Context_length_exceeded means the INPUT is too long—max_tokens (C) controls output length, not input. Chunking the documents that are too large is the correct fix, and reprocessing only the 300 failures is the most cost-efficient approach.",
+        "C": "The error is context_length_exceeded on the INPUT side, not the output; max_tokens controls how many tokens the model *generates*, not how many it can *accept*, so increasing it won't fix documents that are too long to fit in the input window.",
+        "D": "Reprocessing all 10,000 documents with a larger context window re-runs successful extractions unnecessarily, doubling the cost; only the 300 failures need reprocessing, and they need smaller chunks, not a bigger model."
+      }
     },
     {
       "id": 25,
@@ -377,7 +521,13 @@
         "D": "The model extracts keywords as a nested object when the schema requires a flat array of strings"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: B, C, and D are all format/structure errors that can be fixed by error feedback on retry. A is fundamentally\ndifferent—the data doesn't exist in the input at all. No amount of retrying can produce information that isn't there."
+      "explanation": "Why A: B, C, and D are all format/structure errors that can be fixed by error feedback on retry. A is fundamentally\ndifferent—the data doesn't exist in the input at all. No amount of retrying can produce information that isn't there.",
+      "optionExplanations": {
+        "A": "B, C, and D are all format/structure errors that can be fixed by error feedback on retry",
+        "B": "This is a format conversion error (locale-formatted strings to integers) that can be easily fixed with a retry and explicit error feedback about the required format.",
+        "C": "This is a structural truncation error where the model is outputting more data than needed; a retry with format clarification can correct this.",
+        "D": "This is a schema structure mismatch (nested object vs flat array) that can be resolved through error feedback and reformatting on retry."
+      }
     },
     {
       "id": 26,
@@ -391,7 +541,13 @@
         "D": "Add stricter schema constraints with detailed field descriptions to prevent invalid values initially"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Giving the model the full context (document + failed extraction + specific errors) lets it understand exactly\nwhat went wrong and fix it precisely. Stricter constraints (D) help with output format but not semantic validity\n(sums, ID formats)."
+      "explanation": "Why C: Giving the model the full context (document + failed extraction + specific errors) lets it understand exactly\nwhat went wrong and fix it precisely. Stricter constraints (D) help with output format but not semantic validity\n(sums, ID formats).",
+      "optionExplanations": {
+        "A": "Post-processing can only fix predictable, rule-based errors like formatting; it cannot handle semantic errors like incorrect sums or invalid ID patterns that require understanding context.",
+        "B": "Simple retries without feedback don't address the root cause of validation failures and may just return the same incorrect extraction multiple times.",
+        "C": "Giving the model the full context (document + failed extraction + specific errors) lets it understand exactly what went wrong and fix it precisely. Stricter constraints (D) help with output format but not semantic validity (sums, ID formats).",
+        "D": "Stricter schema constraints prevent malformed JSON but cannot catch semantic errors like extracting a sum that doesn't match the document's actual values."
+      }
     },
     {
       "id": 27,
@@ -405,7 +561,13 @@
         "D": "Preprocess documents with a classifier that identifies and removes superseded sections"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Legal contracts often need both values preserved with provenance. Discarding original terms (B, D)\nloses legally important history. The schema redesign is the most complete and accurate solution."
+      "explanation": "Why C: Legal contracts often need both values preserved with provenance. Discarding original terms (B, D)\nloses legally important history. The schema redesign is the most complete and accurate solution.",
+      "optionExplanations": {
+        "A": "Pattern matching flags problems for manual review but doesn't solve the underlying issue—the model still doesn't know which value to extract or why.",
+        "B": "Ignoring the original terms and only extracting amendments loses critical legal history and audit trail that contracts often require for compliance.",
+        "C": "Legal contracts often need both values preserved with provenance. Discarding original terms (B, D) loses legally important history. The schema redesign is the most complete and accurate solution.",
+        "D": "Removing superseded sections destroys the document structure and removes context the model might need to understand the relationship between original and amended terms."
+      }
     },
     {
       "id": 28,
@@ -419,7 +581,13 @@
         "D": "Set temperature to 0 to eliminate randomness and ensure deterministic outputs"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Temperature 0 reduces variation but doesn't tell the model WHICH format to use. Few-shot examples\ndirectly demonstrate the desired output format."
+      "explanation": "Why A: Temperature 0 reduces variation but doesn't tell the model WHICH format to use. Few-shot examples\ndirectly demonstrate the desired output format.",
+      "optionExplanations": {
+        "A": "Temperature 0 reduces variation but doesn't tell the model WHICH format to use. Few-shot examples directly demonstrate the desired output format.",
+        "B": "Requiring the field only forces extraction but doesn't specify which format to use, so the model may still output inconsistent material descriptions.",
+        "C": "A more capable model tier doesn't directly solve inconsistency in format selection; the issue is lack of guidance on desired output format, not model capacity.",
+        "D": "Setting temperature to 0 reduces variation in word choice but doesn't teach the model which standardized material format to use, so outputs remain inconsistent."
+      }
     },
     {
       "id": 29,
@@ -433,7 +601,13 @@
         "D": "Implement stratified random sampling reviewing a fixed percentage of high-confidence extractions weekly, enabling error rate measurement and novel pattern detection"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: This is the only approach that enables ongoing error rate measurement AND discovers novel failure\npatterns. Heuristics (C) only catch known patterns."
+      "explanation": "Why D: This is the only approach that enables ongoing error rate measurement AND discovers novel failure\npatterns. Heuristics (C) only catch known patterns.",
+      "optionExplanations": {
+        "A": "Re-extraction verification only catches inconsistencies between two attempts but doesn't measure error rates over time or detect novel failure patterns that haven't appeared yet.",
+        "B": "Lowering the confidence threshold is a blunt adjustment that increases false positives without providing any mechanism to measure whether the strategy actually improves accuracy or identify what types of errors are occurring.",
+        "C": "Heuristic rules can only flag known problem types (tables, appendices) but cannot detect novel or unforeseen error patterns that emerge over time, limiting your ability to improve the strategy.",
+        "D": "This is the only approach that enables ongoing error rate measurement AND discovers novel failure patterns. Heuristics (C) only catch known patterns."
+      }
     },
     {
       "id": 30,
@@ -447,7 +621,13 @@
         "D": "Run a two-week pilot routing 25% of high-confidence extractions directly to downstream systems"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: 97% aggregate accuracy can hide 70% accuracy on specific document types or fields. Segment-level\nanalysis before automation prevents deploying a system that silently fails on particular cases."
+      "explanation": "Why A: 97% aggregate accuracy can hide 70% accuracy on specific document types or fields. Segment-level\nanalysis before automation prevents deploying a system that silently fails on particular cases.",
+      "optionExplanations": {
+        "A": "97% aggregate accuracy can hide 70% accuracy on specific document types or fields. Segment-level analysis before automation prevents deploying a system that silently fails on particular cases.",
+        "B": "Validating that 97% meets downstream system requirements is a compliance check, not a validation of extraction quality—you could meet SLAs while silently failing on specific document types or fields.",
+        "C": "Finding an optimal confidence threshold is a tuning exercise, but it doesn't reveal whether the system performs consistently across different document types and fields where hidden failures may exist.",
+        "D": "A two-week pilot sends real data downstream before validating segment-level performance, risking deployment of a system with hidden accuracy problems in specific document types or fields."
+      }
     },
     {
       "id": 31,
@@ -461,7 +641,13 @@
         "D": "Briefly explain what the agent can help with and offer to resolve the issue quickly"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The customer has issued an explicit, emphatic request for a human. Delaying that by gathering context\nfirst (C) adds more friction to an already frustrated customer."
+      "explanation": "Why A: The customer has issued an explicit, emphatic request for a human. Delaying that by gathering context\nfirst (C) adds more friction to an already frustrated customer.",
+      "optionExplanations": {
+        "A": "The customer has issued an explicit, emphatic request for a human. Delaying that by gathering context first (C) adds more friction to an already frustrated customer.",
+        "B": "Asking a clarifying question, while well-intentioned, delays the customer's explicit request for human contact and adds friction when they've already indicated frustration.",
+        "C": "Gathering account context via tool calls postpones honoring the customer's direct demand for a human, compounding frustration rather than respecting their stated preference.",
+        "D": "Attempting to pitch quick resolution contradicts the customer's clear statement that they want a person, not an agent, and risks further frustrating an already upset customer."
+      }
     },
     {
       "id": 32,
@@ -475,7 +661,13 @@
         "D": "Build a rules engine that maps specific issue types, customer segments, and product categories to escalation decisions"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: This covers the three genuine escalation conditions. Rules engines (D) are brittle and miss edge cases;\nsentiment analysis (B) can misfire or miss real needs."
+      "explanation": "Why A: This covers the three genuine escalation conditions. Rules engines (D) are brittle and miss edge cases;\nsentiment analysis (B) can misfire or miss real needs.",
+      "optionExplanations": {
+        "A": "This covers the three genuine escalation conditions. Rules engines (D) are brittle and miss edge cases; sentiment analysis (B) can misfire or miss real needs.",
+        "B": "Sentiment analysis is unreliable because frustration levels don't always correlate with genuine escalation need—a customer may remain calm while needing human judgment, or sound frustrated over a minor issue.",
+        "C": "Counting failed tool calls creates arbitrary, outcome-blind escalation triggers that ignore context; three failed calls on a simple issue may be recoverable, while one call might genuinely need human expertise.",
+        "D": "Rules engines are brittle and require constant maintenance; they inevitably miss edge cases and novel situations that don't fit predefined categories, making them unreliable for complex, contextual escalation decisions."
+      }
     },
     {
       "id": 33,
@@ -489,7 +681,13 @@
         "D": "Add few-shot examples showing how to distinguish retriable from non-retriable errors"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Structured error metadata directly tells the agent whether to retry or not. This eliminates wasted turns\nwithout restructuring the entire workflow (B)."
+      "explanation": "Why C: Structured error metadata directly tells the agent whether to retry or not. This eliminates wasted turns\nwithout restructuring the entire workflow (B).",
+      "optionExplanations": {
+        "A": "Retry logic at the tool level can't distinguish business errors (like ineligible refunds) from technical errors, so the agent will still waste turns retrying permanent failures.",
+        "B": "Adding a new prerequisite tool increases workflow complexity and doesn't solve the core problem—the agent still lacks clear signals about which errors are retriable.",
+        "C": "Structured error metadata directly tells the agent whether to retry or not. This eliminates wasted turns without restructuring the entire workflow (B).",
+        "D": "Few-shot examples teach the model to distinguish error types, but don't change the underlying problem: plain text responses still lack machine-readable metadata, so the agent must interpret and guess whether retrying is safe, leading to continued wasted turns."
+      }
     },
     {
       "id": 34,
@@ -503,7 +701,13 @@
         "D": "Acknowledge frustration, inform them this is resolvable now, and offer to complete it or escalate"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The customer's real goal is resolution. Acknowledging their frustration, showing the problem is solvable,\nand giving them the choice respects their experience while delivering maximum value."
+      "explanation": "Why D: The customer's real goal is resolution. Acknowledging their frustration, showing the problem is solvable,\nand giving them the choice respects their experience while delivering maximum value.",
+      "optionExplanations": {
+        "A": "Silently processing the refund ignores the customer's explicit request to speak with someone, missing the emotional resolution they're seeking.",
+        "B": "Immediately escalating without offering to resolve the issue wastes the customer's time and the company's resources when a faster resolution is available.",
+        "C": "Asking what hasn't worked delays resolution by reopening investigation when the return is already confirmed eligible and processable—it prioritizes understanding the past over honoring the customer's stated need to stop the back-and-forth.",
+        "D": "The customer's real goal is resolution. Acknowledging their frustration, showing the problem is solvable, and giving them the choice respects their experience while delivering maximum value."
+      }
     },
     {
       "id": 35,
@@ -517,7 +721,13 @@
         "D": "Proceed with additional lookups without modifying the existing tool output context"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Extracting only the fields relevant to the current task (returns) preserves the data needed while\ndramatically reducing context usage. Natural language summaries (C) lose structured data needed for\nsubsequent tool calls."
+      "explanation": "Why B: Extracting only the fields relevant to the current task (returns) preserves the data needed while\ndramatically reducing context usage. Natural language summaries (C) lose structured data needed for\nsubsequent tool calls.",
+      "optionExplanations": {
+        "A": "A vector database adds infrastructure complexity and latency for a problem that's fundamentally about reducing unnecessary data in the current context window.",
+        "B": "Extracting only the fields relevant to the current task (returns) preserves the data needed while dramatically reducing context usage. Natural language summaries (C) lose structured data needed for subsequent tool calls.",
+        "C": "Converting structured data to natural language prose makes it harder for the agent to extract specific fields (like purchase dates or return windows) needed for future tool calls and decision-making, reducing both precision and reusability.",
+        "D": "Proceeding without optimizing context means each additional lookup will further bloat the conversation with irrelevant fields, compounding the efficiency problem."
+      }
     },
     {
       "id": 36,
@@ -531,7 +741,13 @@
         "D": "Compile a structured handoff with customer details, order info, and the identified issue before calling escalate_to_human"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: A structured, synthesized summary gives the human agent exactly what they need for effective\nresolution—more useful than a raw reference ID (A) or just the original message (B)."
+      "explanation": "Why D: A structured, synthesized summary gives the human agent exactly what they need for effective\nresolution—more useful than a raw reference ID (A) or just the original message (B).",
+      "optionExplanations": {
+        "A": "Relying on a database reference ID forces the human agent to look up context separately, creating friction and delay instead of providing immediate clarity.",
+        "B": "Passing only the original message deprives the human agent of the investigative work already done (customer details, order specifics, authorization limit context).",
+        "C": "Attempting an unauthorized refund will predictably fail and delay resolution, adding a failed transaction attempt that wastes time and creates a poor customer experience.",
+        "D": "A structured, synthesized summary gives the human agent exactly what they need for effective resolution—more useful than a raw reference ID (A) or just the original message (B)."
+      }
     },
     {
       "id": 37,
@@ -545,7 +761,13 @@
         "D": "Implement a hook to intercept tool calls; when the refund process amount exceeds $500, block it and invoke human escalation"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: If the system prompt already fails 3% of the time, stronger wording (B) won't help. A hook that intercepts\nand blocks the tool call at the infrastructure level is the only approach that guarantees enforcement regardless of\nmodel behavior."
+      "explanation": "Why D: If the system prompt already fails 3% of the time, stronger wording (B) won't help. A hook that intercepts\nand blocks the tool call at the infrastructure level is the only approach that guarantees enforcement regardless of\nmodel behavior.",
+      "optionExplanations": {
+        "A": "Few-shot examples only guide the model's reasoning; they don't enforce constraints at execution time, so the 3% failure rate will persist when the model still chooses to process refunds directly.",
+        "B": "Emphatic language in prompts doesn't create hard guarantees—the model can still misinterpret or override instructions, which is why you already have a 3% failure rate despite clear instructions.",
+        "C": "While the tool error message helps, it relies on the model to call the tool correctly in the first place; if the model bypasses the tool or calls it with incorrect parameters, this check never triggers.",
+        "D": "If the system prompt already fails 3% of the time, stronger wording (B) won't help. A hook that intercepts and blocks the tool call at the infrastructure level is the only approach that guarantees enforcement regardless of model behavior."
+      }
     },
     {
       "id": 38,
@@ -559,7 +781,13 @@
         "D": "The verification tool is clearing the agent's internal state after each successful validation step"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Claude is stateless. If prior turns aren't included in the messages array, the model has no access to what\nwas established earlier in the conversation."
+      "explanation": "Why B: Claude is stateless. If prior turns aren't included in the messages array, the model has no access to what\nwas established earlier in the conversation.",
+      "optionExplanations": {
+        "A": "Claude has no inherent two-turn memory limit; the issue is architectural, not a built-in constraint of the model itself.",
+        "B": "Claude is stateless. If prior turns aren't included in the messages array, the model has no access to what was established earlier in the conversation.",
+        "C": "Even explicit instructions in the prompt won't help if the model never sees the prior conversation history; instructions only work with information the model can access.",
+        "D": "Verification tools don't clear the agent's internal state in standard architectures; the problem is in how conversation history is managed between API calls, not in the tool itself."
+      }
     },
     {
       "id": 39,
@@ -573,7 +801,13 @@
         "D": "Throw an exception from the tool handler so the agent framework can catch and log it"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This is the correct MCP protocol for tool errors. The agent receives structured information about the\nfailure and can decide how to respond appropriately."
+      "explanation": "Why C: This is the correct MCP protocol for tool errors. The agent receives structured information about the\nfailure and can decide how to respond appropriately.",
+      "optionExplanations": {
+        "A": "Returning an empty result hides the failure from the model, preventing it from making an informed decision about retry, escalation, or alternative actions.",
+        "B": "A success response is semantically incorrect when an error occurred; the model won't interpret a \"status\" field as an error condition and may proceed as if the operation succeeded.",
+        "C": "This is the correct MCP protocol for tool errors. The agent receives structured information about the failure and can decide how to respond appropriately.",
+        "D": "Throwing an exception from the tool handler breaks the MCP protocol and puts error handling in the framework layer rather than surfacing the error as structured data for the model to interpret."
+      }
     },
     {
       "id": 40,
@@ -587,7 +821,13 @@
         "D": "Escalate immediately to a human agent since the refund action cannot be completed"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The agent provides maximum value with available information, is transparent about the technical\nlimitation, and gives the customer actionable next steps. Blocking on retries (B) holds the customer hostage to an\nuncertain backend recovery."
+      "explanation": "Why A: The agent provides maximum value with available information, is transparent about the technical\nlimitation, and gives the customer actionable next steps. Blocking on retries (B) holds the customer hostage to an\nuncertain backend recovery.",
+      "optionExplanations": {
+        "A": "The agent provides maximum value with available information, is transparent about the technical limitation, and gives the customer actionable next steps. Blocking on retries (B) holds the customer hostage to an uncertain backend recovery.",
+        "B": "Automatic retries with exponential backoff can trap the customer in a prolonged conversation waiting for an uncertain backend recovery, wasting their time when escalation is more appropriate.",
+        "C": "Confirming refund processing without actually completing it is misleading to the customer and may create false expectations about when money will arrive.",
+        "D": "Immediate escalation skips the opportunity to provide transparency about what was verified and why human help is needed, reducing the value of the work already completed."
+      }
     },
     {
       "id": 41,
@@ -601,7 +841,13 @@
         "D": "The complete conversation transcript with all tool results"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: A synthesized structured summary is what the human agent needs to act quickly. The complete\ntranscript (D) is too much; only the diagnosis (C) is too little."
+      "explanation": "Why A: A synthesized structured summary is what the human agent needs to act quickly. The complete\ntranscript (D) is too much; only the diagnosis (C) is too little.",
+      "optionExplanations": {
+        "A": "A synthesized structured summary is what the human agent needs to act quickly. The complete transcript (D) is too much; only the diagnosis (C) is too little.",
+        "B": "Including the customer's verbatim complaint and tool excerpts forces the human agent to parse raw, unprocessed data when they need actionable context; this adds cognitive overhead rather than enabling quick resolution.",
+        "C": "Omitting the customer ID and recommended action leaves the agent without key identifiers and decision guidance, making it impossible to act efficiently on the refund.",
+        "D": "The complete transcript exceeds what the agent needs and violates the stated constraint that they won't have transcript access; it also buries critical facts in noise."
+      }
     },
     {
       "id": 42,
@@ -615,7 +861,13 @@
         "D": "Summarize earlier turns into a narrative descriptio"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: A structured data layer persists the key facts from all three issues independently of the conversation\nwindow, so any issue can be referenced accurately at any point in the session."
+      "explanation": "Why C: A structured data layer persists the key facts from all three issues independently of the conversation\nwindow, so any issue can be referenced accurately at any point in the session.",
+      "optionExplanations": {
+        "A": "Relying on on-demand tool fetches risks tool failures, stale cached data, or API timeouts when the customer references old issues; it doesn't proactively preserve the information.",
+        "B": "A sliding window of 30 turns may drop references to issues from turns 1–15 before turn 48, making earlier context inaccessible when the customer asks about them.",
+        "C": "A structured data layer persists the key facts from all three issues independently of the conversation window, so any issue can be referenced accurately at any point in the session.",
+        "D": "A narrative summary is unstructured and prone to loss of precision (exact amounts, dates, order IDs) and makes it harder for the agent to query or update individual issue statuses independently."
+      }
     },
     {
       "id": 43,
@@ -629,7 +881,13 @@
         "D": "Start a new session, inject a structured summary of the previous interaction (issue type, actions taken, resolution status), then make fresh tool calls before engaging"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Starting fresh with a summary and fresh data guarantees no stale results can influence responses.\nOption A still leaves stale data in context and relies on the model to correctly prioritize the newer results."
+      "explanation": "Why D: Starting fresh with a summary and fresh data guarantees no stale results can influence responses.\nOption A still leaves stale data in context and relies on the model to correctly prioritize the newer results.",
+      "optionExplanations": {
+        "A": "Still leaves stale data in context and relies on the model to correctly prioritize the newer results.",
+        "B": "Automatically re-calling all previously-used tools at session start is wasteful and doesn't solve the core problem: stale results remain in the conversation history and can still mislead the agent if it cherry-picks older data.",
+        "C": "Filtering out previous tool_result messages removes evidence of what was already checked, but the agent may still reference stale facts mentioned in its own prior responses or user messages without realizing they're outdated.",
+        "D": "Starting fresh with a summary and fresh data guarantees no stale results can influence responses"
+      }
     },
     {
       "id": 44,
@@ -643,7 +901,13 @@
         "D": "Create an analyze_error MCP tool the agent calls after any failure"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Structured error metadata gives the agent exactly the information it needs to choose the right response\nstrategy for each type of failure without any ambiguity."
+      "explanation": "Why C: Structured error metadata gives the agent exactly the information it needs to choose the right response\nstrategy for each type of failure without any ambiguity.",
+      "optionExplanations": {
+        "A": "Retry logic with exponential backoff at the server level doesn't help the agent decide whether to retry, escalate, or ask the user—it only addresses transient network failures, not validation or permission errors.",
+        "B": "Few-shot examples in the system prompt rely on the model's ability to infer error intent from plain text, which is fragile and fails when error messages are ambiguous or the failure reason differs from past examples.",
+        "C": "Structured error metadata gives the agent exactly the information it needs to choose the right response strategy for each type of failure without any ambiguity.",
+        "D": "A dedicated analyze_error tool adds latency and an extra call for every failure; the agent still needs to know upfront which errors are retryable versus which require escalation, which only structured metadata provides."
+      }
     },
     {
       "id": 45,
@@ -657,7 +921,13 @@
         "D": "The order details are added to the conversation and the model reasons about which action to take"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: This is how Claude's agentic loops work. Tool results become part of the conversation context as\ntool_result messages, and the model uses those results plus the system prompt policy to reason about the\nnext step."
+      "explanation": "Why D: This is how Claude's agentic loops work. Tool results become part of the conversation context as\ntool_result messages, and the model uses those results plus the system prompt policy to reason about the\nnext step.",
+      "optionExplanations": {
+        "A": "This describes a static routing mechanism based on a pre-defined status field, but agentic loops require dynamic reasoning that adapts based on the actual context and policy considerations present in the conversation.",
+        "B": "This assumes a rigid pre-planned sequence of tools, but agentic loops are iterative—the model decides what to do next based on each tool result, not a predetermined sequence established upfront.",
+        "C": "This relies on a fixed decision tree mapping, but agentic reasoning is flexible and contextual; the model evaluates the specific situation and policies in the conversation rather than following predetermined branching logic.",
+        "D": "This is how Claude's agentic loops work. Tool results become part of the conversation context as tool_result messages, and the model uses those results plus the system prompt policy to reason about the next step."
+      }
     },
     {
       "id": 46,
@@ -671,7 +941,13 @@
         "D": "Read-only annotations indicate intended behavior and are reliable for tools that perform GET requests"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: A server can annotate any destructive tool as read-only. Annotations are self-reported metadata, not\nindependently verifiable. Trust the vendor, not the annotation."
+      "explanation": "Why C: A server can annotate any destructive tool as read-only. Annotations are self-reported metadata, not\nindependently verifiable. Trust the vendor, not the annotation.",
+      "optionExplanations": {
+        "A": "Testing a tool's actual behavior only confirms what it does now, not whether the vendor might annotate a destructive tool as read-only in the future or whether the annotation is trustworthy in the first place.",
+        "B": "A tool running locally doesn't prevent the vendor from falsely annotating destructive operations as read-only—the server's location doesn't validate the truthfulness of its self-reported metadata.",
+        "C": "A server can annotate any destructive tool as read-only. Annotations are self-reported metadata, not independently verifiable. Trust the vendor, not the annotation.",
+        "D": "A read-only annotation is just metadata the server claims about itself; it provides no independent verification that a tool actually only reads data, regardless of what HTTP method it uses."
+      }
     },
     {
       "id": 47,
@@ -685,7 +961,13 @@
         "D": "MCP automatically handles authentication and rate limiting with the weather API, reducing backend implementation work"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The primary value of MCP is standardized reusability—build the integration once, and any\nMCP-compatible client (current or future) can use it. MCP does not automatically handle auth or rate limiting (D)."
+      "explanation": "Why A: The primary value of MCP is standardized reusability—build the integration once, and any\nMCP-compatible client (current or future) can use it. MCP does not automatically handle auth or rate limiting (D).",
+      "optionExplanations": {
+        "A": "The primary value of MCP is standardized reusability—build the integration once, and any MCP-compatible client (current or future) can use it. MCP does not automatically handle auth or rate limiting (D).",
+        "B": "MCP's advantage is not about protocol speed; the benefit is standardized integration regardless of performance characteristics.",
+        "C": "MCP is a protocol for client-server communication—it doesn't include built-in retry logic or exponential backoff for failed API calls; those concerns belong to the server implementation.",
+        "D": "MCP does not automatically handle authentication or rate limiting; those tasks remain the responsibility of the server implementation and cannot be delegated to the protocol itself."
+      }
     },
     {
       "id": 48,
@@ -699,7 +981,13 @@
         "D": "Require users to type a confirmation phrase instead of clicking a butto"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Users were rubber-stamping confirmations because the confirmation didn't show them what they were\napproving. Making the full details visible in the confirmation surfaces the errors before they happen."
+      "explanation": "Why A: Users were rubber-stamping confirmations because the confirmation didn't show them what they were\napproving. Making the full details visible in the confirmation surfaces the errors before they happen.",
+      "optionExplanations": {
+        "A": "Users were rubber-stamping confirmations because the confirmation didn't show them what they were approving. Making the full details visible in the confirmation surfaces the errors before they happen.",
+        "B": "Auto-approving routine posts removes human oversight entirely on those transactions, which is exactly how the original errors occurred—users need to verify details, not bypass confirmation for certain categories.",
+        "C": "A waiting period doesn't address the root cause; users were still rubber-stamping confirmations even when given the chance, because they weren't seeing what they were actually approving.",
+        "D": "Requiring a typed phrase adds friction but doesn't solve the underlying problem—users can still type a confirmation phrase without reading or understanding the details of what they're confirming."
+      }
     },
     {
       "id": 49,
@@ -713,7 +1001,13 @@
         "D": "A freeform string parameter with runtime validation that returns an error if the value doesn't match a know database"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Enum parameters are ideal here. The model reliably maps natural language to enum values, and the\nparameter prevents invalid values at the schema level."
+      "explanation": "Why C: Enum parameters are ideal here. The model reliably maps natural language to enum values, and the\nparameter prevents invalid values at the schema level.",
+      "optionExplanations": {
+        "A": "Semantic matching in the backend introduces ambiguity and is error-prone when determining which of three distinct databases to query; the model should make this decision explicitly upfront.",
+        "B": "Searching all three databases by default wastes computational resources and returns irrelevant results; filtering results after retrieval is less efficient than directing the query to the correct database initially.",
+        "C": "Enum parameters are ideal here. The model reliably maps natural language to enum values, and the parameter prevents invalid values at the schema level.",
+        "D": "Runtime validation only catches errors after the model has already made an incorrect choice, resulting in failed calls; enum validation prevents invalid choices at the schema level before execution."
+      }
     },
     {
       "id": 50,
@@ -727,7 +1021,13 @@
         "D": "Expand tool descriptions to clarify use cases, adding guidance like \"Do not use for backup files\" to delete_file and when to use archive_file"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The model makes tool selection decisions based on descriptions. Clear, accurate descriptions with\nexplicit guidance about use cases directly solve the tool selection problem at the source."
+      "explanation": "Why D: The model makes tool selection decisions based on descriptions. Clear, accurate descriptions with\nexplicit guidance about use cases directly solve the tool selection problem at the source.",
+      "optionExplanations": {
+        "A": "Server-side validation is a safety net that prevents harm, but it doesn't improve the model's ability to make the correct tool selection decision in the first place.",
+        "B": "Few-shot examples help with output format consistency, but they don't directly address the root cause—the model lacks clear information about when each tool should be used.",
+        "C": "User confirmation steps occur after the wrong tool has already been selected, adding friction without solving the tool selection problem at the source where the model makes its decision.",
+        "D": "The model makes tool selection decisions based on descriptions. Clear, accurate descriptions with explicit guidance about use cases directly solve the tool selection problem at the source."
+      }
     },
     {
       "id": 51,
@@ -741,7 +1041,13 @@
         "D": "JSON schemas automatically validate that the underlying API returned correct data before the agent processes it"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The primary advantage is reliable, error-free data access in subsequent agent steps. Free-form text\nrequires error-prone parsing; structured fields are directly accessible."
+      "explanation": "Why C: The primary advantage is reliable, error-free data access in subsequent agent steps. Free-form text\nrequires error-prone parsing; structured fields are directly accessible.",
+      "optionExplanations": {
+        "A": "Structured JSON doesn't change how the model processes information internally; accuracy gains come from reliable extraction by downstream code, not from the model's processing mechanism.",
+        "B": "Token consumption differences between JSON and natural language are minimal and not the primary advantage of structured output in this context.",
+        "C": "The primary advantage is reliable, error-free data access in subsequent agent steps. Free-form text requires error-prone parsing; structured fields are directly accessible.",
+        "D": "JSON schemas validate the structure of the model's output, not the correctness of data returned by external APIs; API validation is a separate concern from structured output benefits."
+      }
     },
     {
       "id": 52,
@@ -755,7 +1061,13 @@
         "D": "Annotate the tool as requiring confirmation and configure the orchestration layer to prompt the user for approval"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The single-use confirmation token structurally enforces the preview→confirm sequence. It is\narchitecturally impossible to skip the preview, regardless of how the agent is prompted."
+      "explanation": "Why C: The single-use confirmation token structurally enforces the preview→confirm sequence. It is\narchitecturally impossible to skip the preview, regardless of how the agent is prompted.",
+      "optionExplanations": {
+        "A": "This approach depends on the agent remembering to call dry_run=true first and doing so within a narrow time window; it's easily circumvented and doesn't structurally enforce the workflow.",
+        "B": "Instructions and examples influence model behavior through prompting, which is fragile and can be overridden by changing model versions, system prompts, or agent reasoning patterns.",
+        "C": "The single-use confirmation token structurally enforces the preview→confirm sequence. It is architecturally impossible to skip the preview, regardless of how the agent is prompted.",
+        "D": "Orchestration-layer prompts for user approval still allow the agent to call the tool directly in subsequent attempts; there's no structural barrier preventing the agent from bypassing the confirmation workflow."
+      }
     },
     {
       "id": 53,
@@ -769,7 +1081,13 @@
         "D": "Require users to supply the exact record ID from the CRM interface rather than using natural language references"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: This directly addresses the root cause (misidentification from similar names) by surfacing differentiating\ninformation before confirming, while keeping the workflow to a single confirmation click."
+      "explanation": "Why A: This directly addresses the root cause (misidentification from similar names) by surfacing differentiating\ninformation before confirming, while keeping the workflow to a single confirmation click.",
+      "optionExplanations": {
+        "A": "This directly addresses the root cause (misidentification from similar names) by surfacing differentiating information before confirming, while keeping the workflow to a single confirmation click.",
+        "B": "Automated merging without user review bypasses the core problem—users need to confirm they're deleting the *right* record, not have a system decide which duplicates belong together.",
+        "C": "Soft-delete addresses data recovery but does nothing to reduce the error rate of misidentifying which record to delete in the first place.",
+        "D": "Requiring record IDs increases friction rather than reducing it, working against the stated goal of maintaining efficiency while lowering errors."
+      }
     },
     {
       "id": 54,
@@ -783,7 +1101,13 @@
         "D": "Return is_error: true with a message communicating uncertainty: \"Timeout—status unknown. Message may have been sent. Avoid retry.\""
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with\nretry_safe: true would cause the exact duplicate problem you're trying to prevent."
+      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with\nretry_safe: true would cause the exact duplicate problem you're trying to prevent.",
+      "optionExplanations": {
+        "A": "With retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
+        "B": "Returning is_error: false would mask the actual failure and mislead the agent into thinking the message was successfully sent, perpetuating the duplicate notification problem.",
+        "C": "Encouraging retry on a timeout (where delivery status is unknown) directly causes the duplicate notifications you're trying to prevent.",
+        "D": "The critical information is the delivery uncertainty and the instruction NOT to retry"
+      }
     },
     {
       "id": 55,
@@ -797,7 +1121,13 @@
         "D": "Return is_error: true with a message communicating uncertainty: \"Timeout—status unknown. Message may have been sent. Avoid retry.\""
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with retry_safe: true would cause the exact duplicate problem you're trying to prevent."
+      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
+      "optionExplanations": {
+        "A": "With retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
+        "B": "Returning is_error: false would mask the actual failure and mislead the agent into thinking the message was successfully sent, perpetuating the duplicate notification problem.",
+        "C": "Encouraging retry on a timeout (where delivery status is unknown) directly causes the duplicate notifications you're trying to prevent.",
+        "D": "The critical information is the delivery uncertainty and the instruction NOT to retry"
+      }
     },
     {
       "id": 56,
@@ -811,7 +1141,13 @@
         "D": "Automatically retry the request up to five times with exponential backoff before returning results"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Returning a clear error message (with isError: true) lets the agent understand the failure and\ncommunicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent.\nAuto-retrying 5 times (D) could add tens of seconds of latency to every 503 error."
+      "explanation": "Why A: Returning a clear error message (with isError: true) lets the agent understand the failure and\ncommunicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent.\nAuto-retrying 5 times (D) could add tens of seconds of latency to every 503 error.",
+      "optionExplanations": {
+        "A": "Returning a clear error message (with isError: true) lets the agent understand the failure and communicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent. Auto-retrying 5 times (D) could add tens of seconds of latency to every 503 error.",
+        "B": "An empty response is ambiguous—the agent cannot distinguish between a genuine empty result and a failure, leaving it unable to communicate the actual problem to the user.",
+        "C": "Returning an empty flight list falsely signals success, causing the agent to mislead the user into thinking no flights exist rather than revealing the service failure.",
+        "D": "Five retries with exponential backoff can add 30+ seconds of latency to every transient error, severely degrading user experience when the service is temporarily down."
+      }
     },
     {
       "id": 57,
@@ -825,7 +1161,13 @@
         "D": "Implement a PreToolUse hook that inspects the amount parameter and modifies the tool call to add requires_approval: true when threshold is exceeded"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The business rule is enforced at the tool implementation level, completely independent of the agent's\nbehavior. The agent cannot bypass it regardless of how it is prompted."
+      "explanation": "Why C: The business rule is enforced at the tool implementation level, completely independent of the agent's\nbehavior. The agent cannot bypass it regardless of how it is prompted.",
+      "optionExplanations": {
+        "A": "Relying on system prompt instructions to control agent behavior is insufficient—the agent can be prompted to ignore or override those instructions, leaving the threshold bypassable.",
+        "B": "This depends on the agent following the boolean parameter convention correctly; a prompt injection or reframing could cause the agent to set approved_by_manager to true without actual approval.",
+        "C": "The business rule is enforced at the tool implementation level, completely independent of the agent's behavior. The agent cannot bypass it regardless of how it is prompted.",
+        "D": "A hook that modifies the tool call after the agent has already decided to invoke it cannot prevent the agent from crafting the initial request—it only catches and corrects it, which is reactive rather than structurally impossible."
+      }
     },
     {
       "id": 58,
@@ -839,7 +1181,13 @@
         "D": "Implement server-side validation returning descriptive errors for invalid combinations"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Splitting tools by exercise type makes invalid combinations structurally impossible. The correct\nparameters are enforced by the schema itself—no documentation, examples, or validation needed."
+      "explanation": "Why B: Splitting tools by exercise type makes invalid combinations structurally impossible. The correct\nparameters are enforced by the schema itself—no documentation, examples, or validation needed.",
+      "optionExplanations": {
+        "A": "Enums constrain the values themselves but don't solve the mapping problem—the agent still needs to choose which measurement type to use for a given exercise, leaving room for incorrect pairings.",
+        "B": "Splitting tools by exercise type makes invalid combinations structurally impossible. The correct parameters are enforced by the schema itself—no documentation, examples, or validation needed.",
+        "C": "Examples in tool descriptions require the agent to read, understand, and follow them correctly; they provide guidance but don't prevent the agent from ignoring them and using the wrong measurement type.",
+        "D": "Server-side validation only catches errors after the agent has already made a mistake; it requires the agent to iterate and retry rather than making the incorrect choice impossible from the start."
+      }
     },
     {
       "id": 59,
@@ -853,7 +1201,13 @@
         "D": "Keep both tools but add retry logic in the system prompt instructing the agent to call get_available_slots again if booking fails"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This directly solves the race condition by creating a temporary hold. The workflow becomes:\nget_available_slots → hold_slot → show options → book_appointment, with the held slot protected from\nconcurrent booking."
+      "explanation": "Why C: This directly solves the race condition by creating a temporary hold. The workflow becomes:\nget_available_slots → hold_slot → show options → book_appointment, with the held slot protected from\nconcurrent booking.",
+      "optionExplanations": {
+        "A": "Returning alternative slots only helps if the agent acts on them immediately, but doesn't prevent another user from booking those alternatives in the time it takes the agent to process the response.",
+        "B": "While atomicity solves the race condition, combining tools removes the agent's ability to show users available options before committing to a booking, making the user experience less flexible.",
+        "C": "This directly solves the race condition by creating a temporary hold. The workflow becomes: get_available_slots → hold_slot → show options → book_appointment, with the held slot protected from concurrent booking.",
+        "D": "Retry logic in the system prompt is agent-behavior guidance that can be ignored or mishandled; it doesn't address the underlying race condition—a third party could still book during the retry loop."
+      }
     },
     {
       "id": 60,
@@ -867,7 +1221,13 @@
         "D": "Return fields with confidence scores, plus a requires_review boolean computed using your tested confidence thresholds, along with a review_reasons array explaining which fields triggered review"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The requires_review boolean (computed from calibrated, tested thresholds) directly solves both\nproblems: it stops unnecessary reviews for correctly-extracted high-confidence fields, and it flags genuinely\nuncertain low-confidence fields. The review_reasons array helps human reviewers focus their attention."
+      "explanation": "Why D: The requires_review boolean (computed from calibrated, tested thresholds) directly solves both\nproblems: it stops unnecessary reviews for correctly-extracted high-confidence fields, and it flags genuinely\nuncertain low-confidence fields. The review_reasons array helps human reviewers focus their attention.",
+      "optionExplanations": {
+        "A": "An aggregate score obscures which specific fields are problematic, making it impossible for the agent to distinguish between high-confidence and low-confidence extractions or decide which fields genuinely need review.",
+        "B": "Raw confidence scores alone shift the interpretation burden to the agent, which has already proven unreliable at making the right judgment calls (proceeding incorrectly 23% of the time and over-requesting review 31% of the time).",
+        "C": "Pre-sorting fields into verified and needs_verification categories based on generic thresholds doesn't account for the agent's actual error patterns and cannot incorporate the tested calibration that fixes both over-confidence and over-caution.",
+        "D": "The requires_review boolean (computed from calibrated, tested thresholds) directly solves both problems: it stops unnecessary reviews for correctly-extracted high-confidence fields, and it flags genuinely uncertain low-confidence fields. The review_reasons array helps human reviewers focus their attention."
+      }
     }
   ]
 }

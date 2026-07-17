@@ -41,7 +41,13 @@
         "D": "Modify the prompt to ask Claude to rate severity relative to other issues in the same PR, so the most severe issue is always marked critical"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: The root cause is Claude has no grounded definition of 'critical' vs 'medium' in your context. Without a rubric, it infers — and inference varies. Option B fixes this by giving Claude a precise rubric with concrete code examples for each severity level. With examples, Claude matches pattern to label consistently every time. A only diagnoses the problem — you'd still get inconsistent ratings, just with explanations. C is less precise without concrete examples. D is dangerous: if all issues are minor, one still gets called 'critical,' making ratings meaningless across PRs."
+      "explanation": "Why B: The root cause is Claude has no grounded definition of 'critical' vs 'medium' in your context. Without a rubric, it infers — and inference varies. Option B fixes this by giving Claude a precise rubric with concrete code examples for each severity level. With examples, Claude matches pattern to label consistently every time. A only diagnoses the problem — you'd still get inconsistent ratings, just with explanations. C is less precise without concrete examples. D is dangerous: if all issues are minor, one still gets called 'critical,' making ratings meaningless across PRs.",
+      "optionExplanations": {
+        "A": "A only diagnoses the problem — you'd still get inconsistent ratings, just with explanations",
+        "B": "The root cause is Claude has no grounded definition of 'critical' vs 'medium' in your context. Without a rubric, it infers — and inference varies",
+        "C": "C is less precise without concrete examples",
+        "D": "D is dangerous: if all issues are minor, one still gets called 'critical,' making ratings meaningless across PRs."
+      }
     },
     {
       "id": 2,
@@ -55,7 +61,13 @@
         "D": "Set an environment variable to enable non-interactive mode before running"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The -p (print/non-interactive) flag tells Claude Code to run once, output result to stdout, then exit — without waiting for user input. This is the designed solution for CI/CD pipelines. A may cause Claude Code to crash or error. B is not a valid Claude Code flag. D alone does not switch Claude Code to non-interactive mode."
+      "explanation": "Why C: The -p (print/non-interactive) flag tells Claude Code to run once, output result to stdout, then exit — without waiting for user input. This is the designed solution for CI/CD pipelines. A may cause Claude Code to crash or error. B is not a valid Claude Code flag. D alone does not switch Claude Code to non-interactive mode.",
+      "optionExplanations": {
+        "A": "A may cause Claude Code to crash or error",
+        "B": "B is not a valid Claude Code flag",
+        "C": "The -p (print/non-interactive) flag tells Claude Code to run once, output result to stdout, then exit — without waiting for user input. This is the designed solution for CI/CD pipelines",
+        "D": "D alone does not switch Claude Code to non-interactive mode."
+      }
     },
     {
       "id": 3,
@@ -69,7 +81,13 @@
         "D": "Temporarily disable high false-positive categories (style, naming, documentation) and run only high-precision categories while improving precision"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: This is a trust contamination problem. The 45-48% FP categories are destroying confidence in the 4% FP categories. Developers can't distinguish good alerts from noise, so they ignore everything. D fixes this surgically: keep what works (security/correctness at 4% FP), remove what's broken temporarily, fix noisy categories offline then re-enable once precision improves. Trust is restored immediately. A requires weeks while trust collapses now. B penalises the already-accurate categories. C adds cognitive load to already-fatigued developers."
+      "explanation": "Why D: This is a trust contamination problem. The 45-48% FP categories are destroying confidence in the 4% FP categories. Developers can't distinguish good alerts from noise, so they ignore everything. D fixes this surgically: keep what works (security/correctness at 4% FP), remove what's broken temporarily, fix noisy categories offline then re-enable once precision improves. Trust is restored immediately. A requires weeks while trust collapses now. B penalises the already-accurate categories. C adds cognitive load to already-fatigued developers.",
+      "optionExplanations": {
+        "A": "A requires weeks while trust collapses now",
+        "B": "B penalises the already-accurate categories",
+        "C": "C adds cognitive load to already-fatigued developers.",
+        "D": "This is a trust contamination problem. The 45-48% FP categories are destroying confidence in the 4% FP categories. Developers can't distinguish good alerts from noise, so they ignore everything"
+      }
     },
     {
       "id": 4,
@@ -83,7 +101,13 @@
         "D": "Submit all documents to the Batch API with custom_ids for tracking, immediately process urgent documents when results arrive"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Two-tier routing matches each document type to the API that fits its requirement: • Standard monthly reports (no time pressure) → Batch API: 50% cheaper, processes within 24hrs • Urgent exception reports (action within 1 hour) → Real-time Messages API: immediate response A meets latency but wastes money. C means urgent reports could wait up to 1 hour in the queue, violating the SLA. D means urgent reports could take up to 24 hours — completely violates the 1-hour requirement."
+      "explanation": "Why B: Two-tier routing matches each document type to the API that fits its requirement: • Standard monthly reports (no time pressure) → Batch API: 50% cheaper, processes within 24hrs • Urgent exception reports (action within 1 hour) → Real-time Messages API: immediate response A meets latency but wastes money. C means urgent reports could wait up to 1 hour in the queue, violating the SLA. D means urgent reports could take up to 24 hours — completely violates the 1-hour requirement.",
+      "optionExplanations": {
+        "A": "A meets latency but wastes money",
+        "B": "Two-tier routing matches each document type to the API that fits its requirement: • Standard monthly reports (no time pressure) → Batch API: 50% cheaper, processes within 24hrs • Urgent exception reports (action within 1 hour) → Real-time Messages API: immediate response",
+        "C": "C means urgent reports could wait up to 1 hour in the queue, violating the SLA",
+        "D": "D means urgent reports could take up to 24 hours — completely violates the 1-hour requirement."
+      }
     },
     {
       "id": 5,
@@ -97,7 +121,13 @@
         "D": "Implement a retry loop that catches JSON parse errors and re-prompts Claude with the error details, asking it to correct the validation issues"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Tool use with a JSON schema is API-level enforcement. Claude must fill structured parameters that are automatically validated against the schema. It's not a prompt instruction Claude 'might' follow — it's an architectural constraint built into the API. A works most of the time, not guaranteed. B treats the symptom, not the cause — fragile on nested/complex JSON. D adds latency and cost without addressing the root cause."
+      "explanation": "Why C: Tool use with a JSON schema is API-level enforcement. Claude must fill structured parameters that are automatically validated against the schema. It's not a prompt instruction Claude 'might' follow — it's an architectural constraint built into the API. A works most of the time, not guaranteed. B treats the symptom, not the cause — fragile on nested/complex JSON. D adds latency and cost without addressing the root cause.",
+      "optionExplanations": {
+        "A": "A works most of the time, not guaranteed",
+        "B": "B treats the symptom, not the cause — fragile on nested/complex JSON",
+        "C": "Tool use with a JSON schema is API-level enforcement. Claude must fill structured parameters that are automatically validated against the schema. It's not a prompt instruction Claude 'might' follow — it's an architectural constraint built into the API",
+        "D": "D adds latency and cost without addressing the root cause."
+      }
     },
     {
       "id": 6,
@@ -111,7 +141,13 @@
         "D": "Review all extractions from documents with formatting anomalies such as unusual layouts or mixed content types"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Field-level confidence scores are the model's uncertainty signals. Calibrating thresholds on a labeled validation set means directing reviewers to extractions with the highest probability of semantic errors — risk-based prioritization. A only catches a subset (filled fields can still be wrong values). B measures quality but doesn't preferentially catch error-prone extractions. D is a proxy indicator that misses semantic errors in well-formatted documents."
+      "explanation": "Why C: Field-level confidence scores are the model's uncertainty signals. Calibrating thresholds on a labeled validation set means directing reviewers to extractions with the highest probability of semantic errors — risk-based prioritization. A only catches a subset (filled fields can still be wrong values). B measures quality but doesn't preferentially catch error-prone extractions. D is a proxy indicator that misses semantic errors in well-formatted documents.",
+      "optionExplanations": {
+        "A": "A only catches a subset (filled fields can still be wrong values)",
+        "B": "B measures quality but doesn't preferentially catch error-prone extractions",
+        "C": "Field-level confidence scores are the model's uncertainty signals. Calibrating thresholds on a labeled validation set means directing reviewers to extractions with the highest probability of semantic errors — risk-based prioritization",
+        "D": "D is a proxy indicator that misses semantic errors in well-formatted documents."
+      }
     },
     {
       "id": 7,
@@ -125,7 +161,13 @@
         "D": "Set `tool_choice` to `'auto'` so `extract_metadata` appears first in the tool array, ensuring Claude prioritizes it"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} forces Claude to call that specific tool. This is the only approach that ENFORCES, not suggests, which tool gets called. 'any' means Claude must use SOME tool but picks which one. 'auto' means Claude decides freely. Tool ordering in the definition array gives a slight preference but is NOT a guarantee."
+      "explanation": "Why B: tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} forces Claude to call that specific tool. This is the only approach that ENFORCES, not suggests, which tool gets called. 'any' means Claude must use SOME tool but picks which one. 'auto' means Claude decides freely. Tool ordering in the definition array gives a slight preference but is NOT a guarantee.",
+      "optionExplanations": {
+        "A": "'any' only guarantees Claude uses *some* tool but leaves the choice to Claude—it doesn't force `extract_metadata` first, so `citation_formatter` could still be called initially.",
+        "B": "Tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} forces Claude to call that specific tool. This is the only approach that ENFORCES, not suggests, which tool gets called. 'any' means Claude must use SOME tool but picks which one. 'auto' means Claude decides freely. Tool ordering in the definition array gives a slight preference but is NOT a guarantee.",
+        "C": "Tool definition ordering provides only a weak preference signal to Claude; 'auto' mode still allows Claude to ignore that ordering and call tools in any sequence it chooses.",
+        "D": "The 'auto' mode doesn't respect tool array ordering as a hard constraint—Claude makes free decisions regardless of definition order, so `extract_metadata` is not guaranteed to run first."
+      }
     },
     {
       "id": 8,
@@ -139,7 +181,13 @@
         "D": "Add stricter schema constraints with detailed field descriptions to prevent the model from generating invalid values"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Targeted correction with validation error context: Claude sees the original document, what it extracted, and exactly what failed. It can fix the SPECIFIC error with full context. A is dangerous for financial data — assumes line items are correct and total is wrong, but line items could be the error. C is blind retries with no new information — same input produces the same result. D can't prevent math not adding up through schema alone."
+      "explanation": "Why B: Targeted correction with validation error context: Claude sees the original document, what it extracted, and exactly what failed. It can fix the SPECIFIC error with full context. A is dangerous for financial data — assumes line items are correct and total is wrong, but line items could be the error. C is blind retries with no new information — same input produces the same result. D can't prevent math not adding up through schema alone.",
+      "optionExplanations": {
+        "A": "A is dangerous for financial data — assumes line items are correct and total is wrong, but line items could be the error",
+        "B": "Targeted correction with validation error context: Claude sees the original document, what it extracted, and exactly what failed. It can fix the SPECIFIC error with full context",
+        "C": "C is blind retries with no new information — same input produces the same result",
+        "D": "D can't prevent math not adding up through schema alone."
+      }
     },
     {
       "id": 9,
@@ -153,7 +201,13 @@
         "D": "The model extracts dates as ISO 8601 datetime strings ('2023-03-15T00:00:00') when the schema requires only the date portion"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Retries fix HOW Claude outputs data. They cannot fix WHAT data is available. The full co-author list does not exist anywhere in the document being processed. No matter how many retries or how clearly you explain the validation error, Claude cannot produce information that isn't in its input. A is a format error — Claude knows the number, just formatted it wrong. B is a structure error — Claude has the data, just organized it differently. D is a precision error — Claude just needs to truncate the datetime."
+      "explanation": "Why C: Retries fix HOW Claude outputs data. They cannot fix WHAT data is available. The full co-author list does not exist anywhere in the document being processed. No matter how many retries or how clearly you explain the validation error, Claude cannot produce information that isn't in its input. A is a format error — Claude knows the number, just formatted it wrong. B is a structure error — Claude has the data, just organized it differently. D is a precision error — Claude just needs to truncate the datetime.",
+      "optionExplanations": {
+        "A": "A is a format error — Claude knows the number, just formatted it wrong",
+        "B": "B is a structure error — Claude has the data, just organized it differently",
+        "C": "Retries fix HOW Claude outputs data. They cannot fix WHAT data is available. The full co-author list does not exist anywhere in the document being processed. No matter how many retries or how clearly you explain the validation error, Claude cannot produce information that isn't in its input",
+        "D": "D is a precision error — Claude just needs to truncate the datetime."
+      }
     },
     {
       "id": 10,
@@ -167,7 +221,13 @@
         "D": "Change to an array field that captures all values found with their source locations, letting downstream systems apply preference rules"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: You already have the critical information: the detailed specs table is more reliable 90% of the time. Apply that knowledge directly at the extraction layer: tell Claude to prefer the detailed specs table when values conflict. A sends 15% of documents to manual review unnecessarily when you already have a resolution rule. B flags conflicts but still routes to humans when you have a clear preference rule. D over-engineers — defer a decision you can already make at extraction time."
+      "explanation": "Why C: You already have the critical information: the detailed specs table is more reliable 90% of the time. Apply that knowledge directly at the extraction layer: tell Claude to prefer the detailed specs table when values conflict. A sends 15% of documents to manual review unnecessarily when you already have a resolution rule. B flags conflicts but still routes to humans when you have a clear preference rule. D over-engineers — defer a decision you can already make at extraction time.",
+      "optionExplanations": {
+        "A": "Rejecting documents with conflicts sends 15% of documents to manual review even though you already have a clear, empirically-validated resolution rule (detailed specs table is 90% more accurate), making this unnecessarily costly.",
+        "B": "B flags conflicts but still routes to humans when you have a clear preference rule",
+        "C": "You already have the critical information: the detailed specs table is more reliable 90% of the time. Apply that knowledge directly at the extraction layer: tell Claude to prefer the detailed specs table when values conflict. A sends 15% of documents to manual review unnecessarily when you already have a resolution rule",
+        "D": "D over-engineers — defer a decision you can already make at extraction time."
+      }
     },
     {
       "id": 11,
@@ -181,7 +241,13 @@
         "D": "The model distributes attention proportionally across input context length, causing fields mentioned early to receive less relative attention"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Do the math: Document (150–190K tokens) + Tool definition (~2,100 tokens) + System prompt = approaches or exceeds the 200K context window. When the combined input exceeds the window, earlier content gets truncated. That's exactly why the first half of long documents isn't being extracted accurately — it's literally not in the context anymore. A is not a technical concept. B doesn't explain the length-correlated degradation. D doesn't explain the sharp accuracy drop at a specific token range — truncation is the mechanical explanation."
+      "explanation": "Why C: Do the math: Document (150–190K tokens) + Tool definition (~2,100 tokens) + System prompt = approaches or exceeds the 200K context window. When the combined input exceeds the window, earlier content gets truncated. That's exactly why the first half of long documents isn't being extracted accurately — it's literally not in the context anymore. A is not a technical concept. B doesn't explain the length-correlated degradation. D doesn't explain the sharp accuracy drop at a specific token range — truncation is the mechanical explanation.",
+      "optionExplanations": {
+        "A": "A is not a technical concept",
+        "B": "B doesn't explain the length-correlated degradation",
+        "C": "Do the math: Document (150–190K tokens) + Tool definition (~2,100 tokens) + System prompt = approaches or exceeds the 200K context window. When the combined input exceeds the window, earlier content gets truncated. That's exactly why the first half of long documents isn't being extracted accurately — it's literally not in the context anymore",
+        "D": "D doesn't explain the sharp accuracy drop at a specific token range — truncation is the mechanical explanation."
+      }
     },
     {
       "id": 12,
@@ -195,7 +261,13 @@
         "D": "Add a pre-extraction step where the model summarizes key discussions and conclusions, then perform extraction on that summary"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Both lengths fit within the context window — so this is NOT a truncation problem. This is a signal-to-noise problem. Long meandering transcripts bury key decisions in irrelevant discussion. D solves this with a 2-step pipeline: Step 1 summarizes (concentrates signal, strips noise), Step 2 extracts from clean summary. Chunking (C) fixes truncation, not scatter. Few-shot examples (A) don't address the structural problem. B doesn't fix input structure with a better model."
+      "explanation": "Why D: Both lengths fit within the context window — so this is NOT a truncation problem. This is a signal-to-noise problem. Long meandering transcripts bury key decisions in irrelevant discussion. D solves this with a 2-step pipeline: Step 1 summarizes (concentrates signal, strips noise), Step 2 extracts from clean summary. Chunking (C) fixes truncation, not scatter. Few-shot examples (A) don't address the structural problem. B doesn't fix input structure with a better model.",
+      "optionExplanations": {
+        "A": "Few-shot examples show *what* to extract but don't address the core structural problem: key decisions are scattered and buried in irrelevant discussion, making them harder to locate regardless of example quality.",
+        "B": "B doesn't fix input structure with a better model.",
+        "C": "Splitting into chunks solves truncation problems, but both transcript lengths already fit within the context window—the real issue is signal-to-noise ratio in long meandering discussions, not token limits.",
+        "D": "Both lengths fit within the context window — so this is NOT a truncation problem. This is a signal-to-noise problem. Long meandering transcripts bury key decisions in irrelevant discussion. D solves this with a 2-step pipeline: Step 1 summarizes (concentrates signal, strips noise), Step 2 extracts from clean summary. Chunking (C) fixes truncation, not scatter. Few-shot examples (A) don't address the structural problem"
+      }
     },
     {
       "id": 13,
@@ -209,7 +281,13 @@
         "D": "Request multiple extraction attempts per document and select the most common format"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Two-layer enforcement: (1) Strict schema defines the exact structure and data type required; (2) Normalization rules in prompt tell Claude HOW to convert (e.g., 'Extract prices as numeric values without currency symbols'). Claude normalizes at extraction time — output arrives already clean. A is more calls with no normalization fix. B is fragile — every new menu format breaks your code. D is expensive and unreliable — 'most common' doesn't mean correct."
+      "explanation": "Why C: Two-layer enforcement: (1) Strict schema defines the exact structure and data type required; (2) Normalization rules in prompt tell Claude HOW to convert (e.g., 'Extract prices as numeric values without currency symbols'). Claude normalizes at extraction time — output arrives already clean. A is more calls with no normalization fix. B is fragile — every new menu format breaks your code. D is expensive and unreliable — 'most common' doesn't mean correct.",
+      "optionExplanations": {
+        "A": "A is more calls with no normalization fix",
+        "B": "B is fragile — every new menu format breaks your code",
+        "C": "Two-layer enforcement: (1) Strict schema defines the exact structure and data type required; (2) Normalization rules in prompt tell Claude HOW to convert (e.g., 'Extract prices as numeric values without currency symbols'). Claude normalizes at extraction time — output arrives already clean",
+        "D": "D is expensive and unreliable — 'most common' doesn't mean correct."
+      }
     },
     {
       "id": 14,
@@ -223,7 +301,13 @@
         "D": "Add few-shot examples demonstrating compound phrase handling, explicit mention criteria, and appropriate entry volumes"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: All three problems are nuanced behavioural issues. Few-shot examples show Claude exactly how to handle each case: • Compound phrases: show input 'Python and SQL' → correct output • Implied skills: show that unstated inferred skills should NOT appear • Length consistency: show appropriate skill counts for similar documents D is the only option addressing all three simultaneously. Constraints (B) don't resolve the compound phrase ambiguity. Metadata schema (C) fixes none of the three problems. Post-processing normalization (A) only partially addresses length."
+      "explanation": "Why D: All three problems are nuanced behavioural issues. Few-shot examples show Claude exactly how to handle each case: • Compound phrases: show input 'Python and SQL' → correct output • Implied skills: show that unstated inferred skills should NOT appear • Length consistency: show appropriate skill counts for similar documents D is the only option addressing all three simultaneously. Constraints (B) don't resolve the compound phrase ambiguity. Metadata schema (C) fixes none of the three problems. Post-processing normalization (A) only partially addresses length.",
+      "optionExplanations": {
+        "A": "Post-extraction normalization happens too late—it can deduplicate and map similar entries but cannot resolve the original inconsistency problem of whether compound phrases should be split or kept whole, which is a generation-time decision.",
+        "B": "Hard numeric constraints (10–20 entries) don't address *how* to parse compound phrases or distinguish explicitly mentioned from implied skills—the constraint itself doesn't clarify these behavioral ambiguities.",
+        "C": "Adding metadata fields (confidence, source) documents *what* was extracted but doesn't change how Claude extracts in the first place, leaving the three behavioral problems unsolved.",
+        "D": "All three problems are nuanced behavioural issues. Few-shot examples show Claude exactly how to handle each case: • Compound phrases: show input 'Python and SQL' → correct output • Implied skills: show that unstated inferred skills should NOT appear • Length consistency: show appropriate skill counts for similar documents"
+      }
     },
     {
       "id": 15,
@@ -237,7 +321,13 @@
         "D": "Process ~2,000 sample documents via real-time API to identify failure patterns and refine prompts, then batch process all 50,000 with the corrected prompt"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Learn first, scale second. Real-time on 2,000 docs (small cost) surfaces all major failure mode patterns. Refine prompts. Then submit all 50,000 via Batch API for 50% cost savings. Two weeks easily accommodates this: fast real-time testing → prompt fix → 1-2 batch runs. A is full cost, no savings. B means 10 batches × 24hr = 10 days minimum just in processing time, plus analysis. C processes 50,000 with a known flawed prompt then pays again to fix failures — backwards."
+      "explanation": "Why D: Learn first, scale second. Real-time on 2,000 docs (small cost) surfaces all major failure mode patterns. Refine prompts. Then submit all 50,000 via Batch API for 50% cost savings. Two weeks easily accommodates this: fast real-time testing → prompt fix → 1-2 batch runs. A is full cost, no savings. B means 10 batches × 24hr = 10 days minimum just in processing time, plus analysis. C processes 50,000 with a known flawed prompt then pays again to fix failures — backwards.",
+      "optionExplanations": {
+        "A": "A is full cost, no savings",
+        "B": "B means 10 batches × 24hr = 10 days minimum just in processing time, plus analysis. C processes 50,000 with a known flawed prompt then pays again to fix failures — backwards.",
+        "C": "This approach processes all 50,000 documents with a known flawed prompt first, then pays again to fix failures via real-time API — it's backwards and doubles costs instead of optimizing them.",
+        "D": "Learn first, scale second. Real-time on 2,000 docs (small cost) surfaces all major failure mode patterns. Refine prompts. Then submit all 50,000 via Batch API for 50% cost savings. Two weeks easily accommodates this: fast real-time testing → prompt fix → 1-2 batch runs"
+      }
     },
     {
       "id": 16,
@@ -251,7 +341,13 @@
         "D": "Replace the few-shot examples with a detailed checklist of specific logic edge cases to verify"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: This is a competing attention problem. One prompt covering three different review types forces Claude to split focus. Adding examples for one category dilutes attention to others. A eliminates the competition: each prompt is fully optimised for its domain with dedicated examples. No trade-off, no dilution. B adds more noise. C doesn't fix prompt architecture. D changes the teaching mechanism but doesn't fix the domain competition."
+      "explanation": "Why A: This is a competing attention problem. One prompt covering three different review types forces Claude to split focus. Adding examples for one category dilutes attention to others. A eliminates the competition: each prompt is fully optimised for its domain with dedicated examples. No trade-off, no dilution. B adds more noise. C doesn't fix prompt architecture. D changes the teaching mechanism but doesn't fix the domain competition.",
+      "optionExplanations": {
+        "A": "This is a competing attention problem. One prompt covering three different review types forces Claude to split focus. Adding examples for one category dilutes attention to others. A eliminates the competition: each prompt is fully optimised for its domain with dedicated examples. No trade-off, no dilution",
+        "B": "B adds more noise",
+        "C": "C doesn't fix prompt architecture. D changes the teaching mechanism but doesn't fix the domain competition.",
+        "D": "Replacing few-shot examples with a checklist doesn't address the root problem: one prompt competing across three unrelated review domains causes attention dilution regardless of how instructions are formatted."
+      }
     },
     {
       "id": 17,
@@ -265,7 +361,13 @@
         "D": "Implement a multi-pass pipeline where separate LLM calls first extract branches, then identify missing coverage"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Claude already detects missing tests at the function level — it understands the concept. The gap is recognition at branch level within functions — a pattern it's not currently detecting. Few-shot examples directly teach this: show code with an uncovered null-check branch, paired with the exact review comment it should generate. A tells Claude what to do; examples show it how to recognize the gap. C and D over-complicate the pipeline for a problem solvable in a single pass with well-crafted examples."
+      "explanation": "Why B: Claude already detects missing tests at the function level — it understands the concept. The gap is recognition at branch level within functions — a pattern it's not currently detecting. Few-shot examples directly teach this: show code with an uncovered null-check branch, paired with the exact review comment it should generate. A tells Claude what to do; examples show it how to recognize the gap. C and D over-complicate the pipeline for a problem solvable in a single pass with well-crafted examples.",
+      "optionExplanations": {
+        "A": "Explicit enumeration instructions tell Claude what to do but don't teach it to recognize branch-level gaps — it already understands the concept; it needs pattern examples to identify this specific detection failure.",
+        "B": "Claude already detects missing tests at the function level — it understands the concept. The gap is recognition at branch level within functions — a pattern it's not currently detecting. Few-shot examples directly teach this: show code with an uncovered null-check branch, paired with the exact review comment it should generate. A tells Claude what to do; examples show it how to recognize the gap. C and D over-complicate the pipeline for a problem solvable in a single pass with well-crafted examples.",
+        "C": "Splitting into two separate LLM calls over-complicates the pipeline for a problem that few-shot examples solve elegantly in a single pass.",
+        "D": "A multi-pass pipeline adds unnecessary complexity and latency when the detection gap can be closed with well-crafted examples in one efficient review call."
+      }
     },
     {
       "id": 18,
@@ -279,7 +381,13 @@
         "D": "Add chain-of-thought instructions asking the model to list all external references in the diff, then reason about cross-file impact"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The root cause is missing context — affected files aren't in the prompt. Static analysis deterministically identifies which files depend on changed code. Include files within 2 hops. One API call with all relevant context. Most cost-effective because: one API call, only adds relevant files, static analysis is fast and cheap, deterministic inclusion. A is expensive — model explores freely with many tool calls. B is multiple API calls per file. D can't reason about files it can't see — CoT doesn't conjure missing context."
+      "explanation": "Why C: The root cause is missing context — affected files aren't in the prompt. Static analysis deterministically identifies which files depend on changed code. Include files within 2 hops. One API call with all relevant context. Most cost-effective because: one API call, only adds relevant files, static analysis is fast and cheap, deterministic inclusion. A is expensive — model explores freely with many tool calls. B is multiple API calls per file. D can't reason about files it can't see — CoT doesn't conjure missing context.",
+      "optionExplanations": {
+        "A": "A is expensive — model explores freely with many tool calls",
+        "B": "B is multiple API calls per file",
+        "C": "The root cause is missing context — affected files aren't in the prompt. Static analysis deterministically identifies which files depend on changed code. Include files within 2 hops. One API call with all relevant context. Most cost-effective because: one API call, only adds relevant files, static analysis is fast and cheap, deterministic inclusion",
+        "D": "D can't reason about files it can't see — CoT doesn't conjure missing context."
+      }
     },
     {
       "id": 19,
@@ -293,7 +401,13 @@
         "D": "Configure the review to analyze only the changed lines in the diff without surrounding file context"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: CLAUDE.md is the designed mechanism for project-level persistent context. It tells Claude about team conventions before every review session. Claude reads it, knows force-unwrapping in test files is intentional, and never generates those false positives. A suppresses findings AFTER generation — wasteful and brittle. C requires developer effort on every instance, doesn't scale. D reduces context and causes Claude to miss real bugs — wrong direction."
+      "explanation": "Why B: CLAUDE.md is the designed mechanism for project-level persistent context. It tells Claude about team conventions before every review session. Claude reads it, knows force-unwrapping in test files is intentional, and never generates those false positives. A suppresses findings AFTER generation — wasteful and brittle. C requires developer effort on every instance, doesn't scale. D reduces context and causes Claude to miss real bugs — wrong direction.",
+      "optionExplanations": {
+        "A": "Post-processing keyword filters suppress findings after they're generated, wasting API calls and token budget on false positives that should never be created in the first place.",
+        "B": "CLAUDE.md is the designed mechanism for project-level persistent context. It tells Claude about team conventions before every review session. Claude reads it, knows force-unwrapping in test files is intentional, and never generates those false positives. A suppresses findings AFTER generation — wasteful and brittle",
+        "C": "C requires developer effort on every instance, doesn't scale. D reduces context and causes Claude to miss real bugs — wrong direction.",
+        "D": "Removing surrounding file context reduces the model's visibility into code patterns and intentional design choices, causing it to miss real bugs and defeats the goal of preventing false positives based on project conventions."
+      }
     },
     {
       "id": 20,
@@ -307,7 +421,13 @@
         "D": "Set `--permission-mode dontAsk` to auto-deny any tool permission requests not in the explicitly allowed set"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: --max-turns caps the number of agentic iterations. --max-budget-usd caps the dollar amount. Both flags are built into Claude Code CLI and enforced BY Claude Code itself — exactly what the question requires. B reduces cost per iteration but no hard cap. C is enforced by the job runner, not Claude Code itself. D controls permission handling — has zero effect on iteration count or cost caps."
+      "explanation": "Why A: --max-turns caps the number of agentic iterations. --max-budget-usd caps the dollar amount. Both flags are built into Claude Code CLI and enforced BY Claude Code itself — exactly what the question requires. B reduces cost per iteration but no hard cap. C is enforced by the job runner, not Claude Code itself. D controls permission handling — has zero effect on iteration count or cost caps.",
+      "optionExplanations": {
+        "A": "--max-turns caps the number of agentic iterations. --max-budget-usd caps the dollar amount. Both flags are built into Claude Code CLI and enforced BY Claude Code itself — exactly what the question requires. B reduces cost per iteration but no hard cap",
+        "B": "Switching to a cheaper model reduces cost per token but does not enforce a hard dollar cap—a large PR could still exceed your budget across multiple iterations.",
+        "C": "C is enforced by the job runner, not Claude Code itself. D controls permission handling — has zero effect on iteration count or cost caps.",
+        "D": "Permission mode controls whether Claude auto-approves tool calls; it has no relationship to iteration count limits or spending caps."
+      }
     },
     {
       "id": 21,
@@ -321,7 +441,13 @@
         "D": "Increase `max_tokens` to the model's maximum and instruct Claude to keep finding descriptions under 50 words each"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The root cause is too much output required from a single API call. Split input into batches (5-10 files per call), each call generates partial findings within token limits, merge arrays at the end. This scales infinitely as PR sizes grow. A loses structured JSON and drops medium severity issues. B still has the same single-call architecture and still truncates. D has a hard ceiling — can't set max_tokens to infinity, very large PRs still truncate."
+      "explanation": "Why C: The root cause is too much output required from a single API call. Split input into batches (5-10 files per call), each call generates partial findings within token limits, merge arrays at the end. This scales infinitely as PR sizes grow. A loses structured JSON and drops medium severity issues. B still has the same single-call architecture and still truncates. D has a hard ceiling — can't set max_tokens to infinity, very large PRs still truncate.",
+      "optionExplanations": {
+        "A": "Converting to markdown output abandons structured JSON entirely, making it harder for downstream systems to parse findings consistently and automatically.",
+        "B": "B still has the same single-call architecture and still truncates. D has a hard ceiling — can't set max_tokens to infinity, very large PRs still truncate.",
+        "C": "The root cause is too much output required from a single API call. Split input into batches (5-10 files per call), each call generates partial findings within token limits, merge arrays at the end. This scales infinitely as PR sizes grow. A loses structured JSON and drops medium severity issues",
+        "D": "Even at the model's maximum token limit, there is still a hard ceiling—very large PRs will still truncate, leaving the root problem unsolved."
+      }
     },
     {
       "id": 22,
@@ -335,7 +461,13 @@
         "D": "Whether you can structure each review as a single request without multi-turn refinement"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The Batch API's defining trade-off is: 50% cheaper BUT results take up to 24 hours. If developers can tolerate this delay, it works. If they need feedback within hours, it breaks the workflow entirely. This constraint is binary and workflow-specific. B is backwards — batch is SLOWER, not faster. C is a minor technical issue solvable with custom_ids. D is already satisfied (single-turn reviews) — not a determining factor."
+      "explanation": "Why A: The Batch API's defining trade-off is: 50% cheaper BUT results take up to 24 hours. If developers can tolerate this delay, it works. If they need feedback within hours, it breaks the workflow entirely. This constraint is binary and workflow-specific. B is backwards — batch is SLOWER, not faster. C is a minor technical issue solvable with custom_ids. D is already satisfied (single-turn reviews) — not a determining factor.",
+      "optionExplanations": {
+        "A": "The Batch API's defining trade-off is: 50% cheaper BUT results take up to 24 hours. If developers can tolerate this delay, it works. If they need feedback within hours, it breaks the workflow entirely. This constraint is binary and workflow-specific",
+        "B": "B is backwards — batch is SLOWER, not faster",
+        "C": "C is a minor technical issue solvable with custom_ids",
+        "D": "D is already satisfied (single-turn reviews) — not a determining factor."
+      }
     },
     {
       "id": 23,
@@ -349,7 +481,13 @@
         "D": "Run with `--bare` mode and specify all review criteria directly in the `-p` prompt argument for each CI invocation"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: --bare skips all auto-discovery (eliminates the 18-second monorepo scan). --append-system-prompt-file explicitly loads just the top-level CLAUDE.md (preserves team standards). Both requirements met in one command. B is not a valid Claude Code flag. C replaces the entire default system prompt — goes too far and breaks other default behaviors. D eliminates CLAUDE.md mechanism and embeds standards in every CI command — unmaintainable."
+      "explanation": "Why A: --bare skips all auto-discovery (eliminates the 18-second monorepo scan). --append-system-prompt-file explicitly loads just the top-level CLAUDE.md (preserves team standards). Both requirements met in one command. B is not a valid Claude Code flag. C replaces the entire default system prompt — goes too far and breaks other default behaviors. D eliminates CLAUDE.md mechanism and embeds standards in every CI command — unmaintainable.",
+      "optionExplanations": {
+        "A": "--bare skips all auto-discovery (eliminates the 18-second monorepo scan). --append-system-prompt-file explicitly loads just the top-level CLAUDE.md (preserves team standards). Both requirements met in one command",
+        "B": "B is not a valid Claude Code flag. C replaces the entire default system prompt — goes too far and breaks other default behaviors. D eliminates CLAUDE.md mechanism and embeds standards in every CI command — unmaintainable.",
+        "C": "Replacing the entire default system prompt removes valuable default behaviors and safety guardrails that Claude Code provides, beyond just coding standards.",
+        "D": "Embedding standards directly in the prompt argument for every CI invocation is unmaintainable—any standard change requires updating all CI configurations rather than a single CLAUDE.md file."
+      }
     },
     {
       "id": 24,
@@ -363,7 +501,13 @@
         "D": "Add detailed few-shot examples demonstrating the bug categories Claude should flag with the instruction to maintain current precision levels"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Two-stage pipeline decouples recall from precision: Stage 1 detects ALL potential issues with confidence/severity scores (high recall). Stage 2 filters by risk score to surface only actionable findings (precision controlled). Never ask one prompt to simultaneously maximise recall AND maintain precision — they pull in opposite directions. A collapses precision. B improves context but doesn't create a systematic recall/precision balance. D contradicts itself: 'detect more but keep precision the same' without an architectural mechanism."
+      "explanation": "Why C: Two-stage pipeline decouples recall from precision: Stage 1 detects ALL potential issues with confidence/severity scores (high recall). Stage 2 filters by risk score to surface only actionable findings (precision controlled). Never ask one prompt to simultaneously maximise recall AND maintain precision — they pull in opposite directions. A collapses precision. B improves context but doesn't create a systematic recall/precision balance. D contradicts itself: 'detect more but keep precision the same' without an architectural mechanism.",
+      "optionExplanations": {
+        "A": "Removing conservative filtering and relying on post-hoc programmatic filtering is fragile—Claude may not output the structured data (confidence/severity scores) needed for effective filtering.",
+        "B": "Adding more context improves understanding but does not systematically address the core tension between recall and precision; Claude will still follow the instruction to 'err on the side of not commenting.'",
+        "C": "Two-stage pipeline decouples recall from precision: Stage 1 detects ALL potential issues with confidence/severity scores (high recall). Stage 2 filters by risk score to surface only actionable findings (precision controlled). Never ask one prompt to simultaneously maximise recall AND maintain precision — they pull in opposite directions. A collapses precision. B improves context but doesn't create a systematic recall/precision balance. D contradicts itself: 'detect more but keep precision the same' without an architectural mechanism.",
+        "D": "Few-shot examples without a structural two-stage process cannot simultaneously maximize detection and keep false positives low—the conservative instruction still dominates Claude's behavior."
+      }
     },
     {
       "id": 25,
@@ -377,7 +521,13 @@
         "D": "The extended session length caused the context window to fill with conversation history during the coding session"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: This is the anchoring bias problem. Claude refactored the code and has reasoning in context for WHY it made each decision. When asked to review the same code, it's anchored to its own prior reasoning and less likely to critically challenge decisions it already committed to. The CI review is a fresh, independent context with no prior reasoning — genuine independent review. This is why you should never ask the same model in the same session to both write AND review the same code."
+      "explanation": "Why B: This is the anchoring bias problem. Claude refactored the code and has reasoning in context for WHY it made each decision. When asked to review the same code, it's anchored to its own prior reasoning and less likely to critically challenge decisions it already committed to. The CI review is a fresh, independent context with no prior reasoning — genuine independent review. This is why you should never ask the same model in the same session to both write AND review the same code.",
+      "optionExplanations": {
+        "A": "While the CI environment may have different context, this doesn't explain why the same Claude session reviewing in the local environment missed bugs—the local session has access to the current file being reviewed.",
+        "B": "This is the anchoring bias problem. Claude refactored the code and has reasoning in context for WHY it made each decision. When asked to review the same code, it's anchored to its own prior reasoning and less likely to critically challenge decisions it already committed to. The CI review is a fresh, independent context with no prior reasoning — genuine independent review. This is why you should never ask the same model in the same session to both write AND review the same code.",
+        "C": "The developer's request for a review is not inherently more general than a CI prompt; both are asking Claude to find issues in the same code with the same instructions.",
+        "D": "The context window filling with conversation history would degrade Claude's performance across both refactoring and review equally, not explain why review specifically missed bugs the refactoring session had already committed to."
+      }
     },
     {
       "id": 26,
@@ -391,7 +541,13 @@
         "D": "Switch the summarization calls from Sonnet-tier to Haiku-tier model"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Batch API: same model, same prompts, 50% cost savings, results within 24 hours. All conditions met. A: Concurrency improves speed, NOT per-token cost. You pay the same rate regardless. B changes the task structure and violates 'no change to prompts.' D violates the explicit constraint of keeping the same model tier."
+      "explanation": "Why C: Batch API: same model, same prompts, 50% cost savings, results within 24 hours. All conditions met. A: Concurrency improves speed, NOT per-token cost. You pay the same rate regardless. B changes the task structure and violates 'no change to prompts.' D violates the explicit constraint of keeping the same model tier.",
+      "optionExplanations": {
+        "A": "Concurrency improves speed, NOT per-token cost. You pay the same rate regardless. B changes the task structure and violates 'no change to prompts.' D violates the explicit constraint of keeping the same model tier.",
+        "B": "Concatenating commits into a single request changes the task structure fundamentally (from 200 separate reviews to 1 bulk review) and may violate the constraint about keeping prompts unchanged.",
+        "C": "Batch API: same model, same prompts, 50% cost savings, results within 24 hours. All conditions met",
+        "D": "Switching to Haiku explicitly violates the stated requirement to 'keep the same model tier,' regardless of cost savings."
+      }
     },
     {
       "id": 27,
@@ -405,7 +561,13 @@
         "D": "Add a second review pass that re-reads the diff using the same prompt, looking for anything the first pass may have missed"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The problem is filtering happening inside the prompt. Claude suppresses findings before reporting them. C fixes this: Claude reports everything with confidence/severity metadata. Downstream filtering system decides what to surface. Structured tagged output preserved. A: Extended thinking doesn't remove the over-filtering instruction. B: Removing instructions may lose structured tags. D: Same prompt = same filtering = same bugs missed."
+      "explanation": "Why C: The problem is filtering happening inside the prompt. Claude suppresses findings before reporting them. C fixes this: Claude reports everything with confidence/severity metadata. Downstream filtering system decides what to surface. Structured tagged output preserved. A: Extended thinking doesn't remove the over-filtering instruction. B: Removing instructions may lose structured tags. D: Same prompt = same filtering = same bugs missed.",
+      "optionExplanations": {
+        "A": "Extended thinking doesn't remove the over-filtering instruction",
+        "B": "Removing instructions may lose structured tags",
+        "C": "The problem is filtering happening inside the prompt. Claude suppresses findings before reporting them",
+        "D": "Same prompt = same filtering = same bugs missed."
+      }
     },
     {
       "id": 28,
@@ -419,7 +581,13 @@
         "D": "Keep `--system-prompt` AND add `--allowedTools` to include file-reading/code navigation tools"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: --allowedTools controls what Claude CAN DO (what it can access). The system prompt contains the review instructions. You need both: instructions (system prompt) AND file-reading capability (allowedTools). A changes input method but doesn't give Claude file access. B changes where instructions live but still doesn't enable file-reading tools. C removes review instructions — you need BOTH the prompt AND the tools."
+      "explanation": "Why D: --allowedTools controls what Claude CAN DO (what it can access). The system prompt contains the review instructions. You need both: instructions (system prompt) AND file-reading capability (allowedTools). A changes input method but doesn't give Claude file access. B changes where instructions live but still doesn't enable file-reading tools. C removes review instructions — you need BOTH the prompt AND the tools.",
+      "optionExplanations": {
+        "A": "Changing how the diff is input (embedding vs. piping) does not grant Claude access to files outside the input—it still only sees what you explicitly provide to it.",
+        "B": "The `--append-system-prompt` flag controls where instructions are added, not what Claude can access; file navigation tools are what enable reading, but appending to the system prompt alone doesn't grant that capability.",
+        "C": "Removing the `--system-prompt` eliminates the review instructions entirely, leaving Claude without guidance on what to review for, even if it gains file-reading tools.",
+        "D": "--allowedTools controls what Claude CAN DO (what it can access). The system prompt contains the review instructions. You need both: instructions (system prompt) AND file-reading capability (allowedTools). A changes input method but doesn't give Claude file access. B changes where instructions live but still doesn't enable file-reading tools. C removes review instructions — you need BOTH the prompt AND the tools."
+      }
     },
     {
       "id": 29,
@@ -433,7 +601,13 @@
         "D": "Add a `model_confidence` field (0.0–1.0) and filter out findings below a threshold before final output"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The `detected_pattern` field creates a feedback loop: dismissed finding → look at the pattern → identify what your system is over-flagging → fix the prompt/rules. If 'single-letter loop variable i' is dismissed 90% of the time, that pattern is generating false positives. B helps developers understand findings, not you understand dismissals. C loses categorical signal. D reduces output volume but doesn't reveal WHY things are being dismissed."
+      "explanation": "Why A: The `detected_pattern` field creates a feedback loop: dismissed finding → look at the pattern → identify what your system is over-flagging → fix the prompt/rules. If 'single-letter loop variable i' is dismissed 90% of the time, that pattern is generating false positives. B helps developers understand findings, not you understand dismissals. C loses categorical signal. D reduces output volume but doesn't reveal WHY things are being dismissed.",
+      "optionExplanations": {
+        "A": "The `detected_pattern` field creates a feedback loop: dismissed finding → look at the pattern → identify what your system is over-flagging → fix the prompt/rules. If 'single-letter loop variable i' is dismissed 90% of the time, that pattern is generating false positives. B helps developers understand findings, not you understand dismissals. C loses categorical signal. D reduces output volume but doesn't reveal WHY things are being dismissed.",
+        "B": "Expanding descriptions helps developers understand findings better but doesn't help you diagnose why YOUR SYSTEM is generating dismissed findings in the first place.",
+        "C": "Removing the category field loses important signal about whether dismissals cluster around specific issue types (e.g., 'style' findings dismissed more than 'security'), making it harder to identify systemic problems.",
+        "D": "Filtering low-confidence findings removes false positives from output but doesn't reveal what patterns are causing them—you're hiding the problem rather than diagnosing it."
+      }
     },
     {
       "id": 30,
@@ -447,7 +621,13 @@
         "D": "Add instructions to your system prompt to 'be conservative' and 'only flag definite issues'"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: The key phrase is 'generalise to novel code patterns.' Few-shot examples don't just tell Claude what not to flag — they teach the REASONING PRINCIPLE behind why something is acceptable. When Claude learns the principle from examples, it can apply that same reasoning to new patterns it's never seen. A is brittle (novel patterns don't contain the right keywords). C can't enumerate every case — lists don't generalise. D is vague and gives Claude no concrete guidance on what's acceptable."
+      "explanation": "Why B: The key phrase is 'generalise to novel code patterns.' Few-shot examples don't just tell Claude what not to flag — they teach the REASONING PRINCIPLE behind why something is acceptable. When Claude learns the principle from examples, it can apply that same reasoning to new patterns it's never seen. A is brittle (novel patterns don't contain the right keywords). C can't enumerate every case — lists don't generalise. D is vague and gives Claude no concrete guidance on what's acceptable.",
+      "optionExplanations": {
+        "A": "A is brittle (novel patterns don't contain the right keywords)",
+        "B": "The key phrase is 'generalise to novel code patterns.' Few-shot examples don't just tell Claude what not to flag — they teach the REASONING PRINCIPLE behind why something is acceptable. When Claude learns the principle from examples, it can apply that same reasoning to new patterns it's never seen",
+        "C": "C can't enumerate every case — lists don't generalise",
+        "D": "D is vague and gives Claude no concrete guidance on what's acceptable."
+      }
     },
     {
       "id": 31,
@@ -461,7 +641,13 @@
         "D": "You check whether Claude's response contains a text content block — if text is present, the agent has produced its final answer"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: stop_reason is the official, API-designed mechanism for agentic loop control: • stop_reason = 'tool_use' → execute tool, send result back, continue loop • stop_reason = 'end_turn' → stop loop, return final response Claude signals when it's done. Your loop reads that signal. B requires pre-knowing when Claude is done. C is a safety cap, not the primary control. D is unreliable — Claude can include text alongside tool_use blocks as intermediate reasoning."
+      "explanation": "Why A: stop_reason is the official, API-designed mechanism for agentic loop control: • stop_reason = 'tool_use' → execute tool, send result back, continue loop • stop_reason = 'end_turn' → stop loop, return final response Claude signals when it's done. Your loop reads that signal. B requires pre-knowing when Claude is done. C is a safety cap, not the primary control. D is unreliable — Claude can include text alongside tool_use blocks as intermediate reasoning.",
+      "optionExplanations": {
+        "A": "Stop_reason is the official, API-designed mechanism for agentic loop control: • stop_reason = 'tool_use' → execute tool, send result back, continue loop • stop_reason = 'end_turn' → stop loop, return final response Claude signals when it's done. Your loop reads that signal",
+        "B": "B requires pre-knowing when Claude is done",
+        "C": "C is a safety cap, not the primary control",
+        "D": "D is unreliable — Claude can include text alongside tool_use blocks as intermediate reasoning."
+      }
     },
     {
       "id": 32,
@@ -475,7 +661,13 @@
         "D": "Strengthen the system prompt with emphatic language: 'CRITICAL POLICY: All refunds over $500 MUST trigger human escalation'"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The key phrase: 'cannot be left to model discretion.' Application-level hook enforces the rule in CODE, not in prompts. Claude cannot bypass this — it's a programmatic gate. 100% reliable enforcement. B, C, D all still rely on Claude making the correct decision. Even with perfect instructions, examples, or error messages, there's some failure probability. 'Cannot be left to model discretion' = enforce in application code."
+      "explanation": "Why A: The key phrase: 'cannot be left to model discretion.' Application-level hook enforces the rule in CODE, not in prompts. Claude cannot bypass this — it's a programmatic gate. 100% reliable enforcement. B, C, D all still rely on Claude making the correct decision. Even with perfect instructions, examples, or error messages, there's some failure probability. 'Cannot be left to model discretion' = enforce in application code.",
+      "optionExplanations": {
+        "A": "The key phrase: 'cannot be left to model discretion.' Application-level hook enforces the rule in CODE, not in prompts. Claude cannot bypass this — it's a programmatic gate. 100% reliable enforcement. B, C, D all still rely on Claude making the correct decision. Even with perfect instructions, examples, or error messages, there's some failure probability. 'Cannot be left to model discretion' = enforce in application code.",
+        "B": "Few-shot examples train Claude on correct behavior but cannot enforce it—the model could still choose to process a high-value refund directly despite seeing examples, leaving the 5% failure rate unsolved.",
+        "C": "Returning an error message relies on Claude interpreting and acting on that message correctly in future calls, but the model may still bypass the escalation logic or handle the error inconsistently.",
+        "D": "Emphatic language in the prompt is still a prompt instruction, not a code-level guarantee—Claude could still fail to escalate in edge cases, which violates the 'cannot be left to model discretion' requirement."
+      }
     },
     {
       "id": 33,
@@ -489,7 +681,13 @@
         "D": "Add few-shot examples to the system prompt demonstrating how to interpret error message patterns and select appropriate responses"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The root cause is missing information in the error response. The MCP server knows what type of error occurred — it should communicate that: errorCategory: 'transient' → retry; 'validation' → tell user issue; 'permission' → tell user they lack access. B retries ALL errors — permanent errors (order not found) will retry unnecessarily. C requires an extra round-trip when the server already knows the error type. D makes Claude parse text to infer type — fragile."
+      "explanation": "Why A: The root cause is missing information in the error response. The MCP server knows what type of error occurred — it should communicate that: errorCategory: 'transient' → retry; 'validation' → tell user issue; 'permission' → tell user they lack access. B retries ALL errors — permanent errors (order not found) will retry unnecessarily. C requires an extra round-trip when the server already knows the error type. D makes Claude parse text to infer type — fragile.",
+      "optionExplanations": {
+        "A": "The root cause is missing information in the error response. The MCP server knows what type of error occurred — it should communicate that: errorCategory: 'transient' → retry; 'validation' → tell user issue; 'permission' → tell user they lack access. B retries ALL errors — permanent errors (order not found) will retry unnecessarily",
+        "B": "Retrying all errors indiscriminately wastes time and resources on permanent errors (like 'order not found') that will never succeed no matter how many retries occur.",
+        "C": "C requires an extra round-trip when the server already knows the error type. D makes Claude parse text to infer type — fragile.",
+        "D": "Asking Claude to parse unstructured error message text to infer error type is fragile and cognitive overhead—the MCP server already knows definitively what type of error occurred and should communicate it directly."
+      }
     },
     {
       "id": 34,
@@ -503,7 +701,13 @@
         "D": "Briefly explain what the agent can help with and offer to resolve the issue quickly"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Three facts make this unambiguous: (1) Customer explicitly demanded a human NOW; (2) Agent cannot resolve the issue anyway; (3) Agent already has all context. Escalate immediately with conversation history so the human agent has full context — customer doesn't repeat everything a third time. A asks another question when customer has already explained twice. C wastes time on tool calls for data the agent already has. D tries to retain them in the bot after an explicit human request — disrespectful."
+      "explanation": "Why B: Three facts make this unambiguous: (1) Customer explicitly demanded a human NOW; (2) Agent cannot resolve the issue anyway; (3) Agent already has all context. Escalate immediately with conversation history so the human agent has full context — customer doesn't repeat everything a third time. A asks another question when customer has already explained twice. C wastes time on tool calls for data the agent already has. D tries to retain them in the bot after an explicit human request — disrespectful.",
+      "optionExplanations": {
+        "A": "Asking another clarifying question after the customer has already explained twice and explicitly demanded a human wastes their time and frustrates them further.",
+        "B": "Three facts make this unambiguous: (1) Customer explicitly demanded a human NOW; (2) Agent cannot resolve the issue anyway; (3) Agent already has all context. Escalate immediately with conversation history so the human agent has full context — customer doesn't repeat everything a third time. A asks another question when customer has already explained twice. C wastes time on tool calls for data the agent already has. D tries to retain them in the bot after an explicit human request — disrespectful.",
+        "C": "Making redundant tool calls to gather context the agent already possesses delays escalation and forces the customer to wait longer when they've already requested immediate human transfer.",
+        "D": "Attempting to resolve the issue or convince the customer the agent can help contradicts the premise that the agent cannot resolve it—this dismisses the explicit human request and risks escalating frustration."
+      }
     },
     {
       "id": 35,
@@ -517,7 +721,13 @@
         "D": "Remove `is_error: true` and return error details as normal tool content"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Error messages are instructions for Claude. Specific messages → correct decisions. 'Order not found: verify order ID' → don't retry same ID. 'Connection timeout: try again' → retry is valid. B hides transient errors from Claude but still retries permanent errors unnecessarily. C is extra complexity when the server already knows the error type. D: Claude won't recognize it as an error and may interpret error text as data."
+      "explanation": "Why A: Error messages are instructions for Claude. Specific messages → correct decisions. 'Order not found: verify order ID' → don't retry same ID. 'Connection timeout: try again' → retry is valid. B hides transient errors from Claude but still retries permanent errors unnecessarily. C is extra complexity when the server already knows the error type. D: Claude won't recognize it as an error and may interpret error text as data.",
+      "optionExplanations": {
+        "A": "Error messages are instructions for Claude. Specific messages → correct decisions. 'Order not found: verify order ID' → don't retry same ID. 'Connection timeout: try again' → retry is valid. B hides transient errors from Claude but still retries permanent errors unnecessarily",
+        "B": "Hiding transient errors behind automatic internal retries prevents Claude from ever learning why a lookup failed; it also still retries permanent errors (like invalid order IDs) without Claude's informed decision.",
+        "C": "C is extra complexity when the server already knows the error type",
+        "D": "Claude won't recognize it as an error and may interpret error text as data."
+      }
     },
     {
       "id": 36,
@@ -531,7 +741,13 @@
         "D": "Return a success response with a 'status' field indicating the error type"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This is the official Anthropic API mechanism for tool error communication: `is_error: true` + descriptive message in content. Claude explicitly knows the tool failed, knows WHY it failed, and can reason about recovery. A: Claude thinks tool succeeded with no data — proceeds incorrectly. B: Exceptions don't become Claude-readable messages. D: Claude sees success (no is_error flag) and must parse a custom 'status' field — not the designed mechanism."
+      "explanation": "Why C: This is the official Anthropic API mechanism for tool error communication: `is_error: true` + descriptive message in content. Claude explicitly knows the tool failed, knows WHY it failed, and can reason about recovery. A: Claude thinks tool succeeded with no data — proceeds incorrectly. B: Exceptions don't become Claude-readable messages. D: Claude sees success (no is_error flag) and must parse a custom 'status' field — not the designed mechanism.",
+      "optionExplanations": {
+        "A": "Claude thinks tool succeeded with no data — proceeds incorrectly",
+        "B": "Exceptions don't become Claude-readable messages",
+        "C": "This is the official Anthropic API mechanism for tool error communication: `is_error: true` + descriptive message in content. Claude explicitly knows the tool failed, knows WHY it failed, and can reason about recovery",
+        "D": "Claude sees success (no is_error flag) and must parse a custom 'status' field — not the designed mechanism."
+      }
     },
     {
       "id": 37,
@@ -545,7 +761,13 @@
         "D": "Extract only return-relevant fields (items, purchase date, return window, return status) and replace the full tool output with just those fields"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: The task is return requests — only 5-6 fields matter out of 40+. Filter tool output to only return-relevant fields at extraction time. Context consumption drops ~85% per lookup. A is massively over-engineered for a problem solved by field filtering. B makes the problem worse. C requires extra LLM calls and produces unstructured output less useful than structured filtered fields."
+      "explanation": "Why D: The task is return requests — only 5-6 fields matter out of 40+. Filter tool output to only return-relevant fields at extraction time. Context consumption drops ~85% per lookup. A is massively over-engineered for a problem solved by field filtering. B makes the problem worse. C requires extra LLM calls and produces unstructured output less useful than structured filtered fields.",
+      "optionExplanations": {
+        "A": "A is massively over-engineered for a problem solved by field filtering. B makes the problem worse",
+        "B": "This option ignores the core problem: you're consuming massive context on every lookup. Without modifying tool output, the 40+ fields continue bloating the conversation, making future lookups equally inefficient and eventually hitting context limits.",
+        "C": "C requires extra LLM calls and produces unstructured output less useful than structured filtered fields.",
+        "D": "The task is return requests — only 5-6 fields matter out of 40+. Filter tool output to only return-relevant fields at extraction time. Context consumption drops ~85% per lookup"
+      }
     },
     {
       "id": 38,
@@ -559,7 +781,13 @@
         "D": "Implement automatic retries with exponential backoff for `process_refund`, keeping the conversation open while processing"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Do what you CAN, be honest about what you CAN'T, provide a path forward. Customer gets billing explanation and eligibility confirmation. Honest acknowledgment of system issue. Clear next step. B wastes valuable gathered context before using it. C is a LIE — the refund has NOT been processed. D: Infrastructure timeouts last minutes to hours — customer waiting indefinitely is terrible UX."
+      "explanation": "Why A: Do what you CAN, be honest about what you CAN'T, provide a path forward. Customer gets billing explanation and eligibility confirmation. Honest acknowledgment of system issue. Clear next step. B wastes valuable gathered context before using it. C is a LIE — the refund has NOT been processed. D: Infrastructure timeouts last minutes to hours — customer waiting indefinitely is terrible UX.",
+      "optionExplanations": {
+        "A": "Do what you CAN, be honest about what you CAN'T, provide a path forward. Customer gets billing explanation and eligibility confirmation. Honest acknowledgment of system issue. Clear next step. B wastes valuable gathered context before using it",
+        "B": "Escalating immediately wastes the valuable context already gathered (customer info, order details, refund eligibility confirmation). The agent has successfully completed 80% of the resolution—abandoning that work before using it reduces first-contact resolution and frustrates the customer.",
+        "C": "C is a LIE — the refund has NOT been processed",
+        "D": "Infrastructure timeouts last minutes to hours — customer waiting indefinitely is terrible UX."
+      }
     },
     {
       "id": 39,
@@ -573,7 +801,13 @@
         "D": "Configure the agent to escalate after three consecutive tool calls that fail to resolve the customer's issue"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Semantic escalation triggers describe the actual situations where human intervention adds value: customer wants a human (must respect), policy exception needed (beyond agent authority), no progress possible (agent is stuck). B: Frustration ≠ need for human. Frustrated customers often just need a clear answer the agent CAN provide. C: Rigid rules fail on novel situations outside the rule set. D: Tool failures = infrastructure issues, not necessarily need for human judgment."
+      "explanation": "Why A: Semantic escalation triggers describe the actual situations where human intervention adds value: customer wants a human (must respect), policy exception needed (beyond agent authority), no progress possible (agent is stuck). B: Frustration ≠ need for human. Frustrated customers often just need a clear answer the agent CAN provide. C: Rigid rules fail on novel situations outside the rule set. D: Tool failures = infrastructure issues, not necessarily need for human judgment.",
+      "optionExplanations": {
+        "A": "Semantic escalation triggers describe the actual situations where human intervention adds value: customer wants a human (must respect), policy exception needed (beyond agent authority), no progress possible (agent is stuck)",
+        "B": "Frustration ≠ need for human. Frustrated customers often just need a clear answer the agent CAN provide",
+        "C": "Rigid rules fail on novel situations outside the rule set",
+        "D": "Tool failures = infrastructure issues, not necessarily need for human judgment."
+      }
     },
     {
       "id": 40,
@@ -587,7 +821,13 @@
         "D": "Resume with full history but filter out previous tool result messages, keeping only the most recent tool calls"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: New session = zero stale tool results in context. Structured summary = customer continuity preserved. All tool calls in new session = 100% fresh data. No anchoring possible. A: Stale data still visible in context — 'prefer recent' is a soft instruction, old data continues to influence. C: Adds more tool results to an already long context. D: Stripping tool results from 32 turns may break logical flow of conversation."
+      "explanation": "Why B: New session = zero stale tool results in context. Structured summary = customer continuity preserved. All tool calls in new session = 100% fresh data. No anchoring possible. A: Stale data still visible in context — 'prefer recent' is a soft instruction, old data continues to influence. C: Adds more tool results to an already long context. D: Stripping tool results from 32 turns may break logical flow of conversation.",
+      "optionExplanations": {
+        "A": "Stale data still visible in context — 'prefer recent' is a soft instruction, old data continues to influence",
+        "B": "New session = zero stale tool results in context. Structured summary = customer continuity preserved. All tool calls in new session = 100% fresh data. No anchoring possible",
+        "C": "Adds more tool results to an already long context",
+        "D": "Stripping tool results from 32 turns may break logical flow of conversation."
+      }
     },
     {
       "id": 41,
@@ -601,7 +841,13 @@
         "D": "Call `escalate_to_human` passing only the customer's original message"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The agent already did valuable work — all gathered intelligence must be preserved and handed off. Human agent receives complete context: customer details + order info + root cause + reference ID. Resolves faster, no customer re-explanation needed. B is over-engineered. C: NEVER act outside authorization — the agent identified the issue is beyond its authority. D: Throws away everything the agent learned — human starts from scratch."
+      "explanation": "Why A: The agent already did valuable work — all gathered intelligence must be preserved and handed off. Human agent receives complete context: customer details + order info + root cause + reference ID. Resolves faster, no customer re-explanation needed. B is over-engineered. C: NEVER act outside authorization — the agent identified the issue is beyond its authority. D: Throws away everything the agent learned — human starts from scratch.",
+      "optionExplanations": {
+        "A": "The agent already did valuable work — all gathered intelligence must be preserved and handed off. Human agent receives complete context: customer details + order info + root cause + reference ID. Resolves faster, no customer re-explanation needed",
+        "B": "B is over-engineered",
+        "C": "NEVER act outside authorization — the agent identified the issue is beyond its authority",
+        "D": "Throws away everything the agent learned — human starts from scratch."
+      }
     },
     {
       "id": 42,
@@ -615,7 +861,13 @@
         "D": "Claude's memory retention is limited to two conversation turns by default, requiring explicit configuration to extend"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Claude has ZERO persistent memory between API calls. Every call is stateless. If the application fails to include prior messages in the API request, Claude starts fresh every call — asking for information already provided. This is the most common multi-turn agent implementation bug. B: Claude doesn't need special instructions to use context it can see. C: Tools don't erase Claude's context window. D: COMPLETELY FALSE — no such default limit exists."
+      "explanation": "Why A: Claude has ZERO persistent memory between API calls. Every call is stateless. If the application fails to include prior messages in the API request, Claude starts fresh every call — asking for information already provided. This is the most common multi-turn agent implementation bug. B: Claude doesn't need special instructions to use context it can see. C: Tools don't erase Claude's context window. D: COMPLETELY FALSE — no such default limit exists.",
+      "optionExplanations": {
+        "A": "Claude has ZERO persistent memory between API calls. Every call is stateless. If the application fails to include prior messages in the API request, Claude starts fresh every call — asking for information already provided. This is the most common multi-turn agent implementation bug",
+        "B": "Claude doesn't need special instructions to use context it can see",
+        "C": "Tools don't erase Claude's context window",
+        "D": "COMPLETELY FALSE — no such default limit exists."
+      }
     },
     {
       "id": 43,
@@ -629,7 +881,13 @@
         "D": "The customer's original complaint verbatim plus tool result excerpts showing duplicate transactions"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The human agent needs exactly what they need, nothing more: Customer ID (locate account), Root cause (understand without re-investigating), Refund amount (know what to process), Recommended action (know what to do). Clean, structured, immediately actionable. A: Human must wade through 25+ turns to find relevant information. B: Missing customer ID and recommended action. D: Partial — missing diagnosed root cause and clear recommended action."
+      "explanation": "Why C: The human agent needs exactly what they need, nothing more: Customer ID (locate account), Root cause (understand without re-investigating), Refund amount (know what to process), Recommended action (know what to do). Clean, structured, immediately actionable. A: Human must wade through 25+ turns to find relevant information. B: Missing customer ID and recommended action. D: Partial — missing diagnosed root cause and clear recommended action.",
+      "optionExplanations": {
+        "A": "Human must wade through 25+ turns to find relevant information",
+        "B": "Missing customer ID and recommended action",
+        "C": "The human agent needs exactly what they need, nothing more: Customer ID (locate account), Root cause (understand without re-investigating), Refund amount (know what to process), Recommended action (know what to do). Clean, structured, immediately actionable",
+        "D": "Partial — missing diagnosed root cause and clear recommended action."
+      }
     },
     {
       "id": 44,
@@ -643,7 +901,13 @@
         "D": "The orchestration layer automatically routes to the next tool based on the order's status field"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Core mechanism of Claude's agentic loop: tool_result → appended to conversation → new API call → Claude reasons → next tool OR final response. Claude decides at each step based on accumulated context. 45 days old may exceed return policy → may need manager exception → escalate. Not a pre-planned sequence (A), not a rules engine (C), not external routing (D). Dynamic, contextual reasoning on accumulating evidence."
+      "explanation": "Why B: Core mechanism of Claude's agentic loop: tool_result → appended to conversation → new API call → Claude reasons → next tool OR final response. Claude decides at each step based on accumulated context. 45 days old may exceed return policy → may need manager exception → escalate. Not a pre-planned sequence (A), not a rules engine (C), not external routing (D). Dynamic, contextual reasoning on accumulating evidence.",
+      "optionExplanations": {
+        "A": "The agentic loop doesn't execute a pre-planned sequence of tools. Each decision point occurs dynamically—Claude evaluates the current conversation state and reasons about the next appropriate action, not following a rigid predetermined path.",
+        "B": "Core mechanism of Claude's agentic loop: tool_result → appended to conversation → new API call → Claude reasons → next tool OR final response. Claude decides at each step based on accumulated context. 45 days old may exceed return policy → may need manager exception → escalate. Not a pre-planned sequence (A), not a rules engine (C), not external routing (D). Dynamic, contextual reasoning on accumulating evidence.",
+        "C": "A pre-configured decision tree applies rigid rules (e.g., 'if order_date > 30 days, escalate'), but context matters: a 45-day-old item might still qualify for escalation if the customer has loyalty status, or might not need escalation if a partial refund is acceptable. Dynamic reasoning beats static rules.",
+        "D": "Automatic routing based on the status field removes Claude's ability to reason contextually. A status value alone (e.g., 'completed') doesn't tell you if the customer deserves an exception or if policy exceptions apply—the model must interpret the full conversation context."
+      }
     },
     {
       "id": 45,
@@ -657,7 +921,13 @@
         "D": "Add orchestration layer code that checks the agent's outcome after each loop terminates — if neither `process_refund` nor `escalate_to_human` was called, call `escalate_to_human` with accumulated context"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Post-loop safety net enforced in application code. After the loop completes for ANY reason: was process_refund called? was escalate_to_human called? If neither → orchestration layer forces escalation. Works for ALL termination causes including max_turns. C: Instructions are processed INSIDE the loop — if max_turns is hit, Claude may not execute them. A: Still doesn't guarantee the second agent ends in resolution/escalation. B: Preventative hook may interrupt legitimate in-progress investigation."
+      "explanation": "Why D: Post-loop safety net enforced in application code. After the loop completes for ANY reason: was process_refund called? was escalate_to_human called? If neither → orchestration layer forces escalation. Works for ALL termination causes including max_turns. C: Instructions are processed INSIDE the loop — if max_turns is hit, Claude may not execute them. A: Still doesn't guarantee the second agent ends in resolution/escalation. B: Preventative hook may interrupt legitimate in-progress investigation.",
+      "optionExplanations": {
+        "A": "Still doesn't guarantee the second agent ends in resolution/escalation",
+        "B": "Preventative hook may interrupt legitimate in-progress investigation.",
+        "C": "Instructions are processed INSIDE the loop — if max_turns is hit, Claude may not execute them",
+        "D": "Post-loop safety net enforced in application code. After the loop completes for ANY reason: was process_refund called? was escalate_to_human called? If neither → orchestration layer forces escalation. Works for ALL termination causes including max_turns"
+      }
     },
     {
       "id": 46,
@@ -671,7 +941,13 @@
         "D": "Create path-specific rules in `.claude/rules/` with YAML frontmatter specifying the error handling conventions"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: /memory shows which context/memory files are currently loaded in the session. This 5-second check answers the most fundamental question: 'Is my CLAUDE.md even in Claude's context?' If it's not loaded, that explains everything immediately. B is a fix, not a diagnostic. C is the second diagnostic step (after confirming your file IS loaded). D is another fix attempt before identifying the root cause. Always diagnose before fixing."
+      "explanation": "Why A: /memory shows which context/memory files are currently loaded in the session. This 5-second check answers the most fundamental question: 'Is my CLAUDE.md even in Claude's context?' If it's not loaded, that explains everything immediately. B is a fix, not a diagnostic. C is the second diagnostic step (after confirming your file IS loaded). D is another fix attempt before identifying the root cause. Always diagnose before fixing.",
+      "optionExplanations": {
+        "A": "/memory shows which context/memory files are currently loaded in the session. This 5-second check answers the most fundamental question: 'Is my CLAUDE.md even in Claude's context?' If it's not loaded, that explains everything immediately",
+        "B": "B is a fix, not a diagnostic",
+        "C": "C is the second diagnostic step (after confirming your file IS loaded)",
+        "D": "D is another fix attempt before identifying the root cause. Always diagnose before fixing."
+      }
     },
     {
       "id": 47,
@@ -685,7 +961,13 @@
         "D": "Enter plan mode to explore the module's architecture and enumerate potential root causes before attempting any fixes"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Clear stack trace + specific function identified + production is down = direct execution. The problem location is already known. Direct execution: read the trace → read the code at that location → identify the bug → fix it. Plan mode is for ambiguous, wide-scope problems. When the stack trace hands you the answer, planning overhead is waste. B, C, D add unnecessary delay when production is burning."
+      "explanation": "Why A: Clear stack trace + specific function identified + production is down = direct execution. The problem location is already known. Direct execution: read the trace → read the code at that location → identify the bug → fix it. Plan mode is for ambiguous, wide-scope problems. When the stack trace hands you the answer, planning overhead is waste. B, C, D add unnecessary delay when production is burning.",
+      "optionExplanations": {
+        "A": "Clear stack trace + specific function identified + production is down = direct execution. The problem location is already known. Direct execution: read the trace → read the code at that location → identify the bug → fix it. Plan mode is for ambiguous, wide-scope problems. When the stack trace hands you the answer, planning overhead is waste. B, C, D add unnecessary delay when production is burning.",
+        "B": "Switching modes between direct execution and plan mode introduces unnecessary context switching and delays when the problem is already localized. The stack trace provides clarity, making the upfront planning overhead waste time in a production emergency.",
+        "C": "Analyzing the module's architecture and dependencies through planning adds investigation layers that aren't needed—the stack trace already points to the specific function. Over-analysis delays the fix when production urgency demands rapid execution.",
+        "D": "Enumerating potential root causes in plan mode is exploration work suited to ambiguous problems, but here the stack trace has already identified the likely culprit. Systematic enumeration of unknowns wastes time when the evidence points to one location."
+      }
     },
     {
       "id": 48,
@@ -699,7 +981,13 @@
         "D": "Add venue server to `~/.claude.json` and playlist server to `.mcp.json`"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Two MCP configuration scopes: •.mcp.json (project-level): committed to repo → available to all team members • ~/.claude.json (user-level): personal machine only → private to you Venue lookup = shared →.mcp.json. Playlist = personal testing → ~/.claude.json. A: Venue server only on your machine. C: Playlist exposed to team. D: Both scopes are backwards."
+      "explanation": "Why B: Two MCP configuration scopes: •.mcp.json (project-level): committed to repo → available to all team members • ~/.claude.json (user-level): personal machine only → private to you Venue lookup = shared →.mcp.json. Playlist = personal testing → ~/.claude.json. A: Venue server only on your machine. C: Playlist exposed to team. D: Both scopes are backwards.",
+      "optionExplanations": {
+        "A": "Venue server only on your machine",
+        "B": "Two MCP configuration scopes: •.mcp.json (project-level): committed to repo → available to all team members • ~/.claude.json (user-level): personal machine only → private to you Venue lookup = shared →.mcp.json. Playlist = personal testing → ~/.claude.json",
+        "C": "Playlist exposed to team",
+        "D": "Both scopes are backwards."
+      }
     },
     {
       "id": 49,
@@ -713,7 +1001,13 @@
         "D": "Extract the formatting rules into a dedicated skill with more detailed examples of correct formatting"
       },
       "correctAnswer": "B",
-      "explanation": "Why B: 15% violations persist despite emphatic instructions — prompt engineering ceiling has been hit. The fix is automation: PostToolUse hook triggers automatically AFTER every Edit/Write. Prettier runs on the modified file regardless of what Claude generated. 100% of file writes get correctly formatted. A, C, D are all still instruction or model-dependent approaches. Once you hit the instruction ceiling, you switch to automated enforcement."
+      "explanation": "Why B: 15% violations persist despite emphatic instructions — prompt engineering ceiling has been hit. The fix is automation: PostToolUse hook triggers automatically AFTER every Edit/Write. Prettier runs on the modified file regardless of what Claude generated. 100% of file writes get correctly formatted. A, C, D are all still instruction or model-dependent approaches. Once you hit the instruction ceiling, you switch to automated enforcement.",
+      "optionExplanations": {
+        "A": "Path-scoped rules still rely on Claude reading and following instructions — you've already hit the instruction ceiling at 15% violations, so organizing rules by file type won't solve the core problem.",
+        "B": "15% violations persist despite emphatic instructions — prompt engineering ceiling has been hit. The fix is automation: PostToolUse hook triggers automatically AFTER every Edit/Write. Prettier runs on the modified file regardless of what Claude generated. 100% of file writes get correctly formatted. A, C, D are all still instruction or model-dependent approaches. Once you hit the instruction ceiling, you switch to automated enforcement.",
+        "C": "A Stop hook with prompt-based evaluation still depends on Claude's ability to self-assess and correct, which hasn't worked at scale — this is another instruction-dependent approach.",
+        "D": "Adding more detailed examples of correct formatting is still prompt engineering; it won't overcome the ceiling you've already hit where emphatic instructions fail to prevent 15% of violations."
+      }
     },
     {
       "id": 50,
@@ -727,7 +1021,13 @@
         "D": "They appear as slash commands (e.g., `/mcp__servername__deploy_checklist`) that you can invoke with arguments"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Three MCP primitives, three different access patterns: • Tools → tool registry, Claude calls automatically • Resources → @-mentionable, attached when referenced • Prompts → slash commands (/mcp__servername__promptname) A describes MCP Tools. B is not how MCP prompts work. C describes MCP Resources. Prompts = slash commands, always."
+      "explanation": "Why D: Three MCP primitives, three different access patterns: • Tools → tool registry, Claude calls automatically • Resources → @-mentionable, attached when referenced • Prompts → slash commands (/mcp__servername__promptname) A describes MCP Tools. B is not how MCP prompts work. C describes MCP Resources. Prompts = slash commands, always.",
+      "optionExplanations": {
+        "A": "MCP Prompts are not added to the tool registry — that's where MCP Tools are registered and automatically invoked by the model.",
+        "B": "B is not how MCP prompts work. C describes MCP Resources. Prompts = slash commands, always.",
+        "C": "MCP Prompts are not @-mentionable resources; @-mentions surface MCP Resources, which are a different MCP primitive with a different access pattern.",
+        "D": "Three MCP primitives, three different access patterns: • Tools → tool registry, Claude calls automatically • Resources → @-mentionable, attached when referenced • Prompts → slash commands (/mcp__servername__promptname) A describes MCP Tools"
+      }
     },
     {
       "id": 51,
@@ -741,7 +1041,13 @@
         "D": "As a detailed instruction block in the project's root `CLAUDE.md` file"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: .claude/skills/ (project-level) + committed to version control = shared with all team members and stays in sync as the team iterates. A: settings.json is for configuration, not skill definitions. B: ~/.claude/skills/ is personal/local — changes don't sync to team members. D: CLAUDE.md provides context, not slash commands — won't register /migrate-component."
+      "explanation": "Why C: .claude/skills/ (project-level) + committed to version control = shared with all team members and stays in sync as the team iterates. A: settings.json is for configuration, not skill definitions. B: ~/.claude/skills/ is personal/local — changes don't sync to team members. D: CLAUDE.md provides context, not slash commands — won't register /migrate-component.",
+      "optionExplanations": {
+        "A": "Settings.json is for configuration, not skill definitions",
+        "B": "~/.claude/skills/ is personal/local — changes don't sync to team members",
+        "C": ".claude/skills/ (project-level) + committed to version control = shared with all team members and stays in sync as the team iterates",
+        "D": "CLAUDE.md provides context, not slash commands — won't register /migrate-component."
+      }
     },
     {
       "id": 52,
@@ -755,7 +1061,13 @@
         "D": "Provide a test case with example input containing null values and the expected output, then ask Claude to fix it"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Concrete test case (input + expected output) gives Claude the most precise, unambiguous specification: input = {name: null, age: 25}, expected = {name: 'UNKNOWN', age: 25}. Claude fixes that EXACT case. Targeted, no unnecessary regeneration. A is vague — Claude doesn't know which edge cases are failing. B defeats the purpose of using Claude. C regenerates everything when only null handling needs fixing — wasteful."
+      "explanation": "Why D: Concrete test case (input + expected output) gives Claude the most precise, unambiguous specification: input = {name: null, age: 25}, expected = {name: 'UNKNOWN', age: 25}. Claude fixes that EXACT case. Targeted, no unnecessary regeneration. A is vague — Claude doesn't know which edge cases are failing. B defeats the purpose of using Claude. C regenerates everything when only null handling needs fixing — wasteful.",
+      "optionExplanations": {
+        "A": "A is vague — Claude doesn't know which edge cases are failing. B defeats the purpose of using Claude. C regenerates everything when only null handling needs fixing — wasteful.",
+        "B": "Manually fixing the code sidesteps Claude entirely and wastes the opportunity to have Claude learn the null-handling fix, making future migrations harder and defeating the purpose of using Claude for code generation.",
+        "C": "Asking Claude to regenerate the entire script is wasteful when only the null-handling logic is broken — this forces re-creation of correct sections and burns more tokens than a targeted fix.",
+        "D": "Concrete test case (input + expected output) gives Claude the most precise, unambiguous specification: input = {name: null, age: 25}, expected = {name: 'UNKNOWN', age: 25}. Claude fixes that EXACT case. Targeted, no unnecessary regeneration"
+      }
     },
     {
       "id": 53,
@@ -769,7 +1081,13 @@
         "D": "Configure hooks for all three: PreToolUse to block db/migrations, PostToolUse to run Prettier"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: Match requirement TYPE to the right configuration MECHANISM: • Hard prohibition (never modify migrations) → permissions.deny: system-level enforcement, Claude cannot perform the action • Behavioral preference (prefer custom logging) → CLAUDE.md instruction: guidance • Automated action (Prettier on TypeScript) → PostToolUse hook: guaranteed execution B, C, D don't correctly differentiate between enforcement mechanisms for different requirement types."
+      "explanation": "Why A: Match requirement TYPE to the right configuration MECHANISM: • Hard prohibition (never modify migrations) → permissions.deny: system-level enforcement, Claude cannot perform the action • Behavioral preference (prefer custom logging) → CLAUDE.md instruction: guidance • Automated action (Prettier on TypeScript) → PostToolUse hook: guaranteed execution B, C, D don't correctly differentiate between enforcement mechanisms for different requirement types.",
+      "optionExplanations": {
+        "A": "Match requirement TYPE to the right configuration MECHANISM: • Hard prohibition (never modify migrations) → permissions.deny: system-level enforcement, Claude cannot perform the action • Behavioral preference (prefer custom logging) → CLAUDE.md instruction: guidance • Automated action (Prettier on TypeScript) → PostToolUse hook: guaranteed execution B, C,",
+        "B": "Path-scoped rules in `.claude/rules/` only work for path-specific guidance (like 'when editing logging files, prefer custom logging') — they cannot enforce hard prohibitions like 'never modify migrations' which requires system-level permissions blocking.",
+        "C": "Stronger directive language in CLAUDE.md won't solve the core problem: Claude is already violating the migration prohibition despite it being in CLAUDE.md, so rewriting it more emphatically repeats a failed approach; PreToolUse hooks for TypeScript edits also don't address the hard prohibition requirement.",
+        "D": "D don't correctly differentiate between enforcement mechanisms for different requirement types."
+      }
     },
     {
       "id": 54,
@@ -783,7 +1101,13 @@
         "D": "Use `@imports` in each package's CLAUDE.md to reference only the specific standard files relevant to that package"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: @imports in each package's CLAUDE.md: clean, DRY, each package gets exactly what it needs. Security package imports security-rules.md. API package imports api-design.md. Standards live in one place — updates propagate automatically. Package maintainers control their own imports. A: Complex override instructions, all standards loaded for everything. B: Another consolidated file to maintain. C: Centralised config that removes package maintainer autonomy."
+      "explanation": "Why D: @imports in each package's CLAUDE.md: clean, DRY, each package gets exactly what it needs. Security package imports security-rules.md. API package imports api-design.md. Standards live in one place — updates propagate automatically. Package maintainers control their own imports. A: Complex override instructions, all standards loaded for everything. B: Another consolidated file to maintain. C: Centralised config that removes package maintainer autonomy.",
+      "optionExplanations": {
+        "A": "Complex override instructions, all standards loaded for everything",
+        "B": "Another consolidated file to maintain",
+        "C": "Centralised config that removes package maintainer autonomy.",
+        "D": "@imports in each package's CLAUDE.md: clean, DRY, each package gets exactly what it needs. Security package imports security-rules.md. API package imports api-design.md. Standards live in one place — updates propagate automatically. Package maintainers control their own imports"
+      }
     },
     {
       "id": 55,
@@ -797,7 +1121,13 @@
         "D": "Ask Claude to interview you about the caching requirements before implementing"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: You know what you want but don't know what you don't know. Plan mode on the existing endpoint surfaces: cache invalidation triggers, Redis failure handling, concurrent request handling, write-through vs read-through strategy. Understand the system → then build correctly. A: Jumping to implementation risks discovering cache invalidation bugs in production. B: Can't write TBDs for things you don't know you don't know. D: Claude analyzing the code surfaces considerations better than asking the user questions they can't answer."
+      "explanation": "Why C: You know what you want but don't know what you don't know. Plan mode on the existing endpoint surfaces: cache invalidation triggers, Redis failure handling, concurrent request handling, write-through vs read-through strategy. Understand the system → then build correctly. A: Jumping to implementation risks discovering cache invalidation bugs in production. B: Can't write TBDs for things you don't know you don't know. D: Claude analyzing the code surfaces considerations better than asking the user questions they can't answer.",
+      "optionExplanations": {
+        "A": "Jumping to implementation risks discovering cache invalidation bugs in production",
+        "B": "Can't write TBDs for things you don't know you don't know",
+        "C": "You know what you want but don't know what you don't know. Plan mode on the existing endpoint surfaces: cache invalidation triggers, Redis failure handling, concurrent request handling, write-through vs read-through strategy. Understand the system → then build correctly",
+        "D": "Claude analyzing the code surfaces considerations better than asking the user questions they can't answer."
+      }
     },
     {
       "id": 56,
@@ -811,7 +1141,13 @@
         "D": "Enter plan mode to analyze how the validation might impact other parts of the reservation flow"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: One conditional in one function: clear, targeted, contained change. Direct execution — just implement it. B: Extended thinking is for complex multi-step reasoning. 'date > today' is not complex. C and D: Plan mode is for wide-scope changes. One conditional statement doesn't need a strategy or impact analysis. Rule: Small + clear + contained = direct execution. Complex + ambiguous + wide scope = plan mode."
+      "explanation": "Why A: One conditional in one function: clear, targeted, contained change. Direct execution — just implement it. B: Extended thinking is for complex multi-step reasoning. 'date > today' is not complex. C and D: Plan mode is for wide-scope changes. One conditional statement doesn't need a strategy or impact analysis. Rule: Small + clear + contained = direct execution. Complex + ambiguous + wide scope = plan mode.",
+      "optionExplanations": {
+        "A": "One conditional in one function: clear, targeted, contained change. Direct execution — just implement it",
+        "B": "Extended thinking is for complex multi-step reasoning. 'date > today' is not complex. C and D: Plan mode is for wide-scope changes. One conditional statement doesn't need a strategy or impact analysis. Rule: Small + clear + contained = direct execution. Complex + ambiguous + wide scope = plan mode.",
+        "C": "Plan mode is designed for wide-scope changes that affect multiple system areas, but adding one conditional to a single function is a contained, isolated change that doesn't require strategic planning.",
+        "D": "While impact analysis has value for large refactors, a single conditional statement in one function has a predictable, minimal scope—the validation either works correctly or it doesn't, making pre-emptive impact analysis unnecessary overhead."
+      }
     },
     {
       "id": 57,
@@ -825,7 +1161,13 @@
         "D": "Write a test suite covering expected behavior, edge cases, and performance requirements before implementation — share test failures with each refinement request"
       },
       "correctAnswer": "D",
-      "explanation": "Why D: Tests are the perfect multi-session iterative refinement mechanism: same objective success criteria every session, Claude can see exactly which tests pass/fail, specific failure messages enable targeted fixes, progress is measurable. Tests persist across sessions. Natural language specs don't tell you objectively if you're making progress. A and B don't provide a systematic feedback loop for progressive improvement across sessions."
+      "explanation": "Why D: Tests are the perfect multi-session iterative refinement mechanism: same objective success criteria every session, Claude can see exactly which tests pass/fail, specific failure messages enable targeted fixes, progress is measurable. Tests persist across sessions. Natural language specs don't tell you objectively if you're making progress. A and B don't provide a systematic feedback loop for progressive improvement across sessions.",
+      "optionExplanations": {
+        "A": "Extended thinking excels at one-time complex reasoning, but progressive improvement across sessions requires persistent, objective feedback mechanisms—not just a detailed plan that may diverge from actual implementation needs as issues emerge.",
+        "B": "B don't provide a systematic feedback loop for progressive improvement across sessions.",
+        "C": "Natural language specifications are subjective and lack measurable success criteria; Claude has no way to objectively determine if an iteration is better or worse across sessions, making it impossible to track concrete progress toward a working solution.",
+        "D": "Tests are the perfect multi-session iterative refinement mechanism: same objective success criteria every session, Claude can see exactly which tests pass/fail, specific failure messages enable targeted fixes, progress is measurable. Tests persist across sessions. Natural language specs don't tell you objectively if you're making progress. A and"
+      }
     },
     {
       "id": 58,
@@ -839,7 +1181,13 @@
         "D": "Show Claude an example of a correctly formatted report and ask it to match that output"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: The key signal: issues are INTERDEPENDENT. Column widths → date display space → content height → page break positions. Fix them sequentially and each fix shifts the context for the next — you chase a moving target indefinitely. Simultaneous fix: Claude accounts for all interdependencies in one coherent update. C wastes working database queries. D works for visual consistency but not interconnected technical constraints. Rule: Independent bugs = fix sequentially. Interdependent bugs = fix simultaneously."
+      "explanation": "Why A: The key signal: issues are INTERDEPENDENT. Column widths → date display space → content height → page break positions. Fix them sequentially and each fix shifts the context for the next — you chase a moving target indefinitely. Simultaneous fix: Claude accounts for all interdependencies in one coherent update. C wastes working database queries. D works for visual consistency but not interconnected technical constraints. Rule: Independent bugs = fix sequentially. Interdependent bugs = fix simultaneously.",
+      "optionExplanations": {
+        "A": "The key signal: issues are INTERDEPENDENT. Column widths → date display space → content height → page break positions. Fix them sequentially and each fix shifts the context for the next — you chase a moving target indefinitely. Simultaneous fix: Claude accounts for all interdependencies in one coherent update. C wastes working database queries",
+        "B": "Sequential fixing assumes issues are independent, but you explicitly noted they interact—changing column widths affects date display, which affects content height, which affects page breaks; each fix shifts the context and requirements for the next, creating a moving target.",
+        "C": "Starting fresh discards the working codebase and functional context you've already established; rewriting from a specification forces Claude to regenerate logic that already partially works rather than surgically addressing the three specific, interrelated technical failures.",
+        "D": "D works for visual consistency but not interconnected technical constraints. Rule: Independent bugs = fix sequentially. Interdependent bugs = fix simultaneously."
+      }
     },
     {
       "id": 59,
@@ -853,7 +1201,13 @@
         "D": "Use direct execution with a prompt asking Claude to analyze all approaches and implement the one it determines is best"
       },
       "correctAnswer": "C",
-      "explanation": "Why C: Multiple valid architectural options with different infrastructure implications = plan mode + team approval. WebSockets (bi-directional, persistent connections), SSE (simpler, one-directional), Polling (simplest infra). Trade-offs affect deployment, costs, scaling — team must decide. A: Deliberate technical debt. B: Assumes answer without evaluating. D: Delegates architectural decisions to Claude — humans must own architecture and infrastructure choices."
+      "explanation": "Why C: Multiple valid architectural options with different infrastructure implications = plan mode + team approval. WebSockets (bi-directional, persistent connections), SSE (simpler, one-directional), Polling (simplest infra). Trade-offs affect deployment, costs, scaling — team must decide. A: Deliberate technical debt. B: Assumes answer without evaluating. D: Delegates architectural decisions to Claude — humans must own architecture and infrastructure choices.",
+      "optionExplanations": {
+        "A": "Deliberate technical debt",
+        "B": "Assumes answer without evaluating",
+        "C": "Multiple valid architectural options with different infrastructure implications = plan mode + team approval. WebSockets (bi-directional, persistent connections), SSE (simpler, one-directional), Polling (simplest infra). Trade-offs affect deployment, costs, scaling — team must decide",
+        "D": "Delegates architectural decisions to Claude — humans must own architecture and infrastructure choices."
+      }
     },
     {
       "id": 60,
@@ -867,7 +1221,13 @@
         "D": "Add the checklist to the project's CLAUDE.md file under a 'Code Review' section"
       },
       "correctAnswer": "A",
-      "explanation": "Why A: /review slash command = on-demand invocation. Developer types /review → checklist loaded → review begins. Doesn't appear for feature writing, debugging, or documentation tasks. Eliminates manual pasting. Team uses it consistently. B is over-engineering for a slash command job. C: Plan mode is unrelated to executing a checklist. D: CLAUDE.md loads for EVERY session — the checklist would pollute feature writing, debugging, and documentation sessions with irrelevant review content. End of Study Guide All 60 questions covered. You're ready for the exam."
+      "explanation": "Why A: /review slash command = on-demand invocation. Developer types /review → checklist loaded → review begins. Doesn't appear for feature writing, debugging, or documentation tasks. Eliminates manual pasting. Team uses it consistently. B is over-engineering for a slash command job. C: Plan mode is unrelated to executing a checklist. D: CLAUDE.md loads for EVERY session — the checklist would pollute feature writing, debugging, and documentation sessions with irrelevant review content. End of Study Guide All 60 questions covered. You're ready for the exam.",
+      "optionExplanations": {
+        "A": "/review slash command = on-demand invocation. Developer types /review → checklist loaded → review begins. Doesn't appear for feature writing, debugging, or documentation tasks. Eliminates manual pasting. Team uses it consistently",
+        "B": "B is over-engineering for a slash command job",
+        "C": "Plan mode is unrelated to executing a checklist",
+        "D": "CLAUDE.md loads for EVERY session — the checklist would pollute feature writing, debugging, and documentation sessions with irrelevant review content. End of Study Guide All 60 questions covered. You're ready for the exam."
+      }
     }
   ]
 }
