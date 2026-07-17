@@ -23,9 +23,31 @@ public static class DbSeeder
             .CreateLogger("DbSeeder");
 
         await db.Database.MigrateAsync();
+        await EnsureResultQuestionOptionExplanationsColumnAsync(db, logger);
 
         await EnsureAdminUserAsync(db, auth, logger);
         await ImportLegacyUsersJsonIfNeededAsync(db, env, logger);
+    }
+
+    /// <summary>
+    /// Guarantees OptionExplanations exists even if an earlier empty migration was already applied.
+    /// </summary>
+    private static async Task EnsureResultQuestionOptionExplanationsColumnAsync(
+        AppDbContext db,
+        ILogger logger)
+    {
+        try
+        {
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                ALTER TABLE "ResultQuestions"
+                ADD COLUMN IF NOT EXISTS "OptionExplanations" jsonb NULL;
+                """);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Could not ensure OptionExplanations column on ResultQuestions.");
+        }
     }
 
     private static async Task EnsureAdminUserAsync(

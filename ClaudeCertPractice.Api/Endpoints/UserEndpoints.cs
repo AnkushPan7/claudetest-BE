@@ -63,6 +63,7 @@ public static class UserEndpoints
         string email,
         SaveResultRequest request,
         UserService users,
+        ILoggerFactory loggerFactory,
         CancellationToken ct)
     {
         try
@@ -73,6 +74,14 @@ public static class UserEndpoints
         catch (ArgumentException ex)
         {
             return Results.BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            loggerFactory.CreateLogger("UserEndpoints").LogError(ex, "Failed to save result for {Email}", email);
+            return Results.Problem(
+                detail: ex.InnerException?.Message ?? ex.Message,
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Failed to save result");
         }
     }
 

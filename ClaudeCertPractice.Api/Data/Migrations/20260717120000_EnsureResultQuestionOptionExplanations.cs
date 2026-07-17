@@ -1,17 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using ClaudeCertPractice.Api.Data;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ClaudeCertPractice.Api.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddResultQuestionOptionExplanations : Migration
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20260717120000_EnsureResultQuestionOptionExplanations")]
+    public partial class EnsureResultQuestionOptionExplanations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Idempotent: safe if this migration already ran empty on a deployed DB,
-            // or if a follow-up migration also adds the column.
+            // Covers production DBs where AddResultQuestionOptionExplanations ran with an empty Up().
             migrationBuilder.Sql(
                 """
                 ALTER TABLE "ResultQuestions"
@@ -22,11 +25,7 @@ namespace ClaudeCertPractice.Api.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(
-                """
-                ALTER TABLE "ResultQuestions"
-                DROP COLUMN IF EXISTS "OptionExplanations";
-                """);
+            // Intentionally empty: dropping would lose data if older migration also owns the column.
         }
     }
 }
