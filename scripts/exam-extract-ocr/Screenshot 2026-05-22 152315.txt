@@ -1,0 +1,14 @@
+﻿You're implementing a feature where users refine their playlist preferences through multiple conversation turns. After deploying, you notice Claude's responses don't reflect
+what users said earlier in the same conversation—for example, a user says they love jazz, but two messages later Claude asks what genres they enjoy. What is the most likely
+cause?
+Claude requires a vector database connection to maintain conversation memory
+O
+o
+Your application isn't including prior messages in the messages array
+o
+The Claude API requires a session_id parameter that you haven't configured
+O
+o
+The models context window has been exceeded by the conversation length
+previous
+Next

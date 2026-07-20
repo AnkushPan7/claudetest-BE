@@ -1,0 +1,16 @@
+﻿You're implementing the escalation logic for when the agent should call
+. Your team proposes four different approaches for triggering escalation. Which
+escalate to human
+approach will most reliably identify cases that genuinely require human intervention?
+O
+o
+Instruct the agent to escalate when the customer requests a human, when the issue requires policy exceptions, or when the agent cannot make meaningful progress.
+O
+o
+Implement sentiment analysis that monitors for frustration indicators (negative language, repeated questions, exclamation marks) and trigger escalation when the
+frustration score exceeds a configured threshold.
+o
+Configure the agent to escalate after three consecutive tool calls that fail to resolve the customers stated issue, ensuring a reasonable attempt before involving a human.
+Build a rules engine that maps specific issue types, customer segments, and product categories to escalation decisions, removing the need for model judgment calls.
+previous
+Next

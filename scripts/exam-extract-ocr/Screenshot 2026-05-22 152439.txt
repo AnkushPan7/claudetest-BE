@@ -1,0 +1,16 @@
+﻿Users frequently send ambiguous requests like "book a venue for the party" without specifying date, guest count, or budget. Your evaluation shows the assistant asks an
+average of 4.2 clarifying questions before taking any action, causing 35% of users to abandon mid-conversation. However, when you reduce questions, users sometimes
+receive recommendations that don't match their preferences. What's the most effective approach to improve this trade-off?
+O
+o
+Configure the assistant to consolidate all clarifying questions into a single compound question (eg., "What date, guest count, and budget are you considering?") to reduce
+the total number of conversational turns.
+Instruct the assistant to state explicit assumptions based on conversation history, proceed with recommendations while inviting corrections, and reserve clarifying
+questions only for irreversible actions like confirming bookings.
+o
+Implement a structured intake form that collects all required parameters (date, guest count, budget, venue type) upfront before the assistant begins providing any
+recommendations.
+O
+o
+Configure the assistant to proceed with reasonable defaults (medium-sized venue, next weekend, moderate budget) without explicitly stating these assumptions,
+allowing users to provide corrections if results don't match expectations.

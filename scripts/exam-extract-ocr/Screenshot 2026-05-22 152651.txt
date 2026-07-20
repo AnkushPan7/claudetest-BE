@@ -1,0 +1,14 @@
+﻿Your system has been operating with 100% human review for 3 months. Analysis shows that extractions with model confidence have 97% accuracy overall. To reduce
+reviewer workload, you plan to automate high-confidence extractions. Before deploying, what validation step is most critical?
+O
+o
+Analyze accuracy by document type and field to verify high-confidence extractions perform consistently across all segments, not just in aggregate.
+O
+o
+Verify that 97% accuracy meets requirements for all downstream systems that consume the extracted data.
+Compare accuracy at different confidence thresholds (85%, 90%, 95%) to find the optimal cutoff that maximizes automation while minimizing errors.
+O
+o
+Run a two-week pilot routing 25% of high-confidence extractions directly to downstream systems and monitor error reporte
+previous
+Next

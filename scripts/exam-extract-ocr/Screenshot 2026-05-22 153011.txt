@@ -1,0 +1,12 @@
+﻿search_flights tool calls an external airline API that occasionally returns a 503 Service Unavailable error. What is the most effective way to handle this error in your tool
+Your
+implementation?
+O
+o
+Return an error message in the tool result explaining the service is temporarily unavailable.
+O
+o
+Log the error internally and return an empty response, letting the model continue without the flight data.
+o
+Return an empty flight list as if the search succeeded but found no matching flights.
+Automatically retry the request up to five times with exponential backoff before returning results to the agent.

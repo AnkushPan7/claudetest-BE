@@ -1,0 +1,15 @@
+﻿Your extraction pipeline processes invoices and extracts line items, subtotals, tax amounts, and grand totals. During evaluation, you discover that in 18% of extractions, the
+sum of extracted line item amounts doesn't match the extracted grand total—sometimes due to OCR errors in the source document, sometimes due to extraction mistakes
+by the model. Downstream accounting systems reject records with mismatched totals. What's the most effective approach to improve extraction reliability?
+O
+o
+Add a "calculated_total" field where the model soms extracted line items alongside a "stated_total" field. Flag records for human review when values differ.
+O
+o
+Add few-shot examples demonstrating invoices where extracted line items sum correctly to the stated total, encouraging the model to produce mathematically
+consistent extractions.
+Implement post-processing that automatically adjusts line item amounts proportionally when their sum doesn't match the stated total.
+O
+o
+Extract line items and totals independently, then use a separate validation model to reconcile discrepancies by determining which extracted values are most likely
+correct.

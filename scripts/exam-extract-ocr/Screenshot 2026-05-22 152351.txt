@@ -1,0 +1,17 @@
+﻿After three months of weekly sessions, your conversation history has grown to 85,000 tokens. When users ask "What did we conclude about the theme of isolation?" , the
+assistant provides generic literary analysis rather than referencing the group's specific insights from earlier sessions. Discussions often build on previous meetings'
+conclusions, so maintaining narrative flow is important. What's the most effective approach?
+O
+o
+Implement rolling window truncation to keep only the most recent 25,000 tokens.
+O
+o
+Use semantic embedding to index the full conversation history and retrieve only relevant past exchanges for each user query, replacing the linear conversation format
+with retrieved chunks.
+Implement progressive summarization where older conversation blocks are replaced with concise summaries that explicitly extract key conclusions, decisions, and
+recurring themes, while keeping recent exchanges verbatim.
+O
+o
+Add structured XML tags to mark significant discussion conclusions throughout the conversation history.
+previous
+Next

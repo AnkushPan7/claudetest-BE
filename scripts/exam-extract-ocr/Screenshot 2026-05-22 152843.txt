@@ -1,0 +1,11 @@
+﻿You're deciding whether to expose your weather API integration as an MCP server or implement it as a custom tool directly in your agent application. Your team plans to build
+several different Al applications that will all need weather data. What is the primary advantage of the MCP approach?
+O
+o
+Any MCP-compatible client can connect to your weather server without writing custom integration code.
+O
+o
+MCP servers process tool calls faster than custom implementations because they use an optimized binary protocol.
+o
+MCP provides built-in retry logic that automatically handles failed API calls with exponential backoff
+MCP automatically handles authentication and rate limiting with the weather API, reducing backend implementation work.

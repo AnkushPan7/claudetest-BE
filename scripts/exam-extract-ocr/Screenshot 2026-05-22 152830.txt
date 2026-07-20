@@ -1,0 +1,14 @@
+﻿When the agent calls
+and receives order details showing the item was purchased 45 days ago, how does the agentic loop determine whether to call
+lookup_order
+next?
+process _ refund Or escalate to human
+The orchestration layer automatically routes to the next tool based on the orderS status field.
+O
+o
+The agent executes the remaining steps in a tool sequence planned at the start of the request.
+o
+The agent follows a pre-configured decision tree mapping order attributes to specific tool calls.
+O
+o
+The order details are added to the conversation and the model reasons about which action to take.

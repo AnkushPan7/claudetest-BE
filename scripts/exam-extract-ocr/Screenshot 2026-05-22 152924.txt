@@ -1,0 +1,14 @@
+﻿send_notification tool calls third-party messaging APIs. When these services time out during delivery, you cannot determine whether the message was actually sent.
+Your
+Currently, the tool returns
+is_error: true with a generic "Notification failed" message for all timeouts. Production monitoring reveals agents automatically retry these
+failures, frequently causing users to receive duplicate notifications. How should you modify the error response?
+Return is_error: true withastructured field retry_safe: true for timeouts, distinguishing them from permanent failures that should not be retried.
+O
+o
+Return is_error: false with the original message content echoed back.
+o
+Return is_error: true witha message encouragingretry: "Delivery service temporarily unavailable. Please retry the notification."
+O
+o
+Return is_error: true witha message communicating uncertainty: "Timeout—status unknown. Message may have been sent. Avoid retry."

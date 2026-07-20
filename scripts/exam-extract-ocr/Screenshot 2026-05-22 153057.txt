@@ -1,0 +1,16 @@
+﻿Your document extraction tool Uses ML models to extract invoice fields (vendor, amount, date). The models return confidence scores (0.0-1.0) for each extracted field. In
+production, you observe: (1) the agent proceeds with low-confidence extractions that are incorrect 23% of the time, and (2) the agent requests unnecessary human review
+for 31% of extractions that were actually correct. How should you restructure the tool's output?
+O
+o
+Compute an aggregate extraction_quality score across all fields and return it alongside the extracted values. Include a text summary describing the overall extraction
+reliability.
+O
+o
+Return fields with their raw confidence scores and add detailed few-shot examples to your system prompt demonstrating how to interpret different confidence ranges
+and when to request human review.
+o
+Return fields organized into verified and needs_verification objects based on confidence thresholds.
+Return fields with confidence scores, plusa requires_review
+boolean computed using your tested confidence thresholds, along witha review_reasons array explaining
+which fields triggered review.

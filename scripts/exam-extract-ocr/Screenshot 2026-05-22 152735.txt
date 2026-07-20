@@ -1,0 +1,15 @@
+﻿Your agent is handling a billing dispute. After calling
+, it identifies that the dispute involves a promotional pricing error requiring manager
+and
+lookup_order
+get customer
+approval—beyond the agent's authorization level. How should the workflow handle this mid-process escalation?
+Persist the complete conversation and tool response historytoadatabase, then call with areference ID.
+O
+o
+Call passing only the customers original message.
+o
+Attempt the refund with process _ refund anyway, escalating only if the system rejects the transaction.
+O
+o
+Compile a structured handoff with customer details, order info, and the identified issue before calling

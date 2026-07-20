@@ -1,0 +1,664 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Your music discovery assistant should consistently maintain an enthusiastic tone, explain its reasoning for each recommendation, and ask clarifying questions to better understand user preferences. You want this behavior to persist reliably across all user interactions. Where should you define these behavioral guidelines?",
+      "options": {
+        "A": "In the first assistant message, instructing Claude to follow these guidelines going forward",
+        "B": "In the system prompt",
+        "C": "In environmental variables that your application passes to the API client",
+        "D": "Prepended to each user message before sending to the API"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152113.png"
+    },
+    {
+      "id": 2,
+      "text": "Over several turns discussing investment strategy, a user has stated: \"I have a very low risk tolerance—I can't handle seeing my portfolio drop\" and later, \"I want to maximize my returns—I've seen friends do well in crypto and tech stocks.\" They now ask \"What should I invest in?\" Which approach best ensures the resulting recommendation aligns with the user's actual priority?",
+      "options": {
+        "A": "Proceed with the most recently stated preference.",
+        "B": "Provide separate recommendations for both scenarios (conservative and growth-oriented) without clarifying which the user prefers, and let them choose.",
+        "C": "Recommend a balanced portfolio that moderates both preferences without explicitly addressing the conflict.",
+        "D": "Surface the contradiction and ask the user to clarify which matters more—capital preservation or growth potential—before recommending."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152305.png"
+    },
+    {
+      "id": 3,
+      "text": "You're implementing a feature where users refine their playlist preferences through multiple conversation turns. After deploying, you notice Claude's responses don't reflect what users said earlier in the same conversation—for example, a user says they love jazz, but two messages later Claude asks what genres they enjoy. What is the most likely cause?",
+      "options": {
+        "A": "Claude requires a vector database connection to maintain conversation memory",
+        "B": "Your application isn't including prior messages in the messages array",
+        "C": "The Claude API requires a session_id parameter that you haven't configured",
+        "D": "The model's context window has been exceeded by the conversation length"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152315.png"
+    },
+    {
+      "id": 4,
+      "text": "After deploying an updated system prompt that improves response quality, users with multi-session conversations spanning several weeks report that the assistant now contradicts its earlier statements and has a noticeably different communication style. New users don't experience these issues. What's the best approach to resolve this?",
+      "options": {
+        "A": "Add instructions to the new system prompt directing the assistant to maintain consistency with any prior statements in the conversation history.",
+        "B": "Version system prompts and associate each conversation with the prompt version under which it started, applying updates only to new conversations.",
+        "C": "Add a transition message when sessions resume explaining that the assistant has been updated and behavior may differ.",
+        "D": "Regenerate summaries of existing conversations using the new prompt and replace the stored histories to align past context with current behavior."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152325.png"
+    },
+    {
+      "id": 5,
+      "text": "Your fitness coaching assistant uses a system prompt with detailed conditional logic: \"If the user mentions being a beginner, provide step-by-step form instructions. If they use terms like 'progressive overload' or 'superset', respond concisely. If they ask about injury history, always recommend consulting a physician.\" During evaluation, you find the assistant correctly adapts to explicit expertise declarations but struggles when users don't clearly state their level—often defaulting to overly detailed responses regardless of contextual cues like technical terminology. Which change to the system prompt would most directly address this failure to pick up on implicit expertise signals?",
+      "options": {
+        "A": "Implement a pre-conversation intake that asks users to rate their experience level, then inject that rating into the system prompt as context for all subsequent responses.",
+        "B": "Replace most conditionals with a general principle: \"Adapt explanation depth to match user expertise, mirroring their terminology.\" Keep only the safety-critical conditional about injury consultations.",
+        "C": "Add more conditional branches to cover additional expertise signals, such as \"If user mentions specific rep ranges or asks about periodization, treat as advanced.\"",
+        "D": "Add an explicit instruction for the model to ask a clarifying question about experience level whenever the user's expertise isn't immediately clear from their first message."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152337.png"
+    },
+    {
+      "id": 6,
+      "text": "After three months of weekly sessions, your conversation history has grown to 85,000 tokens. When users ask \"What did we conclude about the theme of isolation?\", the assistant provides generic literary analysis rather than referencing the group's specific insights from earlier sessions. Discussions often build on previous meetings' conclusions, so maintaining narrative flow is important. What's the most effective approach?",
+      "options": {
+        "A": "Implement rolling window truncation to keep only the most recent 25,000 tokens.",
+        "B": "Use semantic embedding to index the full conversation history and retrieve only relevant past exchanges for each user query, replacing the linear conversation format with retrieved chunks.",
+        "C": "Implement progressive summarization where older conversation blocks are replaced with concise summaries that explicitly extract key conclusions, decisions, and recurring themes, while keeping recent exchanges verbatim.",
+        "D": "Add structured XML tags to mark significant discussion conclusions throughout the conversation history."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152351.png"
+    },
+    {
+      "id": 7,
+      "text": "Your conversational assistant frequently generates multiple clarifying questions when users make ambiguous requests. When a user asks \"Can you help me with the report?\", the assistant responds: \"I'd be happy to help! Could you tell me: 1) Which report? 2) What kind of help—drafting, reviewing, or formatting? 3) What's your deadline?\" User analytics show a 40% conversation abandonment rate after these multi-question responses. What's the most effective way to reduce friction while appropriately handling ambiguity?",
+      "options": {
+        "A": "Create a lookup table of common request patterns with predefined default interpretations, having the assistant respond with those defaults without stating the assumptions made.",
+        "B": "Add a preprocessing step using a smaller model to classify request ambiguity on a 1-5 scale, routing high-ambiguity requests to a clarification dialog and low-ambiguity requests directly to the assistant.",
+        "C": "Limit the assistant to one clarifying question per turn, using conversation history to accumulate answers over multiple exchanges rather than requesting everything upfront.",
+        "D": "Modify the system prompt to instruct the assistant to make reasonable assumptions from available context, state those assumptions explicitly, and offer to adjust if the interpretation is wrong."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152401.png"
+    },
+    {
+      "id": 8,
+      "text": "Your conversation history includes two types of content: persistent story elements (character backgrounds, plot structure, world rules) that must remain consistent throughout, and extensive brainstorming discussion that's mostly ephemeral. After 40+ turns, you're hitting context limits and users report the assistant \"forgets\" established character traits, breaking narrative consistency. Which approach best ensures persistent story elements remain available to the model while reclaiming context space?",
+      "options": {
+        "A": "Apply a sliding-window approach keeping only the most recent 25 turns, relying on the model to infer earlier context from recent discussion flow.",
+        "B": "Summarize the entire conversation history into a condensed synopsis every 20 turns, replacing the full history to free up tokens.",
+        "C": "Separate persistent story elements into a retained \"story bible\" section at context start, applying trimming or summarization only to brainstorming discussion.",
+        "D": "Store all history in a vector database and retrieve semantically similar passages for each new message, replacing conversation history with retrieved chunks."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152412.png"
+    },
+    {
+      "id": 9,
+      "text": "Your research assistant helps users analyze academic papers over extended conversations. User testing reveals a recurring issue: after conversations exceed 60K tokens, users ask follow-up questions requiring precise numerical details from papers discussed earlier—sample sizes, exact p-values, specific inclusion criteria. Your current approach summarizes paper discussions after 8 turns to stay within context limits. Users report that responses to these precision-dependent questions are often hedged or inaccurate. What's the most effective architectural change?",
+      "options": {
+        "A": "Implement retrieval that re-injects relevant paper sections when the user's question suggests they need specific numerical details.",
+        "B": "Maintain a structured database of key facts extracted from each paper (sample sizes, statistics, methods) and retrieve relevant entries into context when precision-dependent questions are detected.",
+        "C": "Use a separate Claude call with explicit instructions to generate higher-fidelity summaries that preserve all numerical details and statistical values.",
+        "D": "Keep source text from methodology and results sections in context permanently, while summarizing only the conversational discussion and interpretation portions."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152422.png"
+    },
+    {
+      "id": 10,
+      "text": "Users frequently refine their search criteria mid-conversation. You notice a pattern: when users say things like \"Actually, let's raise the budget to $650K\" or \"I'd prefer a condo now instead of a house,\" the assistant sometimes continues referencing the original preferences in later responses—even though the updates are clearly present in the conversation history. Context usage is only at 35% capacity. Which solution most reliably ensures the model uses the current preferences?",
+      "options": {
+        "A": "Include few-shot examples showing the assistant correctly acknowledging and applying preference changes in responses.",
+        "B": "Add system prompt instructions emphasizing that the model should always prioritize the most recently stated preferences over earlier ones.",
+        "C": "Maintain a structured state object with current preferences, update it on changes, and include it in each request.",
+        "D": "Implement conversation pruning to remove turns containing outdated preferences, ensuring only current ones remain in context."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152430.png"
+    },
+    {
+      "id": 11,
+      "text": "Users frequently send ambiguous requests like \"book a venue for the party\" without specifying date, guest count, or budget. Your evaluation shows the assistant asks an average of 4.2 clarifying questions before taking any action, causing 35% of users to abandon mid-conversation. However, when you reduce questions, users sometimes receive recommendations that don't match their preferences. What's the most effective approach to improve this trade-off?",
+      "options": {
+        "A": "Configure the assistant to consolidate all clarifying questions into a single compound question (e.g., \"What date, guest count, and budget are you considering?\") to reduce the total number of conversational turns.",
+        "B": "Instruct the assistant to state explicit assumptions based on conversation history, proceed with recommendations while inviting corrections, and reserve clarifying questions only for irreversible actions like confirming bookings.",
+        "C": "Implement a structured intake form that collects all required parameters (date, guest count, budget, venue type) upfront before the assistant begins providing any recommendations.",
+        "D": "Configure the assistant to proceed with reasonable defaults (medium-sized venue, next weekend, moderate budget) without explicitly stating these assumptions, allowing users to provide corrections if results don't match expectations."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152439.png"
+    },
+    {
+      "id": 12,
+      "text": "A new user's first message is \"Set up my focus music.\" This could mean configure preferences, create a playlist, or play music immediately. Your system supports all three actions. What's the most effective approach?",
+      "options": {
+        "A": "Create a new \"Focus\" playlist with curated tracks and notify the user it's ready.",
+        "B": "Start preference configuration by asking about genres, tempo, and artists they prefer for focus.",
+        "C": "Ask one clarifying question about action type: play now or configure for later.",
+        "D": "Play popular focus tracks immediately and let the user redirect if needed."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152451.png"
+    },
+    {
+      "id": 13,
+      "text": "After a 40-minute session helping plan a dinner party, the conversation has grown to 78,000 tokens. The history includes: (1) the user mentioning a guest has a severe shellfish allergy, (2) specific measurements for scaling recipes to 8 servings, (3) the user's clarification that \"room temperature butter\" means 68°F in their kitchen, and (4) general back-and-forth about meal timing and presentation. You need to implement context management before the window limit is reached. What approach best balances information preservation with token reduction?",
+      "options": {
+        "A": "Implement a sliding window retaining only the most recent 20,000 tokens, relying on users to re-state important information when relevant.",
+        "B": "Extract critical structured data (allergies, serving counts, user-defined terms) into a compact reference section, summarize general discussion, and retain recent exchanges verbatim.",
+        "C": "Store the full conversation externally and use semantic search to retrieve relevant portions for each turn, loading only matching segments into context.",
+        "D": "Summarize the entire conversation history into a concise summary capturing main topics discussed, then append new messages going forward."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152501.png"
+    },
+    {
+      "id": 14,
+      "text": "Users report that API latency increases noticeably and costs rise as practice conversations extend beyond 50+ turns. What is the PRIMARY cause of this behavior?",
+      "options": {
+        "A": "The model generates progressively longer responses as it accumulates more context to reference.",
+        "B": "The entire conversation history is included with each API request, so input tokens grow with every turn.",
+        "C": "The model builds an internal profile of the user's conversation patterns, requiring more processing as the profile grows.",
+        "D": "Database operations for retrieving and storing conversation history slow down as the table grows larger."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152512.png"
+    },
+    {
+      "id": 15,
+      "text": "Users report that responses feel repetitive across turns—each message begins with phrases like \"Certainly!\" or \"I'd be happy to help!\" even deep into conversations. You want responses to flow naturally without these repetitive openers. What's the most effective approach?",
+      "options": {
+        "A": "Append a partial assistant message with a direct response opening that the model will continue from",
+        "B": "Implement post-processing to detect and strip common greeting phrases from response beginnings",
+        "C": "Lower the temperature parameter to make response openings more deterministic and less variable",
+        "D": "Add system prompt instructions specifying phrases to avoid, such as \"Never begin responses with 'Certainly' or similar affirmations\""
+      },
+      "sourceFile": "Screenshot 2026-05-22 152519.png"
+    },
+    {
+      "id": 16,
+      "text": "Your pipeline uses a tool called extract_metadata with a JSON schema for paper details. You've also defined lookup_citations and verify_doi tools for enrichment. During testing, you notice that when users include requests like \"extract the metadata and tell me how cited it is,\" Claude sometimes calls lookup_citations first, which fails because it needs the DOI that extract_metadata would provide. What's the most effective way to ensure structured metadata extraction happens first?",
+      "options": {
+        "A": "Set tool_choice to \"any\" so Claude must use a tool, combined with system prompt instructions prioritizing extract_metadata.",
+        "B": "Set tool_choice to {\"type\": \"tool\", \"name\": \"extract_metadata\"} and process the enrichment requests in subsequent turns after receiving the extracted metadata.",
+        "C": "Set tool_choice to {\"type\": \"tool\", \"name\": \"extract_metadata\"} for every API call in the pipeline, ensuring Claude always extracts metadata before any enrichment can occur.",
+        "D": "Set tool_choice to \"auto\" and reorder the tool definitions so extract_metadata appears first in the tools array, since Claude prioritizes earlier-listed tools."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152529.png"
+    },
+    {
+      "id": 17,
+      "text": "Your extraction uses tool use with a JSON schema where property_type is defined as an enum: ['house', 'apartment', 'condo', 'townhouse']. After deployment, 8% of extractions fail schema validation. Investigation reveals listings mention many uncommon property types—\"studio\", \"loft\", \"duplex\", \"mobile home\", \"tiny house\", \"converted warehouse\"—and new types continue appearing regularly. What's the most effective long-term solution?",
+      "options": {
+        "A": "Continuously expand the enum to include newly observed property types and add monitoring for additional edge cases.",
+        "B": "Add few-shot examples to your prompt demonstrating how to map unexpected property types to the closest existing enum value.",
+        "C": "Add an \"other\" value to your enum with a separate property_type_detail string field for specifics when \"other\" is selected.",
+        "D": "Change property_type from an enum to a free-form string and implement a normalization step in post-processing."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152538.png"
+    },
+    {
+      "id": 18,
+      "text": "Your extraction system processes two document types: standard monthly reports (archived after processing) and urgent exception reports (must trigger business alerts within 30 minutes of receipt). Both use the same JSON schema. You want to minimize API costs while meeting latency requirements. How should you architect the processing pipeline?",
+      "options": {
+        "A": "Submit all documents to the Batch API with custom_ids for tracking. When results arrive, immediately process urgent documents and trigger delayed alerts for exceptions.",
+        "B": "Route standard reports to the Batch API for 50% cost savings, and route urgent exception reports to the real-time Messages API.",
+        "C": "Queue all documents and submit hourly batches, flagging urgent documents for expedited handling when batch results return.",
+        "D": "Submit all documents to the real-time Messages API to ensure consistent processing latency across document types."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152544.png"
+    },
+    {
+      "id": 19,
+      "text": "Documents arrive continuously throughout business hours and need structured data extracted. To reduce costs, you want to use the Message Batches API (50% discount, up-to-24-hour processing window). Your SLA specifies that extraction results must be available within 30 hours of document arrival with 99.9% reliability. Which batching strategy is most appropriate?",
+      "options": {
+        "A": "Submit a single batch at end of day containing all documents from that day",
+        "B": "Submit batches every 6 hours containing documents from that window",
+        "C": "Use the real-time API for all documents instead of batch processing",
+        "D": "Submit batches every 4 hours containing documents from that window"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152551.png"
+    },
+    {
+      "id": 20,
+      "text": "Your schema includes a skills: string[] field. Production monitoring reveals three consistency issues: (1) compound phrases like \"Python and SQL\" are sometimes kept as one entry, sometimes split; (2) implied but unstated skills occasionally appear in extractions; (3) similar documents produce wildly different array lengths (5-10 vs 40+ entries). Your prompt currently says \"Extract all skills mentioned.\" What's the most effective improvement?",
+      "options": {
+        "A": "Enrich the schema to {skill: string, confidence: float, source_quote: string}[] to capture extraction metadata.",
+        "B": "Add few-shot examples demonstrating compound phrase handling, explicit mention criteria, and appropriate entry granularity.",
+        "C": "Add post-extraction normalization that maps skills to a canonical taxonomy and deduplicates similar entries.",
+        "D": "Add constraints: \"Extract 10-20 skills maximum, one skill per entry, only explicitly named skills.\""
+      },
+      "sourceFile": "Screenshot 2026-05-22 152557.png"
+    },
+    {
+      "id": 21,
+      "text": "Your extraction system uses tool_use with a JSON schema containing 12 fields and detailed descriptions, totaling approximately 2,500 tokens for the complete tool definition. Processing documents under 150K tokens yields 98% accuracy. For documents between 175-190K tokens, accuracy drops to 71%, with information from the final third consistently missed. The model's context window is 200K tokens. What is the most likely cause?",
+      "options": {
+        "A": "The model distributes attention proportionally across input length, causing fields mentioned only once near the document's end to receive insufficient processing focus.",
+        "B": "Schemas exceeding 8-10 fields increase decision complexity during parameter generation, reducing extraction accuracy independent of document length.",
+        "C": "Tool definitions consume input context tokens. Combined with system prompts and document content, the total approaches the context limit, degrading end-of-document processing.",
+        "D": "Very long documents exceed the model's effective attention span regardless of context limits, causing accuracy degradation for content farther from the prompt instructions."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152603.png"
+    },
+    {
+      "id": 22,
+      "text": "Your system extracts event metadata (date, location, organizer, attendee_count) from news articles using a JSON schema with all nullable fields. During evaluation, you observe the model frequently generates plausible but incorrect values for fields not mentioned in the article—for example, outputting \"500\" for attendee_count when the source contains no attendance information. What's the most effective way to reduce these false extractions?",
+      "options": {
+        "A": "Add a post-processing step using a second LLM call to verify each extracted value exists in the source document.",
+        "B": "Upgrade to a more capable model tier with improved instruction-following to reduce hallucination tendencies.",
+        "C": "Add prompt instructions to return null for any field where information is not directly stated in the source.",
+        "D": "Make all schema fields required (non-nullable) with strict validation rules to ensure the model only outputs verifiable data."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152609.png"
+    },
+    {
+      "id": 23,
+      "text": "Your extraction pipeline processes invoices and extracts line items, subtotals, tax amounts, and grand totals. During evaluation, you discover that in 18% of extractions, the sum of extracted line item amounts doesn't match the extracted grand total—sometimes due to OCR errors in the source document, sometimes due to extraction mistakes by the model. Downstream accounting systems reject records with mismatched totals. What's the most effective approach to improve extraction reliability?",
+      "options": {
+        "A": "Add a \"calculated_total\" field where the model sums extracted line items alongside a \"stated_total\" field. Flag records for human review when values differ.",
+        "B": "Add few-shot examples demonstrating invoices where extracted line items sum correctly to the stated total, encouraging the model to produce mathematically consistent extractions.",
+        "C": "Implement post-processing that automatically adjusts line item amounts proportionally when their sum doesn't match the stated total.",
+        "D": "Extract line items and totals independently, then use a separate validation model to reconcile discrepancies by determining which extracted values are most likely correct."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152615.png"
+    },
+    {
+      "id": 24,
+      "text": "After your daily batch of 10,000 documents completes, 300 documents (3%) failed with \"context_length_exceeded\" errors. The results file identifies each failure by custom_id. What's the most cost-effective approach to process these failures?",
+      "options": {
+        "A": "Reprocess the entire batch with prompt caching enabled to reduce the cost of retrying requests with identical system prompts",
+        "B": "Resubmit only the 300 failed documents after chunking them into smaller pieces, then combine the partial extractions",
+        "C": "Increase the max_tokens parameter for the 300 failed documents and resubmit them in a new batch",
+        "D": "Resubmit the entire 10,000 document batch using a model tier with a larger context window"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152619.png"
+    },
+    {
+      "id": 25,
+      "text": "Your extraction system implements automatic retries when validation fails. On each retry, the specific validation error is appended to the prompt. This retry-with-error-feedback approach resolves most failures within 2-3 attempts. For which failure pattern would additional retries be LEAST effective?",
+      "options": {
+        "A": "The model extracts \"et al.\" for co-authors when the full list exists only in an external document not in the input",
+        "B": "The model extracts citation counts as locale-formatted strings (\"1,234\") when the schema requires integers",
+        "C": "The model extracts dates as ISO 8601 datetime strings (\"2023-03-15T00:00:00Z\") when the schema requires only the date portion (YYYY-MM-DD)",
+        "D": "The model extracts keywords as a nested object organized by category when the schema requires a flat array of strings"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152625.png"
+    },
+    {
+      "id": 26,
+      "text": "Your invoice extraction uses tool use with strict JSON schemas. JSON syntax errors never occur, but 12% of extractions fail semantic validation—for example, line item amounts don't sum to the extracted total, or vendor IDs don't match valid formats. These failures currently route to manual review. What's the most effective approach to reduce manual review volume while maintaining accuracy?",
+      "options": {
+        "A": "Implement post-processing logic that automatically corrects common errors, such as recalculating totals from line items when sums don't match.",
+        "B": "Retry the extraction up to 3 times when validation fails, accepting the first result that passes validation.",
+        "C": "When validation fails, make a follow-up request with the document, extraction, and validation errors for model correction.",
+        "D": "Add stricter schema constraints with detailed field descriptions to prevent the model from generating invalid values initially."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152630.png"
+    },
+    {
+      "id": 27,
+      "text": "Your extraction pipeline processes contracts that frequently include amendments. When a contract contains both original terms and later amendments (e.g., original clause specifies \"30-day payment terms\" while Amendment 1 changes this to \"45 days\"), the model inconsistently extracts one value or the other with no indication of which applies. What's the most effective approach to improve extraction accuracy for documents with amendments?",
+      "options": {
+        "A": "Implement post-extraction validation using pattern matching to detect amendments and flag those extractions for manual review.",
+        "B": "Add prompt instructions to always extract the most recent amendment value and ignore superseded original terms.",
+        "C": "Redesign the schema so amended fields capture multiple values, each with source location and effective date.",
+        "D": "Preprocess documents with a classifier that identifies and removes superseded sections before the main extraction step."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152634.png"
+    },
+    {
+      "id": 28,
+      "text": "Your extraction system parses e-commerce product descriptions to extract specifications like dimensions, weight, and materials into JSON. Despite having a well-defined schema, the model inconsistently extracts the \"materials\" field—sometimes returning \"cotton blend\", other times \"Cotton/Polyester mix\", and occasionally omitting the field when material information is clearly present in the source. What's the most effective way to improve extraction consistency?",
+      "options": {
+        "A": "Add few-shot examples showing 2-3 complete input-output pairs with standardized material description formats",
+        "B": "Make the \"materials\" field required instead of optional in the schema to force the model to always extract a value",
+        "C": "Switch to a more capable model tier since inconsistent extraction indicates insufficient model capability",
+        "D": "Set temperature to 0 to eliminate randomness and ensure deterministic outputs"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152640.png"
+    },
+    {
+      "id": 29,
+      "text": "The system routes documents with extraction confidence below 85% to human review. A quarterly audit reveals that 12% of high-confidence extractions (≥85%) also contain errors—cases where the model finds plausible-but-incorrect values. Error sources vary: comparison tables showing competitor specs, appendices referencing different product variants, and ambiguous phrasing the model misinterprets. You need a sustainable strategy to catch these high-confidence errors and measure whether improvements reduce the error rate over time. What approach is most effective?",
+      "options": {
+        "A": "Add a verification pass that re-extracts from each high-confidence document, flagging cases where the two extraction attempts produce different results.",
+        "B": "Lower the confidence threshold from 85% to 70%, routing a larger volume of extractions to human review.",
+        "C": "Implement heuristic rules that flag documents containing comparison tables or appendices for review regardless of confidence score.",
+        "D": "Implement stratified random sampling reviewing a fixed percentage of high-confidence extractions weekly, enabling error rate measurement and novel pattern detection."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152645.png"
+    },
+    {
+      "id": 30,
+      "text": "Your system has been operating with 100% human review for 3 months. Analysis shows that extractions with model confidence ≥90% have 97% accuracy overall. To reduce reviewer workload, you plan to automate high-confidence extractions. Before deploying, what validation step is most critical?",
+      "options": {
+        "A": "Analyze accuracy by document type and field to verify high-confidence extractions perform consistently across all segments, not just in aggregate.",
+        "B": "Verify that 97% accuracy meets requirements for all downstream systems that consume the extracted data.",
+        "C": "Compare accuracy at different confidence thresholds (85%, 90%, 95%) to find the optimal cutoff that maximizes automation while minimizing errors.",
+        "D": "Run a two-week pilot routing 25% of high-confidence extractions directly to downstream systems and monitor error reports."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152651.png"
+    },
+    {
+      "id": 31,
+      "text": "A customer sends: \"This is frustrating. I've explained my issue twice and nothing is being resolved. I want to talk to a real person NOW.\" The agent has not yet called any tools to investigate their account. What should the agent do?",
+      "options": {
+        "A": "Immediately call escalate_to_human with the conversation history.",
+        "B": "Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating.",
+        "C": "First call get_customer and lookup_order to gather account context, then escalate to a human agent.",
+        "D": "Briefly explain what the agent can help with and offer to resolve the issue quickly, escalating only if the customer repeats their request."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152658.png"
+    },
+    {
+      "id": 32,
+      "text": "You're implementing the escalation logic for when the agent should call escalate_to_human. Your team proposes four different approaches for triggering escalation. Which approach will most reliably identify cases that genuinely require human intervention?",
+      "options": {
+        "A": "Instruct the agent to escalate when the customer requests a human, when the issue requires policy exceptions, or when the agent cannot make meaningful progress.",
+        "B": "Implement sentiment analysis that monitors for frustration indicators (negative language, repeated questions, exclamation marks) and trigger escalation when the frustration score exceeds a configured threshold.",
+        "C": "Configure the agent to escalate after three consecutive tool calls that fail to resolve the customer's stated issue, ensuring a reasonable attempt before involving a human.",
+        "D": "Build a rules engine that maps specific issue types, customer segments, and product categories to escalation decisions, removing the need for model judgment calls."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152710.png"
+    },
+    {
+      "id": 33,
+      "text": "Your process_refund tool returns two types of errors: technical errors (\"503 Service Unavailable\", \"Connection timeout\") that are transient (5% of calls), and business errors (\"Order exceeds 30 day return window\", \"Item already refunded\") that are permanent (12% of calls). Monitoring shows the agent wastes 3-4 turns retrying business errors that can never succeed. Currently, both error types return only a plain text message to Claude. What's the most effective way to reduce wasted retries while improving customer-facing response quality?",
+      "options": {
+        "A": "Implement automatic retry logic at the tool level for technical errors only, passing business errors to Claude without retries.",
+        "B": "Add a check_refund_eligibility tool that must be called before process_refund to prevent business rule violations.",
+        "C": "Return structured error responses with retriable: false for business errors and a customer-friendly explanation for Claude to use.",
+        "D": "Add few-shot examples showing how to distinguish retriable from non-retriable errors by parsing error message text."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152719.png"
+    },
+    {
+      "id": 34,
+      "text": "A customer writes: \"I've been going back and forth on this return for days. I just want to speak to someone who can actually help me.\" The agent has confirmed via lookup_order that the return is straightforward—within policy and eligible for immediate processing. What should the agent do?",
+      "options": {
+        "A": "Process the refund via process_refund to resolve the underlying issue, then inform them it's complete",
+        "B": "Call escalate_to_human immediately to honor the customer's request",
+        "C": "Ask what specifically hasn't worked in previous attempts before deciding whether to escalate or resolve automatically",
+        "D": "Acknowledge frustration, inform them this is resolvable now, and offer to complete it or escalate"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152724.png"
+    },
+    {
+      "id": 35,
+      "text": "Your agent has called lookup_order multiple times while investigating a customer's return requests. Each response includes 40+ fields (items, shipping details, payment info, status history). Tool outputs now represent the majority of the conversation's context. The customer mentions two more orders they want to discuss. What's the most effective approach before making additional lookups?",
+      "options": {
+        "A": "Move all tool responses to a vector database with semantic indexing, retrieving relevant portions as the conversation continues",
+        "B": "Extract only return-relevant fields (items, purchase date, return window, status) from each existing order response, removing verbose details",
+        "C": "Have the model generate a natural language summary of each order's key details, replacing structured responses with prose descriptions",
+        "D": "Proceed with additional lookups without modifying the existing tool output context"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152729.png"
+    },
+    {
+      "id": 36,
+      "text": "Your agent is handling a billing dispute. After calling get_customer and lookup_order, it identifies that the dispute involves a promotional pricing error requiring manager approval—beyond the agent's authorization level. How should the workflow handle this mid-process escalation?",
+      "options": {
+        "A": "Persist the complete conversation and tool response history to a database, then call escalate_to_human with a reference ID.",
+        "B": "Call escalate_to_human passing only the customer's original message.",
+        "C": "Attempt the refund with process_refund anyway, escalating only if the system rejects the transaction.",
+        "D": "Compile a structured handoff with customer details, order info, and the identified issue before calling escalate_to_human."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152735.png"
+    },
+    {
+      "id": 37,
+      "text": "Compliance requires that refunds exceeding $500 must automatically escalate to a human agent—this rule cannot be left to model discretion. Despite clear system prompt instructions, production logs show the agent occasionally processes high-value refunds directly (3% failure rate). How should you achieve guaranteed compliance?",
+      "options": {
+        "A": "Add few-shot examples to the prompt showing correct escalation behavior at various refund amounts ($400, $500, $600).",
+        "B": "Strengthen the system prompt with emphatic language: \"CRITICAL POLICY: Refunds over $500 MUST trigger human escalation. NEVER process these directly.\"",
+        "C": "Modify the refund tool to return an error with message \"Amount exceeds policy limit—please escalate\" when threshold is exceeded.",
+        "D": "Implement a hook to intercept tool calls; when the refund process amount exceeds $500, block it and invoke human escalation."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152741.png"
+    },
+    {
+      "id": 38,
+      "text": "The agent verifies customer identity through a multi-step process before resetting passwords. During testing, you notice that after the customer answers the third verification question, the agent asks them to provide their name again, as if the earlier exchange never happened. What's the most likely cause of this behavior?",
+      "options": {
+        "A": "Claude's memory retention is limited to two conversational turns by default, requiring explicit configuration to extend it.",
+        "B": "The conversation history isn't being passed in subsequent API requests.",
+        "C": "The prompt lacks instructions telling Claude to remember information across multiple exchanges.",
+        "D": "The verification tool is clearing the agent's internal state after each successful validation step."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152745.png"
+    },
+    {
+      "id": 39,
+      "text": "When implementing your lookup_order MCP tool, the backend sometimes returns errors (e.g., \"Order not found\" or temporary database failures). What is the correct pattern for communicating these errors back to the agent?",
+      "options": {
+        "A": "Log the error server-side and return an empty result to avoid confusing the model",
+        "B": "Return a success response with a \"status\" field indicating the error type",
+        "C": "Return the error message in the tool result content with the isError flag set to true",
+        "D": "Throw an exception from the tool handler so the agent framework can catch and log it"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152750.png"
+    },
+    {
+      "id": 40,
+      "text": "During a billing dispute resolution, your agent successfully retrieves customer info via get_customer and order details via lookup_order, but when attempting to call process_refund, the tool returns a timeout error. The agent has enough information to explain the charges and verify refund eligibility, but cannot actually process the refund due to the backend failure. What approach best balances first-contact resolution with appropriate error handling?",
+      "options": {
+        "A": "Explain the billing, confirm refund eligibility, acknowledge the system issue preventing immediate processing, and offer escalation or retry later",
+        "B": "Implement automatic retries with exponential backoff for process_refund, keeping the conversation open until the refund is successfully processed",
+        "C": "Confirm the refund will be processed and close the conversation, since the system has all necessary information to complete it automatically",
+        "D": "Escalate immediately to a human agent since the refund action cannot be completed"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152754.png"
+    },
+    {
+      "id": 41,
+      "text": "After investigating a billing dispute over 25+ turns, you've identified that duplicate charges occurred due to a payment gateway timeout triggering retry logic. The required refund ($847) exceeds your $500 authorization limit. You need to call escalate_to_human, and the human agent won't have access to your conversation transcript. What context should you pass to enable effective resolution?",
+      "options": {
+        "A": "A structured summary: customer ID, root cause, refund amount, and recommended action.",
+        "B": "The customer's original complaint verbatim plus the tool result excerpts showing duplicate transactions.",
+        "C": "Your diagnosis and the refund amount only.",
+        "D": "The complete conversation transcript with all tool results."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152801.png"
+    },
+    {
+      "id": 42,
+      "text": "A customer raises three separate issues during one session: a refund inquiry (turns 1-15), a subscription question (turns 16-30), and a payment method update (turns 31-45). At turn 48, the customer asks \"What happened with my refund?\" The conversation is approaching context limits. What strategy best maintains the agent's ability to address all issues throughout the session?",
+      "options": {
+        "A": "Rely on MCP tools to re-fetch relevant information on demand when the customer references earlier issues.",
+        "B": "Implement sliding window context that retains the most recent 30 turns.",
+        "C": "Extract and persist structured issue data (order IDs, amounts, statuses) into a separate context layer.",
+        "D": "Summarize earlier turns into a narrative description, preserving full message history only for the active issue."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152806.png"
+    },
+    {
+      "id": 43,
+      "text": "A customer returns 4 hours after their initial session about the same billing dispute. The previous 32-turn session contains lookup_order results showing \"Status: PENDING, Expected resolution: 24-48 hours.\" In testing, you observe that when resuming sessions with stale tool results, the agent often references the outdated data in responses (e.g., \"I see your refund is still being processed\") even after subsequent fresh tool calls return different information. What approach most reliably handles returning customers?",
+      "options": {
+        "A": "Resume with full history and add a system prompt instruction telling the agent to always prefer the most recent tool results when multiple calls to the same tool exist in context.",
+        "B": "Resume with full history and configure the agent to automatically re-call all previously-used tools at session start to ensure data freshness.",
+        "C": "Resume with full history but filter out previous tool_result messages before resuming, keeping only the human/assistant turns so the agent must re-fetch needed data.",
+        "D": "Start a new session, inject a structured summary of the previous interaction (issue type, actions taken, resolution status), then make fresh tool calls before engaging."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152812.png"
+    },
+    {
+      "id": 44,
+      "text": "Production logs reveal inconsistent error handling: when lookup_order fails, the agent sometimes retries 5+ times (wasteful when the order ID doesn't exist), sometimes escalates immediately (premature for temporary network issues), and sometimes asks users for clarification (inappropriate when the issue is a backend permission error). Investigation shows your MCP tool returns uniform error responses: {\"isError\": true, \"content\": [{\"type\": \"text\", \"text\": \"Operation failed\"}]}. The agent cannot distinguish between error types. What's the most effective improvement?",
+      "options": {
+        "A": "Implement retry logic with exponential backoff in your MCP server for all errors, returning to the agent only after retries are exhausted.",
+        "B": "Add few-shot examples to the system prompt demonstrating how to interpret error message patterns and select appropriate responses for each.",
+        "C": "Enhance error responses with structured metadata: include errorCategory (transient/validation/permission), isRetryable boolean, and a description of what caused the failure.",
+        "D": "Create an analyze_error MCP tool the agent calls after any failure to determine the error category and recommended action."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152825.png"
+    },
+    {
+      "id": 45,
+      "text": "When the agent calls lookup_order and receives order details showing the item was purchased 45 days ago, how does the agentic loop determine whether to call process_refund or escalate_to_human next?",
+      "options": {
+        "A": "The orchestration layer automatically routes to the next tool based on the order's status field.",
+        "B": "The agent executes the remaining steps in a tool sequence planned at the start of the request.",
+        "C": "The agent follows a pre-configured decision tree mapping order attributes to specific tool calls.",
+        "D": "The order details are added to the conversation and the model reasons about which action to take."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152830.png"
+    },
+    {
+      "id": 46,
+      "text": "Your marketing agent connects to MCP servers from three different vendors: an email service, a social media platform, and an analytics dashboard. Each server provides tool annotations—some tools marked with readOnlyHint: true, others with destructiveHint: true. Your team proposes automatically bypassing confirmation prompts for tools annotated as read-only to improve workflow speed. What should guide this decision?",
+      "options": {
+        "A": "Implement a verification layer that tests each tool's actual behavior before adding it to an allowlist. Skip confirmation only for tools validated through behavioral testing.",
+        "B": "MCP servers run as local processes, so tools from any properly initialized connection inherit your application's security context and can be trusted regardless of vendor.",
+        "C": "Treat tool annotations as untrusted metadata unless the server itself is trusted. Base confirmation requirements on your assessment of each vendor's trustworthiness, not on their self-reported annotations.",
+        "D": "Read-only annotations indicate intended behavior and are reliable for tools that perform GET requests to external APIs. Skip confirmation for data-fetching tools from properly connected servers."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152836.png"
+    },
+    {
+      "id": 47,
+      "text": "You're deciding whether to expose your weather API integration as an MCP server or implement it as a custom tool directly in your agent application. Your team plans to build several different AI applications that will all need weather data. What is the primary advantage of the MCP approach?",
+      "options": {
+        "A": "Any MCP-compatible client can connect to your weather server without writing custom integration code.",
+        "B": "MCP servers process tool calls faster than custom implementations because they use an optimized binary protocol.",
+        "C": "MCP provides built-in retry logic that automatically handles failed API calls with exponential backoff.",
+        "D": "MCP automatically handles authentication and rate limiting with the weather API, reducing backend implementation work."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152843.png"
+    },
+    {
+      "id": 48,
+      "text": "Your post_content tool requires user confirmation before publishing. The current workflow displays \"Ready to post to social media. Confirm?\" and analytics show users approve 98% of requests within 2 seconds. Post-mortems reveal incidents where posts went to wrong accounts, were scheduled for wrong times, or contained errors—all confirmed by users without catching the mistakes. How should you redesign the confirmation workflow?",
+      "options": {
+        "A": "Include the complete post text, target account, scheduled time, and platform in the confirmation request",
+        "B": "Auto-approve routine posts and only require explicit confirmation for unusual patterns like posting to new accounts or large audiences",
+        "C": "Add a mandatory waiting period before the confirm option becomes available",
+        "D": "Require users to type a confirmation phrase instead of clicking a button"
+      },
+      "sourceFile": "Screenshot 2026-05-22 152849.png"
+    },
+    {
+      "id": 49,
+      "text": "Your search_documents tool needs a parameter to specify which database to search. Your organization has three document databases: \"research_papers\", \"internal_reports\", and \"technical_specs\". Users express this naturally in conversation (\"search the research database\", \"check technical documents\"). How should you design the database selection parameter?",
+      "options": {
+        "A": "A freeform string parameter where the backend uses semantic matching to determine which database(s) to search.",
+        "B": "No explicit parameter—search all three databases by default, then have the model filter results by source.",
+        "C": "An enum parameter with values [\"research_papers\", \"internal_reports\", \"technical_specs\"], requiring the model to map natural language to the appropriate value.",
+        "D": "A freeform string parameter with runtime validation that returns an error if the value doesn't match a known database."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152855.png"
+    },
+    {
+      "id": 50,
+      "text": "Your MCP server includes archive_file(file_id) and delete_file(file_id) tools. Production logs show the agent calls delete_file when users ask to \"remove old backups,\" but company policy requires archiving backup files. Both tools currently have minimal descriptions: \"Archives a file\" and \"Deletes a file.\" Which change most directly improves tool selection for this scenario?",
+      "options": {
+        "A": "Implement server-side validation that rejects delete_file calls for files tagged as backups, returning an error message suggesting archive_file.",
+        "B": "Add few-shot examples to the system prompt demonstrating that requests involving \"backup\" or \"old\" should use archive_file.",
+        "C": "Add a confirmation step that requires users to type \"CONFIRM DELETE\" before delete_file executes.",
+        "D": "Expand tool descriptions to clarify use cases, adding guidance like \"Do not use for backup files\" to delete_file."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152901.png"
+    },
+    {
+      "id": 51,
+      "text": "Your get_portfolio_value tool returns the total value of a user's investment portfolio. You're deciding between returning a structured JSON object with explicit fields versus returning the information as a formatted text string. What is the primary advantage of using structured output with defined fields?",
+      "options": {
+        "A": "Structured JSON is processed deterministically by the model, significantly improving accuracy when extracting values.",
+        "B": "Structured JSON consumes significantly fewer tokens than natural language, substantially reducing API costs.",
+        "C": "The agent can reliably extract specific values without parsing free-form text, reducing errors in subsequent operations.",
+        "D": "JSON schemas automatically validate that the underlying API returned correct data before the agent processes it."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152907.png"
+    },
+    {
+      "id": 52,
+      "text": "Your remove_team_member tool uses a dry_run: boolean parameter for previewing impacts before execution. Production monitoring shows the agent bypasses the preview step in 15% of cases by calling with dry_run=false directly. You need to ensure every removal is preceded by a preview that the user explicitly confirms. What is the most reliable approach?",
+      "options": {
+        "A": "Add server-side validation that permits dry_run=false only when a dry_run=true call with identical parameters occurred within the past 60 seconds.",
+        "B": "Add detailed instructions and few-shot examples to the tool description requiring the agent to always call with dry_run=true first and wait for user confirmation before calling with dry_run=false.",
+        "C": "Replace with two tools: preview_remove_member returns impact details and a single-use confirmation token; execute_remove_member requires that token, binding execution to the specific previewed action.",
+        "D": "Annotate the tool as requiring confirmation and configure the orchestration layer to prompt the user for approval before forwarding any calls to annotated tools."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152913.png"
+    },
+    {
+      "id": 53,
+      "text": "Your CRM agent's delete_contact tool handles requests like \"delete the duplicate entry for Acme Corp.\" The database contains similarly named records (e.g., \"Acme Corp,\" \"Acme Corporation,\" \"ACME Corp Inc.\"), and analytics show 8% of deletions are reversed within 24 hours due to misidentified records. Users have also complained that the current multi-step confirmation flow adds too much friction to routine cleanup tasks. Which approach most effectively reduces the error rate while maintaining workflow efficiency?",
+      "options": {
+        "A": "Present matched records with differentiating fields and require single-click confirmation of the intended target before executing deletion.",
+        "B": "Deploy automated duplicate detection that identifies and merges probable duplicates, removing the need for manual deletion requests.",
+        "C": "Implement soft-delete with a 30-day recovery window so users can undo mistakes without slowing down the deletion workflow.",
+        "D": "Require users to supply the exact record ID from the CRM interface rather than using natural language references to contact names."
+      },
+      "sourceFile": "Screenshot 2026-05-22 152918.png"
+    },
+    {
+      "id": 54,
+      "text": "Your send_notification tool calls third-party messaging APIs. When these services time out during delivery, you cannot determine whether the message was actually sent. Currently, the tool returns is_error: true with a generic \"Notification failed\" message for all timeouts. Production monitoring reveals agents automatically retry these failures, frequently causing users to receive duplicate notifications. How should you modify the error response?",
+      "options": {
+        "A": "Return is_error: true with a structured field retry_safe: true for timeouts, distinguishing them from permanent failures that should not be retried.",
+        "B": "Return is_error: false with the original message content echoed back.",
+        "C": "Return is_error: true with a message encouraging retry: \"Delivery service temporarily unavailable. Please retry the notification.\"",
+        "D": "Return is_error: true with a message communicating uncertainty: \"Timeout—status unknown. Message may have been sent. Avoid retry.\""
+      },
+      "sourceFile": "Screenshot 2026-05-22 152924.png"
+    },
+    {
+      "id": 55,
+      "text": "Your search_flights tool calls an external airline API that occasionally returns a 503 Service Unavailable error. What is the most effective way to handle this error in your tool implementation?",
+      "options": {
+        "A": "Return an error message in the tool result explaining the service is temporarily unavailable.",
+        "B": "Log the error internally and return an empty response, letting the model continue without the flight data.",
+        "C": "Return an empty flight list as if the search succeeded but found no matching flights.",
+        "D": "Automatically retry the request up to five times with exponential backoff before returning results to the agent."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153011.png"
+    },
+    {
+      "id": 56,
+      "text": "Your expense reimbursement agent processes employee requests using a process_reimbursement tool. Company policy requires that reimbursements above $500 must be approved by a manager before funds are disbursed. The agent handles hundreds of requests daily, and you need the threshold enforcement to be tamper-proof regardless of how the agent is prompted. Which design ensures the $500 approval threshold cannot be bypassed?",
+      "options": {
+        "A": "Provide two tools: auto_reimburse (hard-coded limit of $500) and request_manager_approval. Include detailed system prompt instructions telling the agent to check the amount and call the appropriate tool. Add a PostToolUse hook that logs which tool was called for auditing.",
+        "B": "The process_reimbursement tool accepts an approved_by_manager: boolean parameter. The system prompt instructs the agent to only set this to true after confirming that a manager has approved the request. A nightly audit script reviews all reimbursements where approved_by_manager was set to true.",
+        "C": "The process_reimbursement tool accepts amount and details, and internally enforces the threshold: amounts <=$500 are auto-disbursed and the tool returns a success confirmation; amounts >$500 cause the tool to create a pending approval request and return a status indicating manager review is pending.",
+        "D": "Implement the threshold check in a PreToolUse hook that inspects the amount parameter before process_reimbursement executes. If the amount exceeds $500, the hook modifies the tool call to add a requires_approval: true flag, which the tool checks before disbursing."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153022.png"
+    },
+    {
+      "id": 57,
+      "text": "Your agent has a log_workout tool that accepts exercise_type (string), value (number), and measurement (string). Production monitoring shows the agent frequently passes mismatched combinations—using measurement: \"reps\" for cardio exercises like running, or measurement: \"miles\" for strength exercises like bench press. Your exercises naturally divide into two categories: cardio (measured in time or distance) and strength (measured in reps and sets). 23% of tool calls have invalid combinations. What approach would most effectively reduce these errors?",
+      "options": {
+        "A": "Add enum constraints on measurement limiting values to \"minutes\", \"miles\", \"reps\", or \"sets\" to prevent arbitrary measurement strings.",
+        "B": "Split into log_cardio_workout (with duration_minutes or distance_miles parameters) and log_strength_workout (with reps and sets parameters).",
+        "C": "Add explicit examples to the tool description showing valid combinations (e.g., \"For running: use minutes or miles. For push-ups: use reps\") with constraints for each exercise category.",
+        "D": "Implement server-side validation returning descriptive errors for invalid combinations, allowing the agent to retry with corrections."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153032.png"
+    },
+    {
+      "id": 58,
+      "text": "Your scheduling agent uses get_available_slots(date, provider_id) to retrieve open appointment times, then book_appointment(provider_id, slot_time, patient_id) to reserve a slot. Support tickets show that 15% of booking attempts fail with \"slot no longer available\" because another user booked the slot between the availability check and the booking call. How should you redesign these tools?",
+      "options": {
+        "A": "Modify book_appointment to return detailed failure information including currently available alternative slots when the requested slot is unavailable, enabling the agent to retry with a different time.",
+        "B": "Combine both tools into a single find_and_book_appointment that atomically checks availability and books, returning either the confirmed booking or available alternatives.",
+        "C": "Add a hold_slot(provider_id, slot_time) tool that creates a 60-second temporary reservation, requiring the agent to call it between checking availability and booking.",
+        "D": "Keep both tools but add retry logic to the agent's system prompt, instructing it to call get_available_slots again and select a different time if booking fails."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153040.png"
+    },
+    {
+      "id": 59,
+      "text": "Your track_shipment(tracking_id) tool queries an external logistics API that sometimes fails—the API may be temporarily unavailable, the tracking ID may be malformed, or the shipment may not exist. Currently, your tool raises a Python exception when errors occur. Users report the agent gives unhelpful responses like \"I'm having trouble with that request\" instead of suggesting alternatives such as verifying the tracking number format or checking by order number. How should you handle errors in tool results?",
+      "options": {
+        "A": "Return a generic error response (e.g., {\"success\": false, \"error\": \"lookup_failed\"}) for all failure cases to maintain a consistent schema and avoid exposing internal error details.",
+        "B": "Create dedicated error-recovery tools (retry_tracking_lookup, search_by_order_number) that the model can invoke after the primary tracking tool returns a failure indicator.",
+        "C": "Implement retry logic with exponential backoff inside the tool implementation so transient errors are automatically handled and only return a result after all retry attempts are exhausted.",
+        "D": "Return structured error information as normal tool output including error type, recoverability status, and actionable context for the user."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153048.png"
+    },
+    {
+      "id": 60,
+      "text": "Your document extraction tool uses ML models to extract invoice fields (vendor, amount, date). The models return confidence scores (0.0-1.0) for each extracted field. In production, you observe: (1) the agent proceeds with low-confidence extractions that are incorrect 23% of the time, and (2) the agent requests unnecessary human review for 31% of extractions that were actually correct. How should you restructure the tool's output?",
+      "options": {
+        "A": "Compute an aggregate extraction_quality score across all fields and return it alongside the extracted values. Include a text summary describing the overall extraction reliability.",
+        "B": "Return fields with their raw confidence scores and add detailed few-shot examples to your system prompt demonstrating how to interpret different confidence ranges and when to request human review.",
+        "C": "Return fields organized into verified and needs_verification objects based on confidence thresholds.",
+        "D": "Return fields with confidence scores, plus a requires_review boolean computed using your tested confidence thresholds, along with a review_reasons array explaining which fields triggered review."
+      },
+      "sourceFile": "Screenshot 2026-05-22 153057.png"
+    }
+  ]
+}

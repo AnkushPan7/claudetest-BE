@@ -1,0 +1,18 @@
+﻿Your marketing agent connects to MCP servers from three different vendors: an email service, a social media platform, and an analytics dashboard. Each server provides tool
+annotations—some tools marked with
+destructiveHint: true . Your team proposes automatically bypassing confirmation prompts for tools
+, others with
+readOnIyHint: true
+annotated as read-only to improve workflow speed. What should guide this decision?
+O
+o
+Implement a verification layer that tests each tools actual behavior before adding it to an allowlist. Skip confirmation only for tools validated through behavioral testing
+O
+o
+MCP servers run as local processes, so tools from any properly initialized connection inherit your applications security context and can be trusted regardless of vendor.
+Treat tool annotations as untrusted metadata unless the server itself is trusted. Base confirmation requirements on your assessment of each vendors trustworthiness,
+not on their self-reported annotations.
+O
+o
+Read-only annotations indicate intended behavior and are reliable for tools that perform GET requests to external APIs. Skip confirmation for data-fetching tools from
+properly connected servers.

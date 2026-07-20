@@ -1,0 +1,15 @@
+﻿Question 4 of 60
+Flag
+Scenario: Conversational AI Patterns
+After deploying an updated system prompt that improves response quality, users with multi-session conversations spanning several weeks report that the assistant now
+contradicts its earlier statements and has a noticeably different communication style. New users don't experience these issues.
+What's the best approach to resolve this?
+O
+o
+Add instructions to the new system prompt directing the assistant to maintain consistency with any prior statements in the conversation history.
+O
+o
+Version system prompts and associate each conversation with the prompt version under which it started, applying updates only to new conversations.
+o
+Add a transition message when sessions resume explaining that the assistant has been updated and behavior may differ.
+Regenerate summaries of existing conversations using the new prompt and replace the stored histories to align past context with current behavior.

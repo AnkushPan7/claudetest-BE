@@ -1,0 +1,38 @@
+﻿Your pipeline Uses a tool called extract_metadata with a JSON schema for paper details. You've also defined
+tools for enrichment. During
+and
+lookup _ citations
+verify_doi
+testing, you notice that when users include requests like "extract the metadata and tell me how cited it is," Claude sometimes calls
+first, which fails
+lookup _ citations
+extract_metadata would provida What's the most effective way to ensure structured metadata extraction happens first?
+because it needs the DOI that
+{"type": "tool
+{"type": "tool
+O
+o
+O
+o
+O
+o
+Set
+Set
+Set
+tool
+tool
+tool
+choice
+choice
+choice
+choice
+to
+"any" soclaude must use a tool, combined with system prompt instructions prioritizing extract_metadata
+"name .
+"name .
+"extract_metadata"} and process the enrichment requests in subsequent turns after receiving the extracted metadata.
+"extract_metadata"} for every API call in the pipeline, ensuring Claude always extracts metadata before any enrichment can
+occur.
+Set tool
+" auto"
+and reorder the tool definitions so extract_metadata appears first in the tools array, since Claude prioritizes earlier-listed tools.

@@ -1,0 +1,15 @@
+﻿Your extraction system uses tool_use with a JSON schema containing 12 fields and detailed descriptions, totaling approximately 2,500 tokens for the complete tool
+definition. Processing documents under 150K tokens yields 98% accuracy. For documents between 175-190K tokens, accuracy drops to 71%, with information from the final
+third consistently missed. The model's context window is 200K tokens. What is the most likely cause?
+O
+o
+The model distributes attention proportionally across input length, causing fields mentioned only once near the documents end to receive insufficient processing focus.
+O
+o
+Schemas exceeding 8-10 fields increase decision complexity during parameter generation, reducing extraction accuracy independent of document length.
+Tool definitions consume input context tokens. Combined with system prompts and document content, the total approaches the context limit, degrading end-of-
+document processing
+O
+o
+Very long documents exceed the models effective attention span regardless of context limits, causing accuracy degradation for content farther from the prompt
+instructions.

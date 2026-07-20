@@ -1,0 +1,12 @@
+﻿Your extraction system implements automatic retries when validation fails. On each retry, the specific validation error is appended to the prompt. This retry-with-error-
+feedback approach resolves most failures within 2-3 attempts. For which failure pattern would additional retries be LEAST effective?
+O
+o
+The model extracts "et al." for co-authors when the full list exists only in an external document not in the input
+O
+o
+The model extracts citation counts as locale-formatted strings ("1,234") when the schema requires integers
+The model extracts dates as ISO 8601 datetime strings ("2023-03-15TOO:OO:OOZ") when the schema requires only the date portion (YYYY-MM-DD)
+O
+o
+The model extracts keywords as a nested object organized by category when the schema requires a flat array of strings

@@ -1,0 +1,14 @@
+﻿delete_contact tool handles requests like "delete the duplicate entry for Acme Corp" The database contains similarly named records (e.g., "Acme Corp,"
+Your CRM agent's
+"Acme Corporation," "ACME Corp Inc."), and analytics show 8% of deletions are reversed within 24 hours due to misidentified records. Users have also complained that the
+current multi-step confirmation flow adds too much friction to routine cleanup tasks. Which approach most effectively reduces the error rate while maintaining workflow
+efficiency?
+O
+o
+Present matched records with differentiating fields and require single-click confirmation of the intended target before executing deletion.
+O
+o
+Deploy automated duplicate detection that identifies and merges probable duplicates, removing the need for manual deletion requests.
+o
+Implement soft-delete with a 30-day recovery window so users can undo mistakes without slowing down the deletion workflow.
+Require users to supply the exact record ID from the CRM interface rather than using natural language references to contact names.

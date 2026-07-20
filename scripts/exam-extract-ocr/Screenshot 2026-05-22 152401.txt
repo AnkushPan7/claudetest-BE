@@ -1,0 +1,17 @@
+﻿Your conversational assistant frequently generates multiple clarifying questions when users make ambiguous requests. When a user asks "Can you help me with the
+report?" , the assistant responds: "ld be happy to help! Could you tell me: 1) Which report? 2) What kind of help—drafting, reviewing, or formatting? 3) What's your deadline?"
+User analytics show a 40% conversation abandonment rate after these multi-question responses. What's the most effective way to reduce friction while appropriately
+handling ambiguity?
+O
+o
+Create a lookup table of common request patterns with predefined default interpretations, having the assistant respond with those defaults without stating the
+assumptions made.
+Add a preprocessing step using a smaller model to classify request ambiguity on a 1-5 scale, routing high-ambiguity requests to a clarification dialog and low-ambiguity
+requests directly to the assistant.
+o
+Limit the assistant to one clarifying question per turn, using conversation history to accumulate answers over multiple exchanges rather than requesting everything
+upfront.
+O
+o
+Modify the system prompt to instruct the assistant to make reasonable assumptions from available context, state those assumptions explicitly, and offer to adjust if the
+interpretation is wrong.

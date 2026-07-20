@@ -1,0 +1,15 @@
+﻿Question 14 of 60
+Flag
+Scenario: Conversational AI Patterns
+Users report that API latency increases noticeably and costs rise as practice conversations extend beyond 50+ turns. What is the PRIMARY cause of this behavior?
+The model generates progressively longer responses as it accumulates more context to reference
+O
+o
+The entire conversation history is included with each API request, so input tokens grow with every turn.
+o
+The model builds an internal profile of the users conversation patterns, requiring more processing as the profile grows.
+O
+o
+Database operations for retrieving and storing conversation history slow down as the table grows larger.
+previous
+Next

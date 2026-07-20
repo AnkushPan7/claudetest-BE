@@ -1,0 +1,13 @@
+﻿tool requires user confirmation before publishing. The current workflow displays "Ready to post to social media. Confirm?" and analytics show users
+Your post_content
+approve 98% of requests within 2 seconds. Post-mortems reveal incidents where posts went to wrong accounts, were scheduled for wrong times, or contained errors—all
+confirmed by users without catching the mistakes. How should you redesign the confirmation workflow?
+O
+o
+Include the complete post text, target account, scheduled time, and platform in the confirmation request
+Auto-approve routine posts and only require explicit confirmation for unusual patterns like posting to new accounts or large audiences
+o
+Add a mandatory waiting period before the confirm option becomes available
+O
+o
+Require users to type a confirmation phrase instead of clicking a button

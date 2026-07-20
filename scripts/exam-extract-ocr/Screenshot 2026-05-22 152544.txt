@@ -1,0 +1,13 @@
+﻿Your extraction system processes two document types: standard monthly reports (archived after processing) and urgent exception reports (must trigger business alerts
+within 30 minutes of receipt). Both use the same JSON schema. You want to minimize API costs while meeting latency requirements. How should you architect the
+processing pipeline?
+Submit all documents to the Batch API with custom_ids for tracking. When results arrive, immediately process urgent documents and trigger delayed alerts for
+exceptions.
+O
+o
+Route standard reports to the Batch API for 50% cost savings, and route urgent exception reports to the real-time Messages API.
+o
+Queue all documents and submit hourly batches, flagging urgent documents for expedited handling when batch results return.
+O
+o
+Submit all documents to the real-time Messages API to ensure consistent processing latency across document types.

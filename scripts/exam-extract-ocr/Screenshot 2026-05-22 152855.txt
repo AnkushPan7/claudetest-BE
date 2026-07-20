@@ -1,0 +1,15 @@
+﻿tool needs a parameter to specify which database to search. Your organization has three document databases: "research_papers", "internal_reports",
+Your
+search documents
+and "technical_specs". Users express this naturally in conversation ('Gearch the research database", "check technical documents"). How should you design the database
+selection parameter?
+O
+o
+A freeform string parameter where the backend uses semantic matching to determine which database(s) to search.
+O
+o
+No explicit parameter—search all three databases by default, then have the model filter results by source.
+An enum parameter with values ["research_papers", "internal_reports", "technical_specs"], requiring the model to map natural language to the appropriate value.
+O
+o
+A freeform string parameter with runtime validation that returns an error if the value doesn't match a known database.

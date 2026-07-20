@@ -1,0 +1,13 @@
+﻿The system routes documents with extraction confidence below 85% to human review. A quarterly audit reveals that 12% of high-confidence extractions also
+contain errors—cases where the model finds plausible-but-incorrect values. Error sources vary. comparison tables showing competitor specs, appendices referencing
+different product variants, and ambiguous phrasing the model misinterprets. You need a sustainable strategy to catch these high-confidence errors and measure whether
+improvements reduce the error rate over time. What approach is most effective?
+O
+o
+Add a verification pass that re-extracts from each high-confidence document, flagging cases where the two extraction attempts produce different results.
+O
+o
+Lower the confidence threshold from 85% to 70%, routing a larger volume of extractions to human review.
+o
+Implement heuristic rules that flag documents containing comparison tables or appendices for review regardless of confidence score.
+Implement stratified random sampling reviewing a fixed percentage of high-confidence extractions weekly, enabling error rate measurement and novel pattern detection.

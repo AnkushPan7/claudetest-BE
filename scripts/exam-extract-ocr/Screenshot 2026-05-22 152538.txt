@@ -1,0 +1,22 @@
+﻿Your extraction uses tool use with a JSON schema where
+property _ type is defined as an enum:
+['house',
+extractions fail schema validation. Investigation reveals listings mention many uncommon property types
+warehouse"—and new types continue appearing regularly. What's the most effective long-term solution?
+. After deployment, 8% of
+' apartment ' ,
+' condo' ,
+'townhouse']
+"studio", "loft", 'duplex", "mobile home", "tiny house", "converted
+O
+o
+Continuously expand the enum to include newly observed property types and add monitoring for additional edge cases.
+O
+o
+Add few-shot examples to your prompt demonstrating how to map unexpected property types to the closest existing enum value.
+Add an "other" value to your enum with a separate string field for specifics when "other" is selected.
+O
+o
+Change property_type from anenumtoa free-form string and implement a normalization step in post-processing.
+previous
+Next

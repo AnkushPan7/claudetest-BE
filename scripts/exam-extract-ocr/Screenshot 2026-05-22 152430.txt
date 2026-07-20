@@ -1,0 +1,15 @@
+﻿Users frequently refine their search criteria mid-conversation. You notice a pattern: when users say things like "Actually, let's raise the budget to $650K" or "I'd prefer a condo
+now instead of a house," the assistant sometimes continues referencing the original preferences in later responses—even though the updates are clearly present in the
+conversation history. Context usage is only at 35% capacity. Which solution most reliably ensures the model uses the current preferences?
+O
+o
+Include few-shot examples showing the assistant correctly acknowledging and applying preference changes in responses.
+O
+o
+Add system prompt instructions emphasizing that the model should always prioritize the most recently stated preferences over earlier ones.
+Maintain a structured state object with current preferences, update it on changes, and include it in each request.
+O
+o
+Implement conversation pruning to remove turns containing outdated preferences, ensuring only current ones remain in context.
+previous
+Next

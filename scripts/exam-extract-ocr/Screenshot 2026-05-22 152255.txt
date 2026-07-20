@@ -1,0 +1,17 @@
+﻿Question 1 of 60
+Flag
+Scenario: Conversational AI Patterns
+Your music discovery assistant should consistently maintain an enthusiastic tone, explain its reasoning for each recommendation, and ask clarifying questions to better
+understand user preferences. You want this behavior to persist reliably across all user interactions. Where should you define these behavioral guidelines?
+O
+o
+In the first assistant message, instructing Claude to follow these guidelines going forward
+O
+o
+In the system prompt
+In environmental variables that your application passes to the API client
+O
+o
+Prepended to each user message before sending to the API
+previous
+Next

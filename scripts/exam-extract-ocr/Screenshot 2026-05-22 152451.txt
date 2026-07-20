@@ -1,0 +1,16 @@
+﻿Question 12 of 60
+Flag
+Scenario: Conversational AI Patterns
+A new user's first message is "Set up my focus music." This could mean configure preferences, create a playlist, or play music immediately. Your system supports all three
+actions. What's the most effective approach?
+O
+o
+Create a new "Focus" playlist with curated tracks and notify the User its ready.
+Start preference configuration by asking about genres, tempo, and artists they prefer for focus.
+o
+Ask one clarifying question about action type: play now or configure for later.
+O
+o
+Play popular focus tracks immediately and let the user redirect if needed.
+previous
+Next

@@ -1,0 +1,13 @@
+﻿tool returns the total value of a user's investment portfolio. You're deciding between returning a structured JSON object with explicit fields versus
+Your
+get _ portfolio_value
+returning the information as a formatted text string. What is the primary advantage of using structured output with defined fields?
+Structured JSON is processed deterministically by the model, significantly improving accuracy when extracting values.
+O
+o
+Structured JSON consumes significantly fewer tokens than natural language, substantially reducing API costs.
+o
+The agent can reliably extract specific values without parsing free-form text, reducing errors in subsequent operations.
+O
+o
+JSON schemas automatically validate that the underlying API returned correct data before the agent processes it.

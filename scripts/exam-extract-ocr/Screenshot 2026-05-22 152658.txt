@@ -1,0 +1,14 @@
+﻿A customer sends: "This is frustrating. I've explained my issue twice and nothing is being resolved. I want to talk to a real person NOW." The agent has not yet called any tools
+to investigate their account. What should the agent do?
+O
+o
+Immediately call with the conversation history.
+O
+o
+Acknowledge the frustration and ask one targeted question to understand the specific issue before escalating
+First call get_customer and lookup_order to gather account context, then escalate toa human agent.
+O
+o
+Briefly explain what the agent can help with and offer to resolve the issue quickly, escalating only if the customer repeats their request.
+previous
+Next

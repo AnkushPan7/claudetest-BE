@@ -1,0 +1,14 @@
+﻿Over several turns discussing investment strategy, a user has stated: "l have a very low risk tolerance—I can't handle seeing my portfolio drop" and later, "l want to maximize
+my returns—I've seen friends do well in crypto and tech stocks." They now ask "What should I invest in?" Which approach best ensures the resulting recommendation aligns
+with the user's actual priority?
+O
+o
+Proceed with the most recently stated preference
+Provide separate recommendations for both scenarios (conservative and growth-oriented) without clarifying which the user prefers, and let them choose.
+o
+Recommend a balanced portfolio that moderates both preferences without explicitly addressing the conflict.
+O
+o
+Surface the contradiction and ask the user to clarify which matters more—capital preservation or growth potential—before recommending.
+previous
+Next

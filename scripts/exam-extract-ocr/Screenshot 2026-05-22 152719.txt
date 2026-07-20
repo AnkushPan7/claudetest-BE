@@ -1,0 +1,14 @@
+﻿Your process _ refund tool returns two types of errors: technical errors ("503 Service Unavailable", "Connection timeout") that are transient
+12% of calls). Monitoring shows the agent wastes 3-4 turns retrying business errors
+that can never succeed. Currently, both error types return only a plain text message to Claude.
+What's the most effective way to reduce wasted retries while improving customer-facing response quality?
+O
+o
+Implement automatic retry logic at the tool level for technical errors only, passing business errors to Claude without retries.
+Add a
+tool that must be called before process_refund to prevent business rule violations.
+o
+Return structured error responses with retriable: false for business errorsandacustomer-friendly explanation for Claude to use.
+O
+o
+Add few-shot examples showing how to distinguish retriable from non-retriable errors by parsing error message text.

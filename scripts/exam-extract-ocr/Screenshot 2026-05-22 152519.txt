@@ -1,0 +1,13 @@
+﻿Users report that responses feel repetitive across turns—each message begins with phrases like "Certainly!" or "I'd be happy to help!" even deep into conversations. You
+want responses to flow naturally without these repetitive openers. What's the most effective approach?
+O
+o
+Append a partial assistant message with a direct response opening that the model will continue from
+Implement post-processing to detect and strip common greeting phrases from response beginnings
+o
+Lower the temperature parameter to make response openings more deterministic and less variable
+O
+o
+Add system prompt instructions specifying phrases to avoid, such as "Never begin responses with 'Certainly' or similar affirmations"
+previous
+Next

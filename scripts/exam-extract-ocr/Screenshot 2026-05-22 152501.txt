@@ -1,0 +1,14 @@
+﻿After a 40-minute session helping plan a dinner party, the conversation has grown to 78,000 tokens. The history includes: (1) the user mentioning a guest has a severe
+shellfish allergy, (2) specific measurements for scaling recipes to 8 servings, (3) the user's clarification that "room temperature butter" means 680F in their kitchen, and (4)
+general back-and-forth about meal timing and presentation. You need to implement context management before the window limit is reached. What approach best balances
+information preservation with token reduction?
+O
+o
+Implement a sliding window retaining only the most recent 20,000 tokens, relying on users to re-state important information when relevant.
+Extract critical structured data (allergies, serving counts, user-defined terms) into a compact reference section, summarize general discussion, and retain recent
+exchanges verbatim.
+o
+Store the full conversation externally and use semantic search to retrieve relevant portions for each turn, loading only matching segments into context.
+O
+o
+Summarize the entire conversation history into a concise summary capturing main topics discussed, then append new messages going forward.

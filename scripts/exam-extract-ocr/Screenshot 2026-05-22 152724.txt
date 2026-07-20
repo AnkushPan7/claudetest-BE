@@ -1,0 +1,13 @@
+﻿A customer writes: "I've been going back and forth on this return for days. I just want to speak to someone who can actually help me." The agent has confirmed via
+that the return is straightforward—within policy and eligible for immediate processing. What should the agent do?
+lookup _ order
+O
+o
+Process the refund via process_refund to resolve the underlying issue, then inform them its complete
+O
+o
+Call immediately to honor the customers request
+Ask what specifically hasn't worked in previous attempts before deciding whether to escalate or resolve automatically
+O
+o
+Acknowledge frustration, inform them this is resolvable now, and offer to complete it or escalate

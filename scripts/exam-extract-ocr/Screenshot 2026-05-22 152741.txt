@@ -1,0 +1,11 @@
+﻿Compliance requires that refunds exceeding $500 must automatically escalate to a human agent—this rule cannot be left to model discretion. Despite clear system prompt
+instructions, production logs show the agent occasionally processes high-value refunds directly (3% failure rate). How should you achieve guaranteed compliance?
+O
+o
+Add few-shot examples to the prompt showing correct escalation behavior at various refund amounts ($400, $500, $600).
+Strengthen the system prompt with emphatic language: "CRITICAL POLICY: Refunds over $500 MUST trigger human escalation. NEVER process these directly."
+o
+Modify the refund tool to return an error with message "Amount exceeds policy limit—please escalate" when threshold is exceeded.
+O
+o
+Implement a hook to intercept tool calls; when the refund process amount exceeds $500, block it and invoke human escalation.

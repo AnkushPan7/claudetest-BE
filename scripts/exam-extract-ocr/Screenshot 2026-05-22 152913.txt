@@ -1,0 +1,20 @@
+﻿tool Uses a
+Your
+parameter for previewing impacts before execution. Production monitoring shows the agent bypasses the preview
+remove team member
+dry _ run: boolean
+step in 15% of cases by calling with
+directly. You need to ensure every removal is preceded by a preview that the user explicitly confirms. What is the most
+reliable approach?
+O
+o
+Add server-side validation thatpermits only whena call with identical parametersoccurred within the past60 seconds.
+O
+o
+Add detailed instructions and few-shot examples to the tool description requiring the agent to always call with first and wait for user confirmation before
+calling with
+Replace with two tools: returns impact details anda single-useconfirmation token; requires that token, bindingexecution
+to the specific previewed action.
+O
+o
+Annotate the tool as requiring confirmation and configure the orchestration layer to prompt the user for approval before forwarding any calls to annotated tools.

@@ -1,0 +1,14 @@
+﻿During a billing dispute resolution, your agent successfully retrieves customer info via
+and order details via lookup_order , but when attempting to call
+get customer
+process _ refund , the tool returns a timeout error. The agent has enough information to explain the charges and verify refund eligibility, but cannot actually process the
+refund due to the backend failure. What approach best balances first-contact resolution with appropriate error handling?
+O
+o
+Explain the billing, confirm refund eligibility, acknowledge the system issue preventing immediate processing, and offer escalation or retry later
+Implement automatic retries with exponential backofffor process_refund , keeping the conversation open until the refund is successfully processed
+o
+Confirm the refund will be processed and close the conversation, since the system has all necessary information to complete it automatically
+O
+o
+Escalate immediately to a human agent since the refund action cannot be completed

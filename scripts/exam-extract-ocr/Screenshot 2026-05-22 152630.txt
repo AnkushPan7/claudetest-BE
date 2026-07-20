@@ -1,0 +1,12 @@
+﻿Your invoice extraction Uses tool Use with strict JSON schemas. JSON syntax errors never occur, but 12% of extractions fail semantic validation—for example, line item
+amounts don't sum to the extracted total, or vendor IDs don't match valid formats. These failures currently route to manual review. What's the most effective approach to
+reduce manual review volume while maintaining accuracy?
+O
+o
+Implement post-processing logic that automatically corrects common errors, such as recalculating totals from line items when sums don't match.
+O
+o
+Retry the extraction up to 3 times when validation fails, accepting the first result that passes validation.
+o
+When validation fails, make a follow-up request with the document, extraction, and validation errors for model correction.
+Add stricter schema constraints with detailed field descriptions to prevent the model from generating invalid values initially.

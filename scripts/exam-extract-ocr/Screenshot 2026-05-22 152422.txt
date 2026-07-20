@@ -1,0 +1,14 @@
+﻿Your research assistant helps users analyze academic papers over extended conversations. User testing reveals a recurring issue: after conversations exceed 60K tokens,
+users ask follow-up questions requiring precise numerical details from papers discussed earlier—sample sizes, exact p-values, specific inclusion criteria. Your current
+approach summarizes paper discussions after 8 turns to stay within context limits. Users report that responses to these precision-dependent questions are often hedged or
+inaccurate. What's the most effective architectural change?
+O
+o
+Implement retrieval that re-injects relevant paper sections when the user's question suggests they need specific numerical details.
+Maintain a structured database of key facts extracted from each paper (sample sizes, statistics, methods) and retrieve relevant entries into context when precision-
+dependent questions are detected.
+o
+Use a separate Claude call with explicit instructions to generate higher-fidelity summaries that preserve all numerical details and statistical values.
+O
+o
+Keep source text from methodology and results sections in context permanently, while summarizing only the conversational discussion and interpretation portions.

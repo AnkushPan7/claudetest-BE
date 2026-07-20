@@ -1,0 +1,332 @@
+{
+  "updatedText": [
+    1,
+    2,
+    3,
+    4,
+    12,
+    14,
+    20,
+    31,
+    34,
+    39,
+    40,
+    41,
+    43,
+    45,
+    48,
+    50,
+    60
+  ],
+  "updatedOptions": [
+    1,
+    4,
+    12,
+    14,
+    20,
+    40,
+    41,
+    43,
+    48,
+    50
+  ],
+  "failedExtract": [
+    {
+      "id": 2,
+      "reason": "option C not found",
+      "file": "Screenshot 2026-05-22 152305.txt"
+    },
+    {
+      "id": 5,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152255.txt"
+    },
+    {
+      "id": 6,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152337.txt"
+    },
+    {
+      "id": 7,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152351.txt"
+    },
+    {
+      "id": 8,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152401.txt"
+    },
+    {
+      "id": 9,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152412.txt"
+    },
+    {
+      "id": 10,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152422.txt"
+    },
+    {
+      "id": 11,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152430.txt"
+    },
+    {
+      "id": 13,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152439.txt"
+    },
+    {
+      "id": 15,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152501.txt"
+    },
+    {
+      "id": 16,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152519.txt"
+    },
+    {
+      "id": 17,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152529.txt"
+    },
+    {
+      "id": 18,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152538.txt"
+    },
+    {
+      "id": 19,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152544.txt"
+    },
+    {
+      "id": 21,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152551.txt"
+    },
+    {
+      "id": 22,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152603.txt"
+    },
+    {
+      "id": 23,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152609.txt"
+    },
+    {
+      "id": 24,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152615.txt"
+    },
+    {
+      "id": 25,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152619.txt"
+    },
+    {
+      "id": 26,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152625.txt"
+    },
+    {
+      "id": 27,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152630.txt"
+    },
+    {
+      "id": 28,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152634.txt"
+    },
+    {
+      "id": 29,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152640.txt"
+    },
+    {
+      "id": 30,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152645.txt"
+    },
+    {
+      "id": 31,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152658.txt"
+    },
+    {
+      "id": 32,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152651.txt"
+    },
+    {
+      "id": 33,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152710.txt"
+    },
+    {
+      "id": 34,
+      "reason": "option B not found",
+      "file": "Screenshot 2026-05-22 152724.txt"
+    },
+    {
+      "id": 35,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152719.txt"
+    },
+    {
+      "id": 36,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152729.txt"
+    },
+    {
+      "id": 37,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152735.txt"
+    },
+    {
+      "id": 38,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152741.txt"
+    },
+    {
+      "id": 42,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152745.txt"
+    },
+    {
+      "id": 44,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152806.txt"
+    },
+    {
+      "id": 46,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152825.txt"
+    },
+    {
+      "id": 47,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152836.txt"
+    },
+    {
+      "id": 49,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152843.txt"
+    },
+    {
+      "id": 51,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152855.txt"
+    },
+    {
+      "id": 52,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152907.txt"
+    },
+    {
+      "id": 53,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152913.txt"
+    },
+    {
+      "id": 54,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152918.txt"
+    },
+    {
+      "id": 55,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 152924.txt"
+    },
+    {
+      "id": 56,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 153003.txt"
+    },
+    {
+      "id": 57,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 153011.txt"
+    },
+    {
+      "id": 58,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 153022.txt"
+    },
+    {
+      "id": 59,
+      "reason": "option A not found",
+      "file": "Screenshot 2026-05-22 153032.txt"
+    },
+    {
+      "id": 60,
+      "reason": "option B not found",
+      "file": "Screenshot 2026-05-22 153057.txt"
+    }
+  ],
+  "fileMap": {
+    "1": "Screenshot 2026-05-22 152113.txt",
+    "2": "Screenshot 2026-05-22 152305.txt",
+    "3": "Screenshot 2026-05-22 152315.txt",
+    "4": "Screenshot 2026-05-22 152325.txt",
+    "5": "Screenshot 2026-05-22 152255.txt",
+    "6": "Screenshot 2026-05-22 152337.txt",
+    "7": "Screenshot 2026-05-22 152351.txt",
+    "8": "Screenshot 2026-05-22 152401.txt",
+    "9": "Screenshot 2026-05-22 152412.txt",
+    "10": "Screenshot 2026-05-22 152422.txt",
+    "11": "Screenshot 2026-05-22 152430.txt",
+    "12": "Screenshot 2026-05-22 152451.txt",
+    "13": "Screenshot 2026-05-22 152439.txt",
+    "14": "Screenshot 2026-05-22 152512.txt",
+    "15": "Screenshot 2026-05-22 152501.txt",
+    "16": "Screenshot 2026-05-22 152519.txt",
+    "17": "Screenshot 2026-05-22 152529.txt",
+    "18": "Screenshot 2026-05-22 152538.txt",
+    "19": "Screenshot 2026-05-22 152544.txt",
+    "20": "Screenshot 2026-05-22 152557.txt",
+    "21": "Screenshot 2026-05-22 152551.txt",
+    "22": "Screenshot 2026-05-22 152603.txt",
+    "23": "Screenshot 2026-05-22 152609.txt",
+    "24": "Screenshot 2026-05-22 152615.txt",
+    "25": "Screenshot 2026-05-22 152619.txt",
+    "26": "Screenshot 2026-05-22 152625.txt",
+    "27": "Screenshot 2026-05-22 152630.txt",
+    "28": "Screenshot 2026-05-22 152634.txt",
+    "29": "Screenshot 2026-05-22 152640.txt",
+    "30": "Screenshot 2026-05-22 152645.txt",
+    "31": "Screenshot 2026-05-22 152658.txt",
+    "32": "Screenshot 2026-05-22 152651.txt",
+    "33": "Screenshot 2026-05-22 152710.txt",
+    "34": "Screenshot 2026-05-22 152724.txt",
+    "35": "Screenshot 2026-05-22 152719.txt",
+    "36": "Screenshot 2026-05-22 152729.txt",
+    "37": "Screenshot 2026-05-22 152735.txt",
+    "38": "Screenshot 2026-05-22 152741.txt",
+    "39": "Screenshot 2026-05-22 152750.txt",
+    "40": "Screenshot 2026-05-22 152754.txt",
+    "41": "Screenshot 2026-05-22 152801.txt",
+    "42": "Screenshot 2026-05-22 152745.txt",
+    "43": "Screenshot 2026-05-22 152812.txt",
+    "44": "Screenshot 2026-05-22 152806.txt",
+    "45": "Screenshot 2026-05-22 152830.txt",
+    "46": "Screenshot 2026-05-22 152825.txt",
+    "47": "Screenshot 2026-05-22 152836.txt",
+    "48": "Screenshot 2026-05-22 152849.txt",
+    "49": "Screenshot 2026-05-22 152843.txt",
+    "50": "Screenshot 2026-05-22 152901.txt",
+    "51": "Screenshot 2026-05-22 152855.txt",
+    "52": "Screenshot 2026-05-22 152907.txt",
+    "53": "Screenshot 2026-05-22 152913.txt",
+    "54": "Screenshot 2026-05-22 152918.txt",
+    "55": "Screenshot 2026-05-22 152924.txt",
+    "56": "Screenshot 2026-05-22 153003.txt",
+    "57": "Screenshot 2026-05-22 153011.txt",
+    "58": "Screenshot 2026-05-22 153022.txt",
+    "59": "Screenshot 2026-05-22 153032.txt",
+    "60": "Screenshot 2026-05-22 153057.txt"
+  }
+}

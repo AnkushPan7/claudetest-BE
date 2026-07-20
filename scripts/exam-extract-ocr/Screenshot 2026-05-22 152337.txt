@@ -1,0 +1,15 @@
+﻿Your fitness coaching assistant uses a system prompt with detailed conditional logic: "If the user mentions being a beginner, provide step-by-step form instructions. If they
+use terms like 'progressive overload' or 'superset', respond concisely. If they ask about injury history, always recommend consulting a physician." During evaluation, you find
+the assistant correctly adapts to explicit expertise declarations but struggles when users don't clearly state their level—often defaulting to overly detailed responses
+regardless of contextual cues like technical terminology. Which change to the system prompt would most directly address this failure to pick up on implicit expertise
+signals?
+O
+o
+Implement a pre-conversation intake that asks users to rate their experience level, then inject that rating into the system prompt as context for all subsequent responses.
+Replace most conditionals with a general principle: "Adapt explanation depth to match user expertise, mirroring their terminology." Keep only the safety-critical
+conditional about injury consultations.
+o
+Add more conditional branches to cover additional expertise signals, such as "If user mentions specific rep ranges or asks about periodization, treat as advanced."
+O
+o
+Add an explicit instruction for the model to ask a clarifying question about experience level whenever the userS expertise isn't immediately clear from their first message.

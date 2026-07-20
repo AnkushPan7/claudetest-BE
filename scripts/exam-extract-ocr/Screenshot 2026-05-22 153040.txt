@@ -1,0 +1,17 @@
+﻿Your scheduling agent uses
+to retrieve open appointment times, then slot_time, patient_id)
+to
+get_available slots (date, provider id)
+reserve a slot. Support tickets show that 15% of booking attempts fail with "slot no longer available" because another user booked the slot between the availability check and
+the booking call. How should you redesign these tools?
+O
+o
+Modify book_appointment to return detailed failure information including currently available alternative slots when the requested slot is unavailable enabling the agent to
+retry with a different time.
+O
+o
+Combine both tools intoasingle find_and book_appointment thatatomicallychecksavailability and books, returning either theconfirmed bookingor availablealternatives.
+Adda slot_time) tool that createsa60-second temporary reservation, requiring the agent to callitbetweencheckingavailability and booking.
+O
+o
+Keep both tools but add retry logic to the agentS system prompt, instructing it to call again and selecta different time if booking fails.

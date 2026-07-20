@@ -1,0 +1,24 @@
+﻿fails, the agent sometimes retries 5+ times (wasteful when the order ID doesn't exist), sometimes
+Production logs reveal inconsistent error handling: when
+lookup_order
+escalates immediately (premature for temporary network issues), and sometimes asks users for clarification (inappropriate when the issue is a backend permission error).
+Investigation shows your MCP tool returns uniform error responses:
+. The agent cannot
+{"isError":
+"content" •
+• [ {"type" • "text",
+"text" :
+"Operation failed"} ] }
+true,
+distinguish between error types. What's the most effective improvement?
+O
+o
+Implement retry logic with exponential backoff in your MCP server for all errors, returning to the agent only after retries are exhausted.
+O
+o
+Add few-shot examples to the system prompt demonstrating how to interpret error message patterns and select appropriate responses for each.
+Enhance error responses with structured metadata: include error-category (transient/validation/permission), isRetryab1e boolean, andadescriptionofwhatcaused the
+failure.
+O
+o
+Create an analyze_error MCPtool the agentcalls after any failure todetermine the error category and recommended action.

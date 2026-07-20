@@ -1,0 +1,19 @@
+﻿tool queries an external logistics API that sometimes fails—the API may be temporarily unavailable, the tracking ID may be malformed, or
+Your
+the shipment may not exist. Currently, your tool raises a Python exception when errors occur. Users report the agent gives unhelpful responses like "I'm having trouble with
+that request" instead of suggesting alternatives such as verifying the tracking number format or checking by order number. How should you handle errors in tool results?
+O
+o
+Return a generic error response (e.g., {"success" :
+false
+error details.
+Create dedicated error-recovery tools (
+indicator.
+, "error" • "lookup_failed"} ) for all failure cases tomaintainaconsistent schemaand avoid exposing internal
+, ) that the model can invoke after the primary tracking tool returns a failure
+o
+Implement retry logic with exponential backoff inside the tool implementation so transient errors are automatically handled and only return a result after all retry
+attempts are exhausted.
+O
+o
+Return structured error information as normal tool output including error type, recoverability status, and actionable context for the user.

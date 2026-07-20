@@ -1,0 +1,11 @@
+﻿The agent verifies customer identity through a multi-step process before resetting passwords. During testing you notice that after the customer answers the third
+verification question, the agent asks them to provide their name again, as if the earlier exchange never happened. What's the most likely cause of this behavior?
+O
+o
+Claudes memory retention is limited to two conversational turns by default, requiring explicit configuration to extend it.
+O
+o
+The conversation history isn't being passed in subsequent API requests.
+o
+The prompt lacks instructions telling Claude to remember information across multiple exchanges.
+The verification tool is clearing the agents internal state after each successful validation step.

@@ -1,0 +1,25 @@
+﻿(string),
+value (number), and measurement (string). Production monitoring shows the agent frequently
+tool that accepts
+Your agent has a
+Io g_workout
+exercise _ type
+for cardio exercises like running or
+"miles" for strength exercises like bench press. Your
+passes mismatched combinations—using
+" peps"
+measurement :
+measurement:
+exercises naturally divide into two categories: cardio (measured in time or distance) and strength (measured in reps and sets). 23% of tool calls have invalid combinations.
+What approach would most effectively reduce these errors?
+O
+o
+Add enum constraintson measurement limiting values to "minutes", "miles", "reps",or #ets" to prevent arbitrary measurement strings.
+O
+o
+Split into (with duration_minutes or distance_miles parameters) and (with reps and sets parameters).
+Add explicit examples to the tool description showing valid combinations (e.g, "For running: use minutes or miles. For push-ups: use reps") with constraints for each
+exercise category.
+O
+o
+Implement server-side validation returning descriptive errors for invalid combinations, allowing the agent to retry with corrections.

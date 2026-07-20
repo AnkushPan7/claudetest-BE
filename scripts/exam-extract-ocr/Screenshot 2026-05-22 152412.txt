@@ -1,0 +1,15 @@
+﻿Your conversation history includes two types of content: persistent story elements (character backgrounds, plot structure, world rules) that must remain consistent
+throughout, and extensive brainstorming discussion that's mostly ephemeral. After 40+ turns, you're hitting context limits and users report the assistant "forgets"
+established character traits, breaking narrative consistency.
+Which approach best ensures persistent story elements remain available to the model while reclaiming context space?
+O
+o
+Apply a sliding-window approach keeping only the most recent 25 turns, relying on the model to infer earlier context from recent discussion flow.
+O
+o
+Summarize the entire conversation history into a condensed synopsis every 20 turns, replacing the full history to free up tokens.
+o
+Separate persistent story elements into a retained "story bible" section at context start, applying trimming or summarization only to brainstorming discussion.
+Store all history in a vector database and retrieve semantically similar passages for each new message, replacing conversation history with retrieved chunks.
+previous
+Next

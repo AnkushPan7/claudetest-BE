@@ -1,0 +1,17 @@
+﻿Your MCP server includes id)
+tools. Production logs show the agent calls
+delete file when users ask to "remove old
+and
+id)
+backups," but company policy requires archiving backup files. Both tools currently have minimal descriptions: "Archives a file" and "Deletes a file." Which change most
+directly improves tool selection for this scenario?
+O
+o
+Implement server-side validation that rejects delete_file calls for files tagged as backups, returning anerror message suggesting archive_file .
+O
+o
+Add few-shot examples to the system prompt demonstrating that requests involving "backup" or "old" should Use archive_file .
+Add a confirmation step that requires users to type "CONFIRM DELETE" before delete_file executes.
+O
+o
+Expand tool descriptions to clarify use cases, adding guidance like "Do not use for backup files" to delete_file .

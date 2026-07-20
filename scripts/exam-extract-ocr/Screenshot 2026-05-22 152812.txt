@@ -1,0 +1,16 @@
+﻿A customer returns 4 hours after their initial session about the same billing dispute. The previous 32-turn session contains
+results showing "Status: PENDING,
+lookup_order
+Expected resolution: 24-48 hours." In testing, you observe that when resuming sessions with stale tool results, the agent often references the outdated data in responses
+(e.g., "l see your refund is still being processed") even after subsequent fresh tool calls return different information. What approach most reliably handles returning
+customers?
+Resume with full history and add a system prompt instruction telling the agent to always prefer the most recent tool results when multiple calls to the same tool exist in
+context.
+O
+o
+Resume with full history and configure the agent to automatically re-call all previously-used tools at session start to ensure data freshness.
+o
+Resume with full history but filter out previous tool_result messages before resuming, keeping only the human/assistant turns so the agent must re-fetch needed data.
+O
+o
+Start a new session, inject a structured summary of the previous interaction (issue type, actions taken, resolution status), then make fresh tool calls before engaging
