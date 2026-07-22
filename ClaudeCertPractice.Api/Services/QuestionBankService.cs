@@ -6,6 +6,7 @@ namespace ClaudeCertPractice.Api.Services;
 public class QuestionBankService
 {
     public const string DefaultBankId = "ankush";
+    public const string RandomBankId = "random";
 
     private readonly ExamGuideService _examGuide;
     private readonly IReadOnlyDictionary<string, LoadedBank> _banks;
@@ -22,23 +23,29 @@ public class QuestionBankService
         var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var dataDir = Path.Combine(env.ContentRootPath, "Data");
 
+        var ankush = LoadBank(
+            "ankush",
+            "Ankush",
+            Path.Combine(dataDir, "questions-ankush.json"),
+            jsonOptions);
+        var yagnesh = LoadBank(
+            "yagnesh",
+            "Yagnesh",
+            Path.Combine(dataDir, "questions-yagnesh.json"),
+            jsonOptions);
+        var nilesh = LoadBank(
+            "nilesh",
+            "Nilesh",
+            Path.Combine(dataDir, "questions-nilesh.json"),
+            jsonOptions);
+
+        // Combined pool first in the dropdown; IDs remapped so 1–60 per source bank do not collide.
         _banks = new Dictionary<string, LoadedBank>
         {
-            ["ankush"] = LoadBank(
-                "ankush",
-                "Ankush",
-                Path.Combine(dataDir, "questions-ankush.json"),
-                jsonOptions),
-            ["yagnesh"] = LoadBank(
-                "yagnesh",
-                "Yagnesh",
-                Path.Combine(dataDir, "questions-yagnesh.json"),
-                jsonOptions),
-            ["nilesh"] = LoadBank(
-                "nilesh",
-                "Nilesh",
-                Path.Combine(dataDir, "questions-nilesh.json"),
-                jsonOptions),
+            [RandomBankId] = BuildMergedRandomBank(ankush, yagnesh, nilesh),
+            ["ankush"] = ankush,
+            ["yagnesh"] = yagnesh,
+            ["nilesh"] = nilesh,
         };
     }
 
@@ -59,6 +66,28 @@ public class QuestionBankService
             throw new InvalidDataException($"No questions loaded from {path}");
 
         return new LoadedBank(id, name, questions);
+    }
+
+    /// <summary>
+    /// Merges Ankush + Yagnesh + Nilesh into one pool with unique IDs (sources each reuse 1–60).
+    /// </summary>
+    private static LoadedBank BuildMergedRandomBank(params LoadedBank[] sources)
+    {
+        var merged = new List<Question>();
+        var nextId = 1;
+        foreach (var source in sources)
+        {
+            foreach (var q in source.Questions)
+                merged.Add(q with { Id = nextId++ });
+        }
+
+        if (merged.Count == 0)
+            throw new InvalidDataException("Random question bank has no questions.");
+
+        return new LoadedBank(
+            RandomBankId,
+            "Random question (Ankush, Yagnesh, Nilesh)",
+            merged);
     }
 
     public IReadOnlyList<QuestionBankInfo> GetBanks() =>
@@ -148,13 +177,15 @@ public class QuestionBankService
 
     public List<int> PickRandomIds(string? bankId, int count, int[]? domainIds)
     {
-        var pool = domainIds is { Length: > 0 }
-            ? PracticePool(bankId)
-                .Where(q => domainIds.Contains(_examGuide.LegacySectionToDomain(q.SectionId)))
-                .OrderBy(q => q.Id)
-                .ToList()
-            : PracticePool(bankId).OrderBy(_ => Random.Shared.Next()).ToList();
+        IEnumerable<Question> query = PracticePool(bankId);
+        if (domainIds is { Length: > 0 })
+        {
+            query = query.Where(q =>
+                domainIds.Contains(_examGuide.LegacySectionToDomain(q.SectionId)));
+        }
 
+        // Always shuffle so domain-filtered picks (and the merged random bank) stay unbiased.
+        var pool = query.OrderBy(_ => Random.Shared.Next()).ToList();
         return pool.Take(Math.Min(count, pool.Count)).Select(q => q.Id).ToList();
     }
 }
