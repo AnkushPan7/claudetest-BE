@@ -1113,6 +1113,26 @@
       "id": 55,
       "sectionId": 2,
       "title": "send_notification Timeouts: Cannot Determine If Message Was Sent",
+      "text": "Your send_notification tool calls third-party messaging APIs. When these services time out during delivery, you cannot determine whether the message was actually sent. Currently, the tool returns is_error: true with a generic \"Notification failed\" message for all timeouts. Production monitoring reveals agents automatically retry these failures, frequently causing users to receive duplicate notifications. How should you modify the error response?",
+      "options": {
+        "A": "Return is_error: true with a structured field retry_safe: true for timeouts, distinguishing them from permanent failures that should not be retried.",
+        "B": "Return is_error: false with the original message content echoed back.",
+        "C": "Return is_error: true with a message encouraging retry: \"Delivery service temporarily unavailable. Please retry the notification.\"",
+        "D": "Return is_error: true with a message communicating uncertainty: \"Timeout—status unknown. Message may have been sent. Avoid retry.\""
+      },
+      "correctAnswer": "D",
+      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
+      "optionExplanations": {
+        "A": "With retry_safe: true this would cause the exact duplicate problem you're trying to prevent—timeouts leave delivery status unknown, so retrying can send the message twice.",
+        "B": "Returning is_error: false would mask the actual failure and mislead the agent into thinking the message was successfully sent, perpetuating the duplicate notification problem.",
+        "C": "Encouraging retry on a timeout (where delivery status is unknown) directly causes the duplicate notifications you're trying to prevent.",
+        "D": "The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with retry_safe: true would cause the exact duplicate problem you're trying to prevent."
+      }
+    },
+    {
+      "id": 56,
+      "sectionId": 2,
+      "title": "search_flights Tool: 503 Service Unavailable from External Airline API",
       "text": "Your search_flights tool calls an external airline API that occasionally returns a 503 Service Unavailable error. What is the most effective way to handle this error in your tool implementation?",
       "options": {
         "A": "Return an error message in the tool result explaining the service is temporarily unavailable.",
@@ -1120,28 +1140,8 @@
         "C": "Return an empty flight list as if the search succeeded but found no matching flights.",
         "D": "Automatically retry the request up to five times with exponential backoff before returning results to the agent."
       },
-      "correctAnswer": "D",
-      "explanation": "Why D: The critical information is the delivery uncertainty and the instruction NOT to retry. Option A with retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
-      "optionExplanations": {
-        "A": "With retry_safe: true would cause the exact duplicate problem you're trying to prevent.",
-        "B": "Returning is_error: false would mask the actual failure and mislead the agent into thinking the message was successfully sent, perpetuating the duplicate notification problem.",
-        "C": "Encouraging retry on a timeout (where delivery status is unknown) directly causes the duplicate notifications you're trying to prevent.",
-        "D": "The critical information is the delivery uncertainty and the instruction NOT to retry"
-      }
-    },
-    {
-      "id": 56,
-      "sectionId": 2,
-      "title": "search_flights Tool: 503 Service Unavailable from External Airline API",
-      "text": "Your expense reimbursement agent processes employee requests using a process_reimbursement tool. Company policy requires that reimbursements above $500 must be approved by a manager before funds are disbursed. The agent handles hundreds of requests daily, and you need the threshold enforcement to be tamper-proof regardless of how the agent is prompted. Which design ensures the $500 approval threshold cannot be bypassed?",
-      "options": {
-        "A": "Provide two tools: auto_reimburse (hard-coded limit of $500) and request_manager_approval. Include detailed system prompt instructions telling the agent to check the amount and call the appropriate tool. Add a PostToolUse hook that logs which tool was called for auditing.",
-        "B": "The process_reimbursement tool accepts an approved_by_manager: boolean parameter. The system prompt instructs the agent to only set this to true after confirming that a manager has approved the request. A nightly audit script reviews all reimbursements where approved_by_manager was set to true.",
-        "C": "The process_reimbursement tool accepts amount and details, and internally enforces the threshold: amounts <=$500 are auto-disbursed and the tool returns a success confirmation; amounts >$500 cause the tool to create a pending approval request and return a status indicating manager review is pending.",
-        "D": "Implement the threshold check in a PreToolUse hook that inspects the amount parameter before process_reimbursement executes. If the amount exceeds $500, the hook modifies the tool call to add a requires_approval: true flag, which the tool checks before disbursing."
-      },
       "correctAnswer": "A",
-      "explanation": "Why A: Returning a clear error message (with isError: true) lets the agent understand the failure and\ncommunicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent.\nAuto-retrying 5 times (D) could add tens of seconds of latency to every 503 error.",
+      "explanation": "Why A: Returning a clear error message (with isError: true) lets the agent understand the failure and communicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent. Auto-retrying 5 times (D) could add tens of seconds of latency to every 503 error.",
       "optionExplanations": {
         "A": "Returning a clear error message (with isError: true) lets the agent understand the failure and communicate it to the user. An empty response (B) is ambiguous. An empty results list (C) misleads the agent. Auto-retrying 5 times (D) could add tens of seconds of latency to every 503 error.",
         "B": "An empty response is ambiguous—the agent cannot distinguish between a genuine empty result and a failure, leaving it unable to communicate the actual problem to the user.",
@@ -1153,15 +1153,15 @@
       "id": 57,
       "sectionId": 2,
       "title": "process_reimbursement: $500 Approval Threshold Must Be Tamper-Proof",
-      "text": "Your agent has a log_workout tool that accepts exercise_type (string), value (number), and measurement (string). Production monitoring shows the agent frequently passes mismatched combinations—using measurement: \"reps\" for cardio exercises like running, or measurement: \"miles\" for strength exercises like bench press. Your exercises naturally divide into two categories: cardio (measured in time or distance) and strength (measured in reps and sets). 23% of tool calls have invalid combinations. What approach would most effectively reduce these errors?",
+      "text": "Your expense reimbursement agent processes employee requests using a process_reimbursement tool. Company policy requires that reimbursements above $500 must be approved by a manager before funds are disbursed. The agent handles hundreds of requests daily, and you need the threshold enforcement to be tamper-proof regardless of how the agent is prompted. Which design ensures the $500 approval threshold cannot be bypassed?",
       "options": {
-        "A": "Add enum constraints on measurement limiting values to \"minutes\", \"miles\", \"reps\", or \"sets\" to prevent arbitrary measurement strings.",
-        "B": "Split into log_cardio_workout (with duration_minutes or distance_miles parameters) and log_strength_workout (with reps and sets parameters).",
-        "C": "Add explicit examples to the tool description showing valid combinations (e.g., \"For running: use minutes or miles. For push-ups: use reps\") with constraints for each exercise category.",
-        "D": "Implement server-side validation returning descriptive errors for invalid combinations, allowing the agent to retry with corrections."
+        "A": "Provide two tools: auto_reimburse (hard-coded limit of $500) and request_manager_approval. Include detailed system prompt instructions telling the agent to check the amount and call the appropriate tool. Add a PostToolUse hook that logs which tool was called for auditing.",
+        "B": "The process_reimbursement tool accepts an approved_by_manager: boolean parameter. The system prompt instructs the agent to only set this to true after confirming that a manager has approved the request. A nightly audit script reviews all reimbursements where approved_by_manager was set to true.",
+        "C": "The process_reimbursement tool accepts amount and details, and internally enforces the threshold: amounts <=$500 are auto-disbursed and the tool returns a success confirmation; amounts >$500 cause the tool to create a pending approval request and return a status indicating manager review is pending.",
+        "D": "Implement the threshold check in a PreToolUse hook that inspects the amount parameter before process_reimbursement executes. If the amount exceeds $500, the hook modifies the tool call to add a requires_approval: true flag, which the tool checks before disbursing."
       },
       "correctAnswer": "C",
-      "explanation": "Why C: The business rule is enforced at the tool implementation level, completely independent of the agent's\nbehavior. The agent cannot bypass it regardless of how it is prompted.",
+      "explanation": "Why C: The business rule is enforced at the tool implementation level, completely independent of the agent's behavior. The agent cannot bypass it regardless of how it is prompted.",
       "optionExplanations": {
         "A": "Relying on system prompt instructions to control agent behavior is insufficient—the agent can be prompted to ignore or override those instructions, leaving the threshold bypassable.",
         "B": "This depends on the agent following the boolean parameter convention correctly; a prompt injection or reframing could cause the agent to set approved_by_manager to true without actual approval.",
@@ -1173,15 +1173,15 @@
       "id": 58,
       "sectionId": 2,
       "title": "log_workout: 23% Invalid Measurement Combinations",
-      "text": "Your scheduling agent uses get_available_slots(date, provider_id) to retrieve open appointment times, then book_appointment(provider_id, slot_time, patient_id) to reserve a slot. Support tickets show that 15% of booking attempts fail with \"slot no longer available\" because another user booked the slot between the availability check and the booking call. How should you redesign these tools?",
+      "text": "Your agent has a log_workout tool that accepts exercise_type (string), value (number), and measurement (string). Production monitoring shows the agent frequently passes mismatched combinations—using measurement: \"reps\" for cardio exercises like running, or measurement: \"miles\" for strength exercises like bench press. Your exercises naturally divide into two categories: cardio (measured in time or distance) and strength (measured in reps and sets). 23% of tool calls have invalid combinations. What approach would most effectively reduce these errors?",
       "options": {
-        "A": "Modify book_appointment to return detailed failure information including currently available alternative slots when the requested slot is unavailable, enabling the agent to retry with a different time.",
-        "B": "Combine both tools into a single find_and_book_appointment that atomically checks availability and books, returning either the confirmed booking or available alternatives.",
-        "C": "Add a hold_slot(provider_id, slot_time) tool that creates a 60-second temporary reservation, requiring the agent to call it between checking availability and booking.",
-        "D": "Keep both tools but add retry logic to the agent's system prompt, instructing it to call get_available_slots again and select a different time if booking fails."
+        "A": "Add enum constraints on measurement limiting values to \"minutes\", \"miles\", \"reps\", or \"sets\" to prevent arbitrary measurement strings.",
+        "B": "Split into log_cardio_workout (with duration_minutes or distance_miles parameters) and log_strength_workout (with reps and sets parameters).",
+        "C": "Add explicit examples to the tool description showing valid combinations (e.g., \"For running: use minutes or miles. For push-ups: use reps\") with constraints for each exercise category.",
+        "D": "Implement server-side validation returning descriptive errors for invalid combinations, allowing the agent to retry with corrections."
       },
       "correctAnswer": "B",
-      "explanation": "Why B: Splitting tools by exercise type makes invalid combinations structurally impossible. The correct\nparameters are enforced by the schema itself—no documentation, examples, or validation needed.",
+      "explanation": "Why B: Splitting tools by exercise type makes invalid combinations structurally impossible. The correct parameters are enforced by the schema itself—no documentation, examples, or validation needed.",
       "optionExplanations": {
         "A": "Enums constrain the values themselves but don't solve the mapping problem—the agent still needs to choose which measurement type to use for a given exercise, leaving room for incorrect pairings.",
         "B": "Splitting tools by exercise type makes invalid combinations structurally impossible. The correct parameters are enforced by the schema itself—no documentation, examples, or validation needed.",
@@ -1193,15 +1193,15 @@
       "id": 59,
       "sectionId": 2,
       "title": "Scheduling Agent: 15% \"Slot No Longer Available\" Failures (Race Condition)",
-      "text": "Your track_shipment(tracking_id) tool queries an external logistics API that sometimes fails—the API may be temporarily unavailable, the tracking ID may be malformed, or the shipment may not exist. Currently, your tool raises a Python exception when errors occur. Users report the agent gives unhelpful responses like \"I'm having trouble with that request\" instead of suggesting alternatives such as verifying the tracking number format or checking by order number. How should you handle errors in tool results?",
+      "text": "Your scheduling agent uses get_available_slots(date, provider_id) to retrieve open appointment times, then book_appointment(provider_id, slot_time, patient_id) to reserve a slot. Support tickets show that 15% of booking attempts fail with \"slot no longer available\" because another user booked the slot between the availability check and the booking call. How should you redesign these tools?",
       "options": {
-        "A": "Return a generic error response (e.g., {\"success\": false, \"error\": \"lookup_failed\"}) for all failure cases to maintain a consistent schema and avoid exposing internal error details.",
-        "B": "Create dedicated error-recovery tools (retry_tracking_lookup, search_by_order_number) that the model can invoke after the primary tracking tool returns a failure indicator.",
-        "C": "Implement retry logic with exponential backoff inside the tool implementation so transient errors are automatically handled and only return a result after all retry attempts are exhausted.",
-        "D": "Return structured error information as normal tool output including error type, recoverability status, and actionable context for the user."
+        "A": "Modify book_appointment to return detailed failure information including currently available alternative slots when the requested slot is unavailable, enabling the agent to retry with a different time.",
+        "B": "Combine both tools into a single find_and_book_appointment that atomically checks availability and books, returning either the confirmed booking or available alternatives.",
+        "C": "Add a hold_slot(provider_id, slot_time) tool that creates a 60-second temporary reservation, requiring the agent to call it between checking availability and booking.",
+        "D": "Keep both tools but add retry logic to the agent's system prompt, instructing it to call get_available_slots again and select a different time if booking fails."
       },
       "correctAnswer": "C",
-      "explanation": "Why C: This directly solves the race condition by creating a temporary hold. The workflow becomes:\nget_available_slots → hold_slot → show options → book_appointment, with the held slot protected from\nconcurrent booking.",
+      "explanation": "Why C: This directly solves the race condition by creating a temporary hold. The workflow becomes: get_available_slots → hold_slot → show options → book_appointment, with the held slot protected from concurrent booking.",
       "optionExplanations": {
         "A": "Returning alternative slots only helps if the agent acts on them immediately, but doesn't prevent another user from booking those alternatives in the time it takes the agent to process the response.",
         "B": "While atomicity solves the race condition, combining tools removes the agent's ability to show users available options before committing to a booking, making the user experience less flexible.",

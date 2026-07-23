@@ -301,6 +301,19 @@ function main() {
       continue;
     }
 
+    // Guard against off-by-one OCR file assignment: never overwrite a stem
+    // that is semantically unrelated to the bank question (titles/answers stay put).
+    const stemSimilarity = jaccard(extracted.stem, q.text);
+    const titleSimilarity = jaccard(extracted.stem, q.title || '');
+    if (stemSimilarity < 0.2 && titleSimilarity < 0.12) {
+      report.failedExtract.push({
+        id: q.id,
+        reason: `stem mismatch vs bank (jaccard=${stemSimilarity.toFixed(2)}, title=${titleSimilarity.toFixed(2)})`,
+        file: body.file,
+      });
+      continue;
+    }
+
     const newStem = polishStem(extracted.stem, q.text);
     if (newStem !== q.text) {
       q.text = newStem;

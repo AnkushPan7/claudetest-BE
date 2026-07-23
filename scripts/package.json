@@ -6,6 +6,8 @@
   "scripts": {
     "build-questions": "node extract-pdf-text.js \"../../../Downloads/Claude_Architect_Exam_Study_Guide_260531_232603 (2).pdf\" \"../../../Downloads/ClaudeCertificateExam-ANSWERS (2).pdf\" && node build-questions-from-pdfs.js",
     "build-nilesh-questions": "node build-questions-nilesh.js",
+    "validate-alignment": "node validate-question-alignment.js ankush",
+    "validate-alignment-all": "node validate-question-alignment.js all",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
