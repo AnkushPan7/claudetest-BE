@@ -50,6 +50,14 @@ public record CreateSessionRequest(
     string? LearningUrl = null,
     string? BankId = null);
 
+public record RestoreSessionRequest(
+    string SessionId,
+    IReadOnlyList<int> QuestionIds,
+    string SourceMode,
+    string? BankId = null,
+    string? GenerationJobId = null,
+    Dictionary<int, string>? Answers = null);
+
 public record SessionDto(
     string SessionId,
     int TotalQuestions,

@@ -8,6 +8,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<ExamResultEntity> ExamResults => Set<ExamResultEntity>();
     public DbSet<ResultQuestionEntity> ResultQuestions => Set<ResultQuestionEntity>();
+    public DbSet<AiGenerationJobEntity> AiGenerationJobs => Set<AiGenerationJobEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +42,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany(r => r.Questions)
                 .HasForeignKey(q => q.ExamResultId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<AiGenerationJobEntity>(entity =>
+        {
+            entity.HasKey(j => j.Id);
+            entity.Property(j => j.Id).HasMaxLength(64);
+            entity.Property(j => j.UserEmail).HasMaxLength(320);
+            entity.Property(j => j.Status).HasMaxLength(32);
+            entity.Property(j => j.SessionId).HasMaxLength(64);
+            entity.Property(j => j.QuestionsJson).HasColumnType("jsonb");
+            entity.HasIndex(j => j.UserEmail);
+            entity.HasIndex(j => new { j.UserEmail, j.Status });
+            entity.HasIndex(j => j.UpdatedAt);
         });
     }
 }

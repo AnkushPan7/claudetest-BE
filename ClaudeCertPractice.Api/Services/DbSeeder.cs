@@ -24,6 +24,7 @@ public static class DbSeeder
 
         await db.Database.MigrateAsync();
         await EnsureResultQuestionOptionExplanationsColumnAsync(db, logger);
+        await EnsureAiGenerationJobsTableAsync(db, logger);
 
         await EnsureAdminUserAsync(db, auth, logger);
         await ImportLegacyUsersJsonIfNeededAsync(db, env, logger);
@@ -47,6 +48,38 @@ public static class DbSeeder
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Could not ensure OptionExplanations column on ResultQuestions.");
+        }
+    }
+
+    private static async Task EnsureAiGenerationJobsTableAsync(AppDbContext db, ILogger logger)
+    {
+        try
+        {
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE IF NOT EXISTS "AiGenerationJobs" (
+                    "Id" character varying(64) NOT NULL,
+                    "UserEmail" character varying(320) NOT NULL,
+                    "Status" character varying(32) NOT NULL,
+                    "RequestedCount" integer NOT NULL,
+                    "CompletedCount" integer NOT NULL,
+                    "SectionIdsJson" text NULL,
+                    "LearningUrl" text NULL,
+                    "QuestionsJson" jsonb NULL,
+                    "Error" text NULL,
+                    "SessionId" character varying(64) NULL,
+                    "CreatedAt" timestamp with time zone NOT NULL,
+                    "UpdatedAt" timestamp with time zone NOT NULL,
+                    CONSTRAINT "PK_AiGenerationJobs" PRIMARY KEY ("Id")
+                );
+                CREATE INDEX IF NOT EXISTS "IX_AiGenerationJobs_UserEmail" ON "AiGenerationJobs" ("UserEmail");
+                CREATE INDEX IF NOT EXISTS "IX_AiGenerationJobs_UserEmail_Status" ON "AiGenerationJobs" ("UserEmail", "Status");
+                CREATE INDEX IF NOT EXISTS "IX_AiGenerationJobs_UpdatedAt" ON "AiGenerationJobs" ("UpdatedAt");
+                """);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Could not ensure AiGenerationJobs table.");
         }
     }
 

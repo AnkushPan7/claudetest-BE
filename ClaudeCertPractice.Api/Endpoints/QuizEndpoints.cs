@@ -22,6 +22,38 @@ public static class QuizEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status502BadGateway);
 
+        group.MapPost("/sessions/restore", RestoreSession)
+            .WithName("RestoreQuizSession")
+            .Produces<SessionDto>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
+
+        group.MapPost("/generation-jobs", StartGenerationJob)
+            .WithName("StartAiGenerationJob")
+            .Produces<GenerationJobDto>()
+            .Produces(StatusCodes.Status400BadRequest);
+
+        group.MapGet("/generation-jobs/{jobId}", GetGenerationJob)
+            .WithName("GetAiGenerationJob")
+            .Produces<GenerationJobDto>()
+            .Produces(StatusCodes.Status404NotFound);
+
+        group.MapGet("/users/{email}/generation-jobs/active", GetActiveGenerationJob)
+            .WithName("GetActiveAiGenerationJob")
+            .Produces<GenerationJobDto>()
+            .Produces(StatusCodes.Status404NotFound);
+
+        group.MapPost("/generation-jobs/{jobId}/session", CreateSessionFromGenerationJob)
+            .WithName("CreateSessionFromAiGenerationJob")
+            .Produces<SessionDto>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
+
+        group.MapPost("/generation-jobs/{jobId}/cancel", CancelGenerationJob)
+            .WithName("CancelAiGenerationJob")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest);
+
         group.MapGet("/sessions/{sessionId}/questions/{index:int}", GetQuestion)
             .WithName("GetQuizQuestion")
             .Produces<QuestionPublicDto>()
@@ -90,6 +122,8 @@ public static class QuizEndpoints
             try
             {
                 questions = await ai.GenerateAsync(count, learningUrls, request.SectionIds, ct);
+                // Persist unique AI questions into the "AI Generated bank" for later practice.
+                bank.AppendAiGenerated(questions);
             }
             catch (Exception ex)
             {
@@ -134,6 +168,184 @@ public static class QuizEndpoints
             session.Questions.Count,
             session.Questions.Select(q => q.Id).ToList(),
             session.SourceMode));
+    }
+
+    private static async Task<IResult> RestoreSession(
+        RestoreSessionRequest request,
+        QuizSessionService sessions,
+        QuestionBankService bank,
+        AiGenerationJobService jobs,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.SessionId))
+            return Results.BadRequest("SessionId is required.");
+
+        if (request.QuestionIds is null || request.QuestionIds.Count == 0)
+            return Results.BadRequest("QuestionIds are required to restore a session.");
+
+        var existing = sessions.Get(request.SessionId);
+        if (existing is not null)
+        {
+            sessions.ApplyAnswers(existing, request.Answers);
+            return Results.Ok(new SessionDto(
+                existing.SessionId,
+                existing.Questions.Count,
+                existing.Questions.Select(q => q.Id).ToList(),
+                existing.SourceMode));
+        }
+
+        var sourceMode = (request.SourceMode ?? "Json").Trim();
+        var isAi = sourceMode.Equals("Ai", StringComparison.OrdinalIgnoreCase);
+
+        if (isAi && !string.IsNullOrWhiteSpace(request.GenerationJobId))
+        {
+            var jobDto = await jobs.GetAsync(request.GenerationJobId, ct);
+            if (jobDto is null)
+                return Results.NotFound("AI generation job not found; cannot restore this exam.");
+
+            try
+            {
+                var fromJob = await jobs.CreateSessionFromJobAsync(
+                    request.GenerationJobId,
+                    jobDto.UserEmail,
+                    ct);
+                var live = sessions.Get(fromJob.SessionId);
+                if (live is not null)
+                    sessions.ApplyAnswers(live, request.Answers);
+                return Results.Ok(fromJob);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        }
+
+        List<Question> questions;
+        string? sessionBankId;
+
+        if (isAi)
+        {
+            questions = request.QuestionIds
+                .Select(id => bank.GetById(QuestionBankService.AiGeneratedBankId, id))
+                .Where(q => q is not null)
+                .Cast<Question>()
+                .ToList();
+            sessionBankId = null;
+        }
+        else
+        {
+            sessionBankId = bank.NormalizeBankId(request.BankId);
+            questions = request.QuestionIds
+                .Select(id => bank.GetById(sessionBankId, id))
+                .Where(q => q is not null)
+                .Cast<Question>()
+                .ToList();
+        }
+
+        if (questions.Count == 0 || questions.Count != request.QuestionIds.Count)
+            return Results.BadRequest("Could not restore all questions for this exam session.");
+
+        var session = sessions.CreateWithId(
+            request.SessionId,
+            questions,
+            isAi ? "Ai" : "Json",
+            sessionBankId);
+        sessions.ApplyAnswers(session, request.Answers);
+
+        return Results.Ok(new SessionDto(
+            session.SessionId,
+            session.Questions.Count,
+            session.Questions.Select(q => q.Id).ToList(),
+            session.SourceMode));
+    }
+
+    private static async Task<IResult> StartGenerationJob(
+        StartGenerationJobRequest request,
+        AiGenerationJobService jobs,
+        IOptions<QuizSettings> settings,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserEmail))
+            return Results.BadRequest("UserEmail is required.");
+
+        var count = Math.Clamp(request.Count ?? 10, 1, settings.Value.MaxQuestionsPerSession);
+        try
+        {
+            var job = await jobs.StartOrGetActiveAsync(
+                request.UserEmail,
+                count,
+                request.SectionIds,
+                request.LearningUrl,
+                request.ForceNew,
+                ct);
+            return Results.Ok(job);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> GetGenerationJob(
+        string jobId,
+        AiGenerationJobService jobs,
+        CancellationToken ct)
+    {
+        var job = await jobs.GetAsync(jobId, ct);
+        return job is null ? Results.NotFound() : Results.Ok(job);
+    }
+
+    private static async Task<IResult> GetActiveGenerationJob(
+        string email,
+        AiGenerationJobService jobs,
+        CancellationToken ct)
+    {
+        var job = await jobs.GetActiveForUserAsync(email, ct);
+        return job is null ? Results.NotFound() : Results.Ok(job);
+    }
+
+    private static async Task<IResult> CreateSessionFromGenerationJob(
+        string jobId,
+        StartGenerationJobRequest request,
+        AiGenerationJobService jobs,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserEmail))
+            return Results.BadRequest("UserEmail is required.");
+
+        try
+        {
+            var session = await jobs.CreateSessionFromJobAsync(jobId, request.UserEmail, ct);
+            return Results.Ok(session);
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase))
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> CancelGenerationJob(
+        string jobId,
+        StartGenerationJobRequest request,
+        AiGenerationJobService jobs,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserEmail))
+            return Results.BadRequest("UserEmail is required.");
+
+        try
+        {
+            await jobs.CancelAsync(jobId, request.UserEmail, ct);
+            return Results.NoContent();
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
     }
 
     private static IResult GetQuestion(

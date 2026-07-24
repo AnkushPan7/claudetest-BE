@@ -18,9 +18,18 @@ public class QuizSessionService
 
     public QuizSession Create(IReadOnlyList<Question> questions, string sourceMode, string? bankId = null)
     {
+        return CreateWithId(Guid.NewGuid().ToString("N"), questions, sourceMode, bankId);
+    }
+
+    public QuizSession CreateWithId(
+        string sessionId,
+        IReadOnlyList<Question> questions,
+        string sourceMode,
+        string? bankId = null)
+    {
         var session = new QuizSession
         {
-            SessionId = Guid.NewGuid().ToString("N"),
+            SessionId = sessionId,
             Questions = questions.ToList(),
             SourceMode = sourceMode,
             BankId = bankId,
@@ -31,4 +40,20 @@ public class QuizSessionService
 
     public QuizSession? Get(string sessionId) =>
         _sessions.TryGetValue(sessionId, out var s) ? s : null;
+
+    public void ApplyAnswers(QuizSession session, IReadOnlyDictionary<int, string>? answers)
+    {
+        if (answers is null || answers.Count == 0) return;
+
+        foreach (var (index, selected) in answers)
+        {
+            if (index < 0 || index >= session.Questions.Count) continue;
+            var letter = selected.Trim().ToUpperInvariant();
+            if (letter is not ("A" or "B" or "C" or "D")) continue;
+
+            var q = session.Questions[index];
+            var isCorrect = string.Equals(letter, q.CorrectAnswer, StringComparison.OrdinalIgnoreCase);
+            session.Answers[index] = (letter, isCorrect);
+        }
+    }
 }

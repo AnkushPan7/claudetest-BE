@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net;
 using System.Text.RegularExpressions;
 using ClaudeCertPractice.Api.Configuration;
@@ -7,6 +8,9 @@ namespace ClaudeCertPractice.Api.Services;
 
 public class LearningContentService
 {
+    private static readonly ConcurrentDictionary<string, (string Text, DateTime CachedAt)> Cache = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(30);
+
     private readonly HttpClient _http;
     private readonly QuizSettings _settings;
 
@@ -37,6 +41,10 @@ public class LearningContentService
         if (distinct.Count == 0)
             throw new ArgumentException("At least one learning URL is required.");
 
+        var cacheKey = string.Join("|", distinct);
+        if (Cache.TryGetValue(cacheKey, out var hit) && DateTime.UtcNow - hit.CachedAt < CacheTtl)
+            return hit.Text;
+
         var perUrlBudget = Math.Max(8_000, _settings.MaxSourceCharacters / distinct.Count);
         var parts = new List<string>();
 
@@ -50,6 +58,7 @@ public class LearningContentService
         if (combined.Length > _settings.MaxSourceCharacters)
             combined = combined[.._settings.MaxSourceCharacters];
 
+        Cache[cacheKey] = (combined, DateTime.UtcNow);
         return combined;
     }
 

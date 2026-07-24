@@ -72,10 +72,15 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ExamGuideService>();
 builder.Services.AddSingleton<QuestionBankService>();
 builder.Services.AddSingleton<QuizSessionService>();
+builder.Services.AddSingleton<AiGenerationJobService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddHttpClient<LearningContentService>();
-builder.Services.AddHttpClient<AiQuestionGeneratorService>();
+builder.Services.AddHttpClient<AiQuestionGeneratorService>(client =>
+{
+    // Parallel AI batches for a full 60-question exam can take 1–2 minutes.
+    client.Timeout = TimeSpan.FromMinutes(3);
+});
 
 var corsOrigins = builder.Configuration["CORS_ALLOWED_ORIGINS"];
 var allowedOrigins = string.IsNullOrWhiteSpace(corsOrigins)
@@ -99,6 +104,21 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 await DbSeeder.InitializeAsync(app.Services, app.Environment);
+
+// Continue any AI generation jobs that were interrupted by a process restart.
+_ = Task.Run(async () =>
+{
+    try
+    {
+        var jobs = app.Services.GetRequiredService<AiGenerationJobService>();
+        await jobs.ResumeInterruptedJobsAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+        logger.LogWarning(ex, "Could not resume interrupted AI generation jobs.");
+    }
+});
 
 if (app.Environment.IsDevelopment())
 {

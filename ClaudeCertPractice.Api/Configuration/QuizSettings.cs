@@ -31,7 +31,22 @@ public class QuizSettings
 
     public int MaxSourceCharacters { get; set; } = 80_000;
 
+    /// <summary>
+    /// Cap on learning-material excerpt sent to the model (smaller = faster TTFT).
+    /// </summary>
+    public int AiMaxSourceCharacters { get; set; } = 12_000;
+
     public int MaxQuestionsPerSession { get; set; } = 60;
 
-    public int AiBatchSize { get; set; } = 5;
+    /// <summary>Questions requested per Anthropic call. Keep modest so JSON is not truncated.</summary>
+    public int AiBatchSize { get; set; } = 3;
+
+    /// <summary>How many Anthropic calls to run at once (wall-clock speed for 60-question exams).</summary>
+    public int AiMaxParallelBatches { get; set; } = 12;
+
+    /// <summary>Output token budget per batch call.</summary>
+    public int AiMaxTokens { get; set; } = 12_288;
+
+    /// <summary>Retries per batch when JSON is incomplete or empty.</summary>
+    public int AiBatchRetries { get; set; } = 2;
 }

@@ -64,15 +64,28 @@ public class UserService
 
         var user = await _db.Users
             .AsNoTracking()
-            .Include(u => u.Results)
             .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.Role == UserRoles.User, ct);
 
         if (user is null) return null;
 
-        var results = user.Results
+        // Project HasDetail with Questions.Any() so EF evaluates it in SQL.
+        // Include(Results) alone leaves Questions unloaded, so Count was always 0.
+        var results = await _db.ExamResults
+            .AsNoTracking()
+            .Where(r => r.UserId == user.Id)
             .OrderByDescending(r => r.CompletedAt)
-            .Select(ToEntry)
-            .ToList();
+            .Select(r => new ResultHistoryEntry(
+                r.Id,
+                r.SessionId,
+                r.CompletedAt,
+                r.Total,
+                r.Answered,
+                r.Correct,
+                r.PercentCorrect,
+                r.SourceMode,
+                r.ScaledScore,
+                r.Questions.Any()))
+            .ToListAsync(ct);
 
         return new UserHistoryDto(
             new UserDto(user.Email, user.Name, user.CreatedAt),

@@ -16,11 +16,42 @@ public static class ExplanationHelper
             selectedAnswer,
             question.OptionExplanations);
 
+    private static readonly Regex LetterBoundPrefix = new(
+        @"^(?:Why\s+[A-D](?:\s+is\s+(?:wrong|incorrect|right|correct))?\s*:|Option\s+[A-D]\s*[:.]?)\s*",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static readonly Regex EmbeddedWhyLetter = new(
+        @"\bWhy\s+[A-D](?:\s+is\s+(?:wrong|incorrect|right|correct))?\s*:\s*",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    /// <summary>
+    /// Strip "Why A:", "Why D is wrong:", etc. so UI never shows a wrong letter under an option.
+    /// </summary>
+    public static string StripLetterBoundPrefixes(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return "";
+
+        var cleaned = text.Trim();
+        for (var i = 0; i < 3; i++)
+        {
+            var next = LetterBoundPrefix.Replace(cleaned, "");
+            if (next == cleaned) break;
+            cleaned = next.Trim();
+        }
+
+        cleaned = EmbeddedWhyLetter.Replace(cleaned, "");
+        return Regex.Replace(cleaned, @"\s+", " ").Trim();
+    }
+
     public static Dictionary<string, string>? ResolveOptionExplanations(Question question)
     {
         var notes = ExtractOptionNotes(question.Explanation, question.OptionExplanations);
         if (notes.Count == 0) return question.OptionExplanations is { Count: > 0 }
-            ? question.OptionExplanations
+            ? question.OptionExplanations.ToDictionary(
+                kv => kv.Key,
+                kv => StripLetterBoundPrefixes(kv.Value),
+                StringComparer.OrdinalIgnoreCase)
             : null;
 
         // Prefer explicit map entries; fill gaps from parsed explanation text.
@@ -31,11 +62,11 @@ public static class ExplanationHelper
                 && question.OptionExplanations.TryGetValue(letter, out var fromMap)
                 && !string.IsNullOrWhiteSpace(fromMap))
             {
-                merged[letter] = fromMap.Trim();
+                merged[letter] = StripLetterBoundPrefixes(fromMap);
             }
             else if (notes.TryGetValue(letter, out var note) && !string.IsNullOrWhiteSpace(note))
             {
-                merged[letter] = note.Trim();
+                merged[letter] = StripLetterBoundPrefixes(note);
             }
         }
 
@@ -58,11 +89,11 @@ public static class ExplanationHelper
             && optionExplanations.TryGetValue(selected, out var fromMap)
             && !string.IsNullOrWhiteSpace(fromMap))
         {
-            return fromMap.Trim();
+            return StripLetterBoundPrefixes(fromMap);
         }
 
         var notes = ExtractOptionNotes(explanation, optionExplanations);
-        return notes.TryGetValue(selected, out var note) ? note : null;
+        return notes.TryGetValue(selected, out var note) ? StripLetterBoundPrefixes(note) : null;
     }
 
     public static Dictionary<string, string> ExtractOptionNotes(
